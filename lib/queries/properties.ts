@@ -237,7 +237,8 @@ export async function getPublicPropertySearchSuggestions(
     category_id,
     sort: "newest",
     publicSearchSuggest: true,
-    countPrecision: "planned",
+    /** Exact count so “top 5 of N” matches the real filter (planned is planner-estimate). */
+    countPrecision: "exact",
   });
 
   const safe = sanitizePropertySearchTerm(q);

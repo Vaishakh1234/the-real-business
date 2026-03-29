@@ -88,8 +88,8 @@ export function PropertySearchSuggestionLink({
       : "truncate font-semibold text-brand-charcoal";
   const metaClass =
     variant === "hero"
-      ? "mt-0.5 truncate text-[13px] text-neutral-600"
-      : "mt-0.5 truncate text-[13px] text-muted-foreground";
+      ? "mt-0.5 line-clamp-2 min-w-0 break-words text-[13px] leading-snug text-neutral-600"
+      : "mt-0.5 line-clamp-2 min-w-0 break-words text-[13px] leading-snug text-muted-foreground";
   const iconClass =
     "mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-gold";
 
