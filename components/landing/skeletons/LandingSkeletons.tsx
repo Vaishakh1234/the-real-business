@@ -51,7 +51,7 @@ export function HomeHeroSkeleton() {
     <section
       className={cn(
         publicContentFrameClass,
-        "relative flex min-h-[85vh] items-center",
+        "relative flex min-h-[min(70svh,540px)] items-center",
       )}
     >
       <div className="max-w-2xl space-y-6">

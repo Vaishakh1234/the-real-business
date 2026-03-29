@@ -21,7 +21,7 @@ import { SITE_NAME, CONTACT } from "@/lib/constants/site";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 
 const HERO_BANNER = "/hero-services.jpg";
-const SECTION_IMAGE = "/services-company.jpg";
+const SECTION_IMAGE = "/images/our-service-1.png";
 
 export const metadata: Metadata = {
   title: `Our Services — ${SITE_NAME}`,
@@ -168,7 +168,10 @@ export default function ServicesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[380px] xs:min-h-[440px] sm:min-h-[520px] flex items-center justify-center overflow-hidden bg-brand-charcoal">
+      <section
+        id="page-hero"
+        className="relative min-h-[380px] xs:min-h-[440px] sm:min-h-[520px] flex items-center justify-center overflow-hidden bg-brand-charcoal"
+      >
         <div className="absolute inset-0">
           <Image
             src={HERO_BANNER}
@@ -239,15 +242,14 @@ export default function ServicesPage() {
                 ))}
               </ul>
             </div>
-            <div className="relative aspect-[4/3] max-h-[480px] rounded-2xl overflow-hidden border border-border shadow-lg">
+            <div className="relative aspect-[4/3] w-full max-h-[680px] lg:max-h-[800px]">
               <Image
                 src={SECTION_IMAGE}
                 alt="Our team and approach"
                 fill
-                className="object-cover"
+                className="object-contain object-center"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-brand-charcoal/20" />
             </div>
           </div>
         </div>

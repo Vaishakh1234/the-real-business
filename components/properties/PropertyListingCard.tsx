@@ -187,14 +187,14 @@ export function HomePropertyListingCard({
       className={cn(
         "group flex h-full min-h-0 flex-col overflow-hidden border bg-white shadow-[0_2px_14px_rgba(15,23,42,0.07)] transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(15,23,42,0.1)]",
         isRelated
-          ? "rounded-xl border-neutral-200/90 ring-1 ring-black/[0.04] sm:min-h-[196px]"
+          ? "rounded-xl border-neutral-200/90 ring-1 ring-black/[0.04] sm:min-h-[228px]"
           : "rounded-2xl border-neutral-200/90 ring-1 ring-black/[0.05]",
       )}
     >
       <div
         className={cn(
           "flex h-full min-h-0 flex-1 flex-col sm:flex-row sm:items-stretch",
-          isRelated && "sm:min-h-[196px]",
+          isRelated && "sm:min-h-[228px]",
         )}
       >
         <Link
@@ -202,7 +202,7 @@ export function HomePropertyListingCard({
           className={cn(
             "relative shrink-0 bg-neutral-100",
             isRelated
-              ? "aspect-[2/1] w-full p-2.5 sm:aspect-auto sm:flex sm:w-[40%] sm:max-w-[220px] sm:min-w-[148px] sm:self-stretch sm:p-3"
+              ? "aspect-[4/3] w-full p-2.5 sm:aspect-auto sm:flex sm:w-[42%] sm:max-w-[240px] sm:min-w-[160px] sm:self-stretch sm:p-3"
               : "block aspect-[4/3] w-full overflow-hidden sm:aspect-auto sm:w-[min(46%,320px)] sm:min-h-[200px] sm:max-w-[340px] sm:self-stretch",
           )}
         >
@@ -210,7 +210,7 @@ export function HomePropertyListingCard({
             className={cn(
               "relative w-full overflow-hidden bg-neutral-200/40",
               isRelated
-                ? "absolute inset-2.5 rounded-lg sm:static sm:inset-auto sm:flex sm:min-h-[152px] sm:flex-1"
+                ? "absolute inset-2.5 rounded-lg sm:static sm:inset-auto sm:flex sm:min-h-[188px] sm:flex-1"
                 : "absolute inset-0",
             )}
           >
@@ -267,9 +267,7 @@ export function HomePropertyListingCard({
         <div
           className={cn(
             "flex min-h-0 min-w-0 flex-1 flex-col justify-between gap-3",
-            isRelated
-              ? "px-4 py-4 sm:px-5 sm:py-5 sm:pl-4"
-              : "p-4 sm:p-5",
+            isRelated ? "px-4 py-4 sm:px-5 sm:py-5 sm:pl-4" : "p-4 sm:p-5",
           )}
         >
           <div
@@ -414,7 +412,6 @@ function DirectoryListingCardMobile({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [imgIdx, setImgIdx] = useState(0);
   const [descOpen, setDescOpen] = useState(false);
-  const [phoneVisible, setPhoneVisible] = useState(false);
 
   const urls = listingGalleryUrls(property);
   const slides: (string | null)[] = urls.length > 0 ? urls : [null];
@@ -725,24 +722,13 @@ function DirectoryListingCardMobile({
             </p>
           </div>
           <div className="flex flex-row items-center gap-2">
-            {!phoneVisible ? (
-              <button
-                type="button"
-                onClick={() => setPhoneVisible(true)}
-                className="flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-full px-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-95 active:opacity-90 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
-                style={{ backgroundColor: LISTING_CARD.ctaRed }}
-              >
-                View Number
-              </button>
-            ) : (
-              <a
-                href={telHref || undefined}
-                className="flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-full px-3 text-sm font-bold tabular-nums text-white shadow-sm transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
-                style={{ backgroundColor: LISTING_CARD.ctaRed }}
-              >
-                {CONTACT.phone}
-              </a>
-            )}
+            <Link
+              href={href}
+              className="flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-full px-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-95 active:opacity-90 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+              style={{ backgroundColor: LISTING_CARD.ctaRed }}
+            >
+              View Details
+            </Link>
             <a
               href={CONTACT.whatsappUrl}
               target="_blank"
@@ -845,9 +831,9 @@ export function DirectoryPropertyListingCard({
                 fill
                 className="object-cover transition-transform duration-500 group-hover/image:scale-[1.02]"
                 sizes="(max-width: 640px) 100vw, 380px"
-                unoptimized={!isRemoteImageOptimizedUrl(
-                  property.cover_image_url,
-                )}
+                unoptimized={
+                  !isRemoteImageOptimizedUrl(property.cover_image_url)
+                }
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center text-4xl text-neutral-400">

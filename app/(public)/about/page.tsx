@@ -30,7 +30,10 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[380px] xs:min-h-[440px] sm:min-h-[520px] flex items-center justify-center overflow-hidden bg-brand-charcoal">
+      <section
+        id="page-hero"
+        className="relative min-h-[380px] xs:min-h-[440px] sm:min-h-[520px] flex items-center justify-center overflow-hidden bg-brand-charcoal"
+      >
         <div className="absolute inset-0">
           <Image
             src={HERO_BANNER}

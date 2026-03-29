@@ -42,7 +42,10 @@ import {
   PUBLIC_SEARCH_TYPEWRITER_HINTS,
   SITE_NAME,
 } from "@/lib/constants/site";
-import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import {
+  publicContentFrameClass,
+  PUBLIC_ROUTES_WITH_TOP_HERO,
+} from "@/lib/constants/publicLayout";
 import { useSearchTypewriter } from "@/hooks/useSearchTypewriter";
 import { useWishlist } from "@/hooks/useWishlist";
 
@@ -189,6 +192,12 @@ const navMenus: NavMenu[] = [
         href: "/contact",
         icon: Warehouse,
       },
+      {
+        title: "Contact us",
+        description: "Message, call, or visit — we’re here to help",
+        href: "/contact",
+        icon: Phone,
+      },
     ],
   },
   {
@@ -236,7 +245,6 @@ const navMenus: NavMenu[] = [
 const mobileNavLinks: { label: string; href: string; icon: LucideIcon }[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Properties", href: "/properties", icon: Building2 },
-  { label: "Saved", href: "/wishlist", icon: Heart },
   { label: "Services", href: "/services", icon: Grid3x3 },
   { label: "Contact", href: "/contact", icon: Phone },
 ];
@@ -274,8 +282,14 @@ export function Navbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  /** Home: solid white bar after scrolling past ~half the hero banner; other routes: always solid */
-  const [headerSolid, setHeaderSolid] = useState(pathname !== "/");
+  /** Transparent over hero until scroll; solid white after threshold (home + pages with `#page-hero`) */
+  const routesWithTopHero = PUBLIC_ROUTES_WITH_TOP_HERO.has(pathname);
+  const [headerSolid, setHeaderSolid] = useState(
+    () => pathname !== "/" && !routesWithTopHero,
+  );
+  const [headerOverlaysHero, setHeaderOverlaysHero] = useState(
+    () => pathname === "/" || routesWithTopHero,
+  );
   const [headerSearch, setHeaderSearch] = useState("");
   const [headerSearchFocused, setHeaderSearchFocused] = useState(false);
   const [headerTypewriterHint, setHeaderTypewriterHint] = useState(0);
@@ -316,39 +330,86 @@ export function Navbar() {
   );
 
   useEffect(() => {
-    if (pathname !== "/") {
-      setHeaderSolid(true);
-      return;
-    }
-
     const update = () => {
-      const hero = document.getElementById("home-hero");
-      const heroHeight =
-        hero?.offsetHeight ?? Math.min(window.innerHeight * 0.78, 620);
-      const threshold = heroHeight * 0.5;
-      setHeaderSolid(window.scrollY > threshold);
+      if (pathname === "/") {
+        const hero = document.getElementById("home-hero");
+        const heroHeight =
+          hero?.offsetHeight ?? Math.min(window.innerHeight * 0.78, 620);
+        const threshold = heroHeight * 0.5;
+        setHeaderSolid(window.scrollY > threshold);
+        setHeaderOverlaysHero(true);
+        return;
+      }
+
+      const pageHero = document.getElementById("page-hero");
+      if (pageHero) {
+        const threshold = pageHero.offsetHeight * 0.45;
+        setHeaderSolid(window.scrollY > threshold);
+        setHeaderOverlaysHero(true);
+        return;
+      }
+
+      if (PUBLIC_ROUTES_WITH_TOP_HERO.has(pathname)) {
+        const fallbackH = 420;
+        const threshold = fallbackH * 0.45;
+        setHeaderSolid(window.scrollY > threshold);
+        setHeaderOverlaysHero(true);
+        return;
+      }
+
+      setHeaderSolid(true);
+      setHeaderOverlaysHero(false);
     };
 
     update();
+    const postLayout = window.setTimeout(update, 0);
+    const postPaint = PUBLIC_ROUTES_WITH_TOP_HERO.has(pathname)
+      ? window.setTimeout(update, 50)
+      : undefined;
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update, { passive: true });
 
-    const hero = document.getElementById("home-hero");
-    const ro =
-      hero &&
+    const homeHero =
+      pathname === "/" ? document.getElementById("home-hero") : null;
+    const roHome =
+      homeHero &&
       new ResizeObserver(() => {
         update();
       });
-    if (hero && ro) ro.observe(hero);
+    if (homeHero && roHome) roHome.observe(homeHero);
+
+    let pageHeroEl =
+      pathname !== "/" ? document.getElementById("page-hero") : null;
+    let roPage: ResizeObserver | null =
+      pageHeroEl &&
+      new ResizeObserver(() => {
+        update();
+      });
+    if (pageHeroEl && roPage) roPage.observe(pageHeroEl);
+
+    const attachPageHeroRo = () => {
+      const el = document.getElementById("page-hero");
+      if (!el || roPage) return;
+      roPage = new ResizeObserver(() => {
+        update();
+      });
+      roPage.observe(el);
+    };
+    if (PUBLIC_ROUTES_WITH_TOP_HERO.has(pathname) && !pageHeroEl) {
+      window.setTimeout(attachPageHeroRo, 0);
+    }
 
     return () => {
+      window.clearTimeout(postLayout);
+      if (postPaint !== undefined) window.clearTimeout(postPaint);
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
-      ro?.disconnect();
+      roHome?.disconnect();
+      roPage?.disconnect();
     };
   }, [pathname]);
 
-  const overlayNav = isHome && !headerSolid;
+  const overlayNav = headerOverlaysHero && !headerSolid;
   /** Mobile: hide bottom nav on `/properties/{slug}` only; keep it on the listing. */
   const isPropertyDetailPage = /^\/properties\/[^/]+/.test(pathname);
 
@@ -379,7 +440,7 @@ export function Navbar() {
             <Link
               href="/"
               className={cn(
-                "font-site-wordmark min-w-0 shrink-0 text-xl font-semibold leading-tight tracking-tight xs:text-2xl sm:text-2xl sm:whitespace-nowrap md:text-3xl",
+                "font-site-wordmark min-w-0 shrink-0 text-2xl font-semibold leading-tight tracking-tight xs:text-3xl sm:text-3xl sm:whitespace-nowrap md:text-4xl",
                 overlayNav ? "text-white drop-shadow-sm" : "text-brand-gold",
               )}
             >
@@ -454,12 +515,15 @@ export function Navbar() {
                     "cursor-pointer list-none whitespace-nowrap [&::-webkit-details-marker]:hidden",
                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold",
                     overlayNav
-                      ? "text-white/85 hover:bg-white/10 hover:text-white focus-visible:ring-offset-0"
+                      ? "text-white hover:bg-white/10 focus-visible:ring-offset-0"
                       : "text-muted-foreground hover:bg-muted/80 hover:text-brand-charcoal focus-visible:ring-offset-2",
                   )}
                 >
                   <MapPin
-                    className="h-4 w-4 shrink-0 text-brand-gold"
+                    className={cn(
+                      "h-4 w-4 shrink-0",
+                      overlayNav ? "text-white" : "text-brand-gold",
+                    )}
                     aria-hidden
                   />
                   <span className="text-center whitespace-nowrap">
@@ -477,7 +541,7 @@ export function Navbar() {
                     strokeWidth={2}
                     className={cn(
                       "h-3.5 w-3.5 shrink-0 opacity-70 group-open:rotate-180",
-                      overlayNav && "text-white/85",
+                      overlayNav ? "text-white" : "text-muted-foreground",
                     )}
                     aria-hidden
                   />
@@ -513,7 +577,7 @@ export function Navbar() {
                         overlayNav
                           ? isActive || isOpen
                             ? "text-white"
-                            : "text-white/80 hover:bg-white/10 hover:text-white"
+                            : "text-white hover:bg-white/10"
                           : isActive || isOpen
                             ? "text-brand-charcoal"
                             : "text-muted-foreground hover:bg-muted/70 hover:text-brand-charcoal",
@@ -528,7 +592,7 @@ export function Navbar() {
                         className={cn(
                           "h-3.5 w-3.5 shrink-0 opacity-70 transition-transform duration-200",
                           isOpen && "rotate-180",
-                          overlayNav && "text-white/85",
+                          overlayNav && "text-white",
                         )}
                         aria-hidden
                       />

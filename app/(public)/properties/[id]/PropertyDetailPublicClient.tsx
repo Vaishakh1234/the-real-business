@@ -719,11 +719,17 @@ export function PropertyDetailPublicClient({
                 <h2 className="mb-3 font-heading text-base font-bold text-[#1a2b4b] sm:mb-4 sm:text-lg">
                   Location
                 </h2>
-                <div className="aspect-video w-full overflow-hidden rounded-xl border border-neutral-200">
+                <div
+                  className={cn(
+                    "relative w-full overflow-hidden rounded-xl border border-neutral-200",
+                    "max-md:h-0 max-md:pb-[calc(56.25%+70px)]",
+                    "md:aspect-video md:h-auto md:pb-0",
+                  )}
+                >
                   <iframe
                     title="Location map"
                     src={locationMapSrc}
-                    className="h-full w-full"
+                    className="absolute inset-0 h-full w-full md:relative md:inset-auto"
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"

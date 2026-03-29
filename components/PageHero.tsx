@@ -20,16 +20,19 @@ export default function PageHero({
   description,
 }: PageHeroProps) {
   return (
-    <section className="relative h-[320px] xs:h-[380px] sm:h-[500px] md:h-[600px] overflow-hidden">
+    <section
+      id="page-hero"
+      className="relative h-[320px] xs:h-[380px] sm:h-[500px] md:h-[600px] overflow-hidden"
+    >
       <Image
         src={imageSrc}
         alt=""
         fill
-        className="object-cover"
+        className="object-cover object-top"
         priority
         sizes="(min-width: 1024px) 80vw, 100vw"
       />
-      <div className="absolute inset-0 bg-brand-charcoal/60" />
+      <div className="absolute inset-0 bg-brand-charcoal/40" />
       <div className="absolute inset-0 flex flex-col justify-end max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-16 xl:px-24 pb-8 sm:pb-10 md:pb-12">
         <nav className="text-white/80 text-sm mb-2 sm:mb-3 flex items-center gap-2 flex-wrap">
           {breadcrumbs.map((item, i) => (

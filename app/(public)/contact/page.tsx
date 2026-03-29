@@ -100,7 +100,7 @@ export default function ContactPage() {
     <>
       <PageHero
         title="Get In Touch"
-        imageSrc="/hero-contact.jpg"
+        imageSrc="/images/contact-us.png"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
         description="Whether you're looking to buy, sell, rent, or have a question—our team is here to help. Reach out and we'll get back to you soon."
       />
@@ -297,14 +297,14 @@ export default function ContactPage() {
               </form>
             </motion.div>
 
-            {/* Contact Info & Map */}
+            {/* Contact Info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex flex-col h-full"
+              className="flex flex-col"
             >
-              <div className="bg-muted p-4 sm:p-6 lg:p-8 rounded-2xl border border-border mb-8">
+              <div className="bg-muted p-4 sm:p-6 lg:p-8 rounded-2xl border border-border">
                 <h3 className="font-heading text-2xl font-bold text-foreground mb-4 sm:mb-6">
                   Contact Information
                 </h3>
@@ -374,19 +374,6 @@ export default function ContactPage() {
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Map */}
-              <div className="flex-grow min-h-[300px] bg-muted rounded-2xl overflow-hidden relative">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968459391!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1644469238848!5m2!1sen!2sus"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  title="Office location map"
-                />
               </div>
             </motion.div>
           </div>

@@ -13,7 +13,6 @@ import {
   X,
   ChevronLeft,
   ChevronDown,
-  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -38,7 +37,6 @@ import {
 import { FilterSelect } from "@/components/ui/filter-select";
 import { usePublicCategories } from "@/hooks/useCategories";
 import { useInfinitePublicProperties } from "@/hooks/useProperties";
-import { useWishlist } from "@/hooks/useWishlist";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 import {
   PROPERTIES_LISTING_SEARCH_PLACEHOLDER,
@@ -147,7 +145,6 @@ export function PropertiesClient() {
     "all" | "price"
   >("all");
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const { count: wishlistCount } = useWishlist();
 
   const structure_type_raw = searchParams.get("structure_type") ?? "";
   const structure_type =
@@ -567,9 +564,9 @@ export function PropertiesClient() {
   );
 
   const chipBase =
-    "inline-flex shrink-0 items-center gap-1 rounded-full border bg-white px-3.5 py-2 text-sm font-semibold text-[#1a2b4b] shadow-sm transition-colors active:bg-neutral-50";
+    "inline-flex shrink-0 items-center gap-1 rounded-full border bg-white px-3.5 py-2 text-sm font-semibold text-[#1a2b4b] shadow-sm transition-[border-color,background-color,box-shadow] active:bg-neutral-50";
   const chipInactive = "border-neutral-200";
-  const chipActive = "border-2 border-neutral-900";
+  const chipActive = "border-brand-gold bg-brand-gold/15";
 
   const resultsToolbar = !isLoading &&
     !errorMessage &&
@@ -656,31 +653,14 @@ export function PropertiesClient() {
                   placeholder="Search City/Locality/Project"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  className="h-11 w-full rounded-full border border-neutral-200 bg-white py-2 pl-4 pr-11 text-[15px] text-brand-charcoal shadow-sm placeholder:text-muted-foreground focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40"
+                  className="h-11 w-full rounded-full border border-neutral-200 bg-white py-2 pl-11 pr-4 text-[15px] text-brand-charcoal shadow-sm placeholder:text-muted-foreground focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40"
                   aria-label="Search properties"
                 />
                 <Search
-                  className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden
                 />
               </div>
-              <button
-                type="button"
-                onClick={() => router.push("/wishlist")}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100 text-[#1a2b4b] shadow-sm active:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
-                aria-label={
-                  wishlistCount > 0
-                    ? `Wishlist (${wishlistCount} saved)`
-                    : "Wishlist"
-                }
-              >
-                <Heart
-                  className="h-5 w-5"
-                  strokeWidth={2}
-                  fill={wishlistCount > 0 ? "currentColor" : "none"}
-                  aria-hidden
-                />
-              </button>
             </div>
 
             <div className="-mx-1 flex gap-2 overflow-x-auto pt-2 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

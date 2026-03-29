@@ -133,12 +133,12 @@ export function RelatedPropertiesSection({
         aria-label="Related properties loading"
       >
         <div className="w-full min-w-0">
-          <div className="mb-0 flex flex-wrap items-end justify-between gap-4">
-            <div>
+          <div className="mb-0 flex flex-nowrap items-center justify-between gap-3 sm:items-end sm:gap-4">
+            <div className="min-w-0 flex-1">
               <h2 className="font-heading text-xl font-bold tracking-tight text-[#1a2b4b] sm:text-3xl">
                 Related properties
               </h2>
-              <p className="mt-1.5 text-[13px] text-neutral-600 sm:mt-2 sm:text-base">
+              <p className="mt-1.5 hidden text-[13px] text-neutral-600 sm:mt-2 sm:block sm:text-base">
                 Other active listings that share your tags
               </p>
             </div>
@@ -148,7 +148,7 @@ export function RelatedPropertiesSection({
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="h-[188px] min-w-[min(88vw,400px)] shrink-0 animate-pulse rounded-2xl border border-neutral-200/80 bg-white/60 sm:min-w-[420px]"
+                  className="h-[260px] min-w-[min(88vw,400px)] shrink-0 animate-pulse rounded-2xl border border-neutral-200/80 bg-white/60 sm:min-w-[420px] sm:h-[228px]"
                 />
               ))}
             </div>
@@ -163,15 +163,15 @@ export function RelatedPropertiesSection({
   return (
     <section className={bandClass} aria-labelledby="related-properties-heading">
       <div className="w-full min-w-0">
-        <div className="mb-0 flex flex-wrap items-end justify-between gap-4">
-          <div className="min-w-0">
+        <div className="mb-0 flex flex-nowrap items-center justify-between gap-3 sm:items-end sm:gap-4">
+          <div className="min-w-0 flex-1">
             <h2
               id="related-properties-heading"
               className="font-heading text-xl font-bold tracking-tight text-[#1a2b4b] sm:text-3xl"
             >
               Related properties
             </h2>
-            <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-neutral-600 sm:mt-2 sm:text-base">
+            <p className="mt-1.5 hidden max-w-xl text-[13px] leading-relaxed text-neutral-600 sm:mt-2 sm:block sm:text-base">
               Listings with overlapping tags — swipe or use the arrows to
               explore.
             </p>

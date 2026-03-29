@@ -4,6 +4,9 @@ import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "trb-property-wishlist";
 
+/** Stable empty set for SSR — must not be mutated; `getServerSnapshot` must return cached identity. */
+const SERVER_SNAPSHOT = new Set<string>();
+
 function readIds(): Set<string> {
   if (typeof window === "undefined") return new Set();
   try {
@@ -34,7 +37,7 @@ function getSnapshot(): Set<string> {
 }
 
 function getServerSnapshot(): Set<string> {
-  return new Set();
+  return SERVER_SNAPSHOT;
 }
 
 function persist(next: Set<string>) {

@@ -12,14 +12,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Search,
-  Clock,
-  ChevronRight,
-  HousePlus,
-  Mic,
-  Heart,
-} from "lucide-react";
+import { Search, Clock, ChevronRight, Heart, HousePlus, Mic } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -252,27 +245,15 @@ export function HeroSearchPanel({
           : "mt-3 pb-6 sm:mt-4 sm:pb-8 lg:pb-10",
       )}
     >
-      {/* Mobile: larger prompt + cart / browse CTAs (full search card from md+) */}
+      {/* Mobile: larger prompt + favorites / browse CTAs (full search card from md+) */}
       <div className="w-full min-w-0 md:hidden">
-        <p className="text-balance font-heading text-[1.25rem] font-bold leading-[1.22] tracking-[-0.015em] text-white xs:text-[1.375rem]">
+        <p className="text-balance font-heading text-[1.0625rem] font-bold leading-snug tracking-[-0.015em] text-white xs:text-[1.1875rem]">
           {HOME_HERO_SEARCH_PROMPT}
         </p>
-        <div className="mt-4 grid grid-cols-1 gap-2.5 xs:grid-cols-2 xs:gap-3">
-          <Link
-            href="/wishlist"
-            className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/12 px-4 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
-            aria-label="Open saved listings (wishlist)"
-          >
-            <Heart
-              className="h-[1.125rem] w-[1.125rem] shrink-0"
-              strokeWidth={2}
-              aria-hidden
-            />
-            Add to cart
-          </Link>
+        <div className="mt-2.5 flex flex-col gap-2">
           <Link
             href="/properties"
-            className="inline-flex min-h-[48px] w-full items-center justify-center gap-1.5 rounded-xl border border-white bg-white px-4 py-3 text-sm font-semibold text-brand-charcoal shadow-md transition-[background-color,border-color] hover:border-white hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
+            className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white bg-white px-3.5 py-2.5 text-sm font-semibold text-brand-charcoal shadow-md transition-[background-color,border-color] hover:border-white hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
           >
             View property
             <ChevronRight
@@ -280,6 +261,14 @@ export function HeroSearchPanel({
               strokeWidth={2}
               aria-hidden
             />
+          </Link>
+          <Link
+            href="/wishlist"
+            className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/40 bg-white/12 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
+            aria-label="Add to favorites — open saved listings"
+          >
+            <Heart className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
+            Add to favorites
           </Link>
         </div>
       </div>
