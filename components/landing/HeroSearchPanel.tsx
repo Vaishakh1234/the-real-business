@@ -12,9 +12,16 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Search, Clock, ChevronRight, Heart, HousePlus, Mic } from "lucide-react";
+import {
+  Search,
+  Clock,
+  ChevronRight,
+  Heart,
+  HousePlus,
+  Loader2,
+} from "lucide-react";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
+import { PropertySearchSuggestionLink } from "@/components/properties/PropertySearchSuggestionLink";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -29,33 +36,22 @@ import {
   postPropertyHrefWithCta,
 } from "@/lib/constants/site";
 import { usePublicCategories } from "@/hooks/useCategories";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchTypewriter } from "@/hooks/useSearchTypewriter";
+import type { PropertyWithRelations } from "@/types";
 const RECENT_KEY = "trb-hero-recent-searches";
 
 /** Radix Select items need non-empty values; map to "" for URL/state */
 const HERO_CATEGORY_ALL = "__all__" as const;
 
-/** Default listing type for hero search (matches former “Buy” tab). */
-const HERO_SEARCH_LIST_TYPE = "sale" as const;
 const HERO_RECENT_LABEL = "Properties";
 
-/** Web Speech API (Chrome/Edge/Safari); not in all TS `lib` versions */
-type HeroSpeechRecognitionInstance = {
-  lang: string;
-  continuous: boolean;
-  interimResults: boolean;
-  onstart: (() => void) | null;
-  onend: (() => void) | null;
-  onerror: ((e: { error: string }) => void) | null;
-  onresult:
-    | ((e: {
-        results: { length: number; [i: number]: { 0: { transcript: string } } };
-      }) => void)
-    | null;
-  start: () => void;
-  stop: () => void;
-};
-type HeroSpeechRecognitionCtor = new () => HeroSpeechRecognitionInstance;
+/** Portaled Radix Select content for hero category (blur / outside-click guard for suggestions) */
+const HERO_CATEGORY_SELECT_ROOT = "[data-trb-hero-category-select]";
+
+function focusInsideHeroCategorySelect(el: Element | null): boolean {
+  return !!el?.closest?.(HERO_CATEGORY_SELECT_ROOT);
+}
 
 type RecentItem = { label: string; href: string };
 
@@ -71,13 +67,22 @@ export function HeroSearchPanel({
   const [heroQueryFocused, setHeroQueryFocused] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [recent, setRecent] = useState<RecentItem[]>([]);
-  const [voiceListening, setVoiceListening] = useState(false);
+  const [suggestions, setSuggestions] = useState<PropertyWithRelations[]>([]);
+  const [suggestTotal, setSuggestTotal] = useState(0);
+  const [suggestLoading, setSuggestLoading] = useState(false);
+  const [suggestOpen, setSuggestOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const speechRecognitionRef = useRef<HeroSpeechRecognitionInstance | null>(
-    null,
-  );
+  const suggestContainerRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef(search);
+  searchRef.current = search;
+  const debouncedSearch = useDebounce(search, 300);
   const { data: categories = [], isLoading: categoriesLoading } =
     usePublicCategories();
+
+  const categoryScopeLabel = useMemo(() => {
+    if (!categoryId) return "All residential";
+    return categories.find((c) => c.id === categoryId)?.name ?? "This category";
+  }, [categories, categoryId]);
 
   const heroQueryIdle = !search.trim() && !heroQueryFocused;
   const heroTypewriterText = useSearchTypewriter(
@@ -107,111 +112,12 @@ export function HeroSearchPanel({
     return qs ? `/properties?${qs}` : "/properties";
   }, [buildParams]);
 
-  useEffect(() => {
-    return () => {
-      try {
-        speechRecognitionRef.current?.stop();
-      } catch {
-        /* ignore */
-      }
-      speechRecognitionRef.current = null;
-    };
-  }, []);
-
-  const startVoiceSearch = useCallback(() => {
-    if (typeof window === "undefined") return;
-
-    const w = window as unknown as {
-      SpeechRecognition?: HeroSpeechRecognitionCtor;
-      webkitSpeechRecognition?: HeroSpeechRecognitionCtor;
-    };
-    const Ctor = w.SpeechRecognition ?? w.webkitSpeechRecognition;
-    if (!Ctor) {
-      toast.error("Voice search isn’t available in this browser", {
-        description: "Try Chrome, Edge, or Safari.",
-      });
-      return;
-    }
-
-    try {
-      speechRecognitionRef.current?.stop();
-    } catch {
-      /* ignore */
-    }
-
-    const rec = new Ctor();
-    speechRecognitionRef.current = rec;
-    rec.lang =
-      typeof navigator !== "undefined" && navigator.language
-        ? navigator.language
-        : "en-IN";
-    rec.continuous = false;
-    rec.interimResults = false;
-
-    rec.onstart = () => setVoiceListening(true);
-
-    rec.onend = () => {
-      setVoiceListening(false);
-      speechRecognitionRef.current = null;
-    };
-
-    rec.onerror = (event: { error: string }) => {
-      setVoiceListening(false);
-      speechRecognitionRef.current = null;
-      if (event.error === "aborted") return;
-      if (event.error === "no-speech") {
-        toast.message("No speech heard", {
-          description: "Tap the mic again and speak your search.",
-        });
-        return;
-      }
-      if (
-        event.error === "not-allowed" ||
-        event.error === "service-not-allowed"
-      ) {
-        toast.error("Microphone access blocked", {
-          description:
-            "Allow microphone permission for this site and try again.",
-        });
-        return;
-      }
-      if (event.error === "audio-capture") {
-        toast.error("No microphone found", {
-          description: "Check that a mic is connected and enabled.",
-        });
-        return;
-      }
-      toast.error("Voice search didn’t work", {
-        description: "Check your connection and try again.",
-      });
-    };
-
-    rec.onresult = (event: {
-      results: { length: number; [i: number]: { 0: { transcript: string } } };
-    }) => {
-      const last = event.results[event.results.length - 1];
-      const text = last?.[0]?.transcript?.trim();
-      if (text) {
-        setSearch((prev) => (prev ? `${prev} ${text}` : text));
-        queueMicrotask(() => searchInputRef.current?.focus());
-      }
-    };
-
-    try {
-      rec.start();
-    } catch {
-      setVoiceListening(false);
-      speechRecognitionRef.current = null;
-      toast.error("Could not start voice search", {
-        description: "Try again in a moment.",
-      });
-    }
-  }, []);
-
   const persistRecent = useCallback(() => {
     try {
-      const label = search.trim()
-        ? `${HERO_RECENT_LABEL} · ${search.trim()}`
+      const q = search.trim();
+      const catPart = categoryId ? ` · ${categoryScopeLabel}` : "";
+      const label = q
+        ? `${HERO_RECENT_LABEL} · ${q}${catPart}`
         : `${HERO_RECENT_LABEL} in Palakkad`;
       const href = `/properties?${buildParams().toString()}`;
       const prev = (() => {
@@ -231,7 +137,86 @@ export function HeroSearchPanel({
     } catch {
       /* ignore */
     }
-  }, [buildParams, search]);
+  }, [buildParams, search, categoryId, categoryScopeLabel]);
+
+  useEffect(() => {
+    const q = debouncedSearch.trim();
+    if (q.length < 2) {
+      setSuggestions([]);
+      setSuggestTotal(0);
+      setSuggestLoading(false);
+      return;
+    }
+
+    const ac = new AbortController();
+    setSuggestLoading(true);
+    const params = new URLSearchParams({ search: q });
+    if (categoryId) params.set("category_id", categoryId);
+
+    fetch(`/api/properties/suggest?${params.toString()}`, {
+      signal: ac.signal,
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (ac.signal.aborted) return;
+        const json = (await res.json()) as {
+          data?: PropertyWithRelations[];
+          total?: number;
+        };
+        if (!res.ok) {
+          setSuggestions([]);
+          setSuggestTotal(0);
+          return;
+        }
+        if (ac.signal.aborted) return;
+        setSuggestions(json.data ?? []);
+        setSuggestTotal(json.total ?? 0);
+      })
+      .catch(() => {
+        if (!ac.signal.aborted) {
+          setSuggestions([]);
+          setSuggestTotal(0);
+        }
+      })
+      .finally(() => {
+        if (!ac.signal.aborted) setSuggestLoading(false);
+      });
+
+    return () => ac.abort();
+  }, [debouncedSearch, categoryId]);
+
+  useEffect(() => {
+    if (searchRef.current.trim().length >= 2) setSuggestOpen(true);
+  }, [categoryId]);
+
+  useEffect(() => {
+    if (debouncedSearch.trim().length < 2) setSuggestOpen(false);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (!suggestOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSuggestOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [suggestOpen]);
+
+  useEffect(() => {
+    if (!suggestOpen) return;
+    const onDown = (e: MouseEvent) => {
+      const el = suggestContainerRef.current;
+      const t = e.target as Node;
+      if (el?.contains(t)) return;
+      if ((e.target as Element | null)?.closest?.(HERO_CATEGORY_SELECT_ROOT))
+        return;
+      setSuggestOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [suggestOpen]);
+
+  const showSuggestPanel = suggestOpen && debouncedSearch.trim().length >= 2;
 
   return (
     <motion.div
@@ -308,7 +293,7 @@ export function HeroSearchPanel({
           </div>
 
           {/* Row 2: single search bar (reference layout: dropdown | input | utility icons | search) */}
-          <div className="p-2 sm:p-4 md:p-5">
+          <div ref={suggestContainerRef} className="relative p-2 sm:p-4 md:p-5">
             <div className="flex flex-col overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.06)] sm:rounded-xl md:h-14 md:flex-row md:items-stretch md:rounded-xl md:bg-white md:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
               <div className="relative flex min-h-[2.5rem] shrink-0 items-stretch border-b border-neutral-200 bg-white sm:min-h-[2.875rem] md:min-h-0 md:w-[min(10.25rem,32vw)] md:max-w-[11rem] md:border-b-0 md:border-r md:border-neutral-200">
                 <Select
@@ -332,7 +317,8 @@ export function HeroSearchPanel({
                     position="popper"
                     sideOffset={6}
                     align="start"
-                    className="z-[200] max-h-72 w-max min-w-[var(--radix-select-trigger-width)] max-w-[min(22rem,calc(100vw-2rem))] border-neutral-200 bg-white text-neutral-900 shadow-lg"
+                    data-trb-hero-category-select=""
+                    className="z-[230] max-h-72 w-max min-w-[var(--radix-select-trigger-width)] max-w-[min(22rem,calc(100vw-2rem))] border-neutral-200 bg-white text-neutral-900 shadow-lg"
                   >
                     <SelectItem
                       value={HERO_CATEGORY_ALL}
@@ -364,11 +350,30 @@ export function HeroSearchPanel({
                       : undefined
                   }
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onFocus={() => setHeroQueryFocused(true)}
-                  onBlur={() => setHeroQueryFocused(false)}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setSearch(v);
+                    if (v.trim().length >= 2) setSuggestOpen(true);
+                  }}
+                  onFocus={() => {
+                    setHeroQueryFocused(true);
+                    if (search.trim().length >= 2) setSuggestOpen(true);
+                  }}
+                  onBlur={() => {
+                    setHeroQueryFocused(false);
+                    requestAnimationFrame(() => {
+                      const root = suggestContainerRef.current;
+                      const ae = document.activeElement;
+                      if (root && ae && root.contains(ae)) return;
+                      if (ae && focusInsideHeroCategorySelect(ae)) return;
+                      setSuggestOpen(false);
+                    });
+                  }}
                   className="relative z-10 min-w-0 flex-1 border-0 bg-transparent py-2 text-[14px] text-neutral-900 outline-none placeholder:text-neutral-500 sm:py-2.5 sm:text-[16px] md:py-0 md:text-[17px]"
                   aria-label="Search locality, project, society, or landmark"
+                  aria-expanded={showSuggestPanel}
+                  aria-controls="hero-suggest-list"
+                  aria-autocomplete="list"
                 />
                 {heroQueryIdle ? (
                   <span
@@ -385,38 +390,7 @@ export function HeroSearchPanel({
                 ) : null}
               </div>
 
-              <div className="flex min-h-[2.5rem] items-center justify-end gap-1.5 border-t border-neutral-200 bg-white px-2 py-1.5 sm:min-h-[3rem] sm:gap-2 sm:px-2.5 sm:py-2 md:min-h-0 md:h-14 md:gap-2 md:border-t-0 md:border-l md:border-neutral-200 md:px-2.5 md:py-2">
-                <button
-                  type="button"
-                  onClick={startVoiceSearch}
-                  disabled={voiceListening}
-                  aria-pressed={voiceListening}
-                  aria-busy={voiceListening}
-                  className={cn(
-                    "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-white shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 disabled:cursor-wait sm:h-10 sm:w-10 sm:rounded-lg md:h-10 md:w-10",
-                    voiceListening
-                      ? "border-red-400/80 text-red-600 ring-2 ring-red-400/40"
-                      : "border-neutral-200 text-neutral-500 hover:border-neutral-300 hover:text-neutral-800",
-                  )}
-                  aria-label={
-                    voiceListening ? "Listening… speak now" : "Search by voice"
-                  }
-                  title={
-                    voiceListening
-                      ? "Listening… speak your search"
-                      : "Voice search"
-                  }
-                >
-                  <Mic
-                    className={cn(
-                      "h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5 md:h-[18px] md:w-[18px]",
-                      voiceListening && "animate-pulse",
-                    )}
-                    strokeWidth={1.75}
-                    aria-hidden
-                  />
-                </button>
-
+              <div className="flex min-h-[2.5rem] items-center justify-end border-t border-neutral-200 bg-white px-2 py-1.5 sm:min-h-[3rem] sm:px-2.5 sm:py-2 md:min-h-0 md:h-14 md:border-t-0 md:border-l md:border-neutral-200 md:px-2.5 md:py-2">
                 <Link
                   href={resultsHref}
                   onClick={persistRecent}
@@ -431,6 +405,86 @@ export function HeroSearchPanel({
                 </Link>
               </div>
             </div>
+
+            {showSuggestPanel ? (
+              <div
+                id="hero-suggest-list"
+                role="listbox"
+                aria-label={`Matching listings in ${categoryScopeLabel}`}
+                className="absolute left-2 right-2 top-[calc(100%-0.25rem)] z-[210] mt-1 max-h-[min(20rem,50vh)] overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-lg sm:left-4 sm:right-4 md:left-5 md:right-5 md:rounded-xl"
+                onMouseDown={(e) => e.preventDefault()}
+              >
+                <div className="border-b border-neutral-100 px-4 py-2 text-left text-xs text-neutral-600">
+                  <span className="font-semibold text-neutral-800">
+                    {categoryScopeLabel}
+                  </span>
+                  <span className="text-neutral-500">
+                    {" "}
+                    · &ldquo;{debouncedSearch.trim()}&rdquo;
+                  </span>
+                </div>
+                {suggestLoading ? (
+                  <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-neutral-500">
+                    <Loader2
+                      className="h-4 w-4 shrink-0 animate-spin"
+                      aria-hidden
+                    />
+                    Searching…
+                  </div>
+                ) : suggestions.length === 0 ? (
+                  <p className="px-4 py-4 text-sm text-neutral-600">
+                    No listings in{" "}
+                    <span className="font-semibold text-neutral-800">
+                      {categoryScopeLabel}
+                    </span>{" "}
+                    match that search yet. Try a different keyword, choose
+                    another type, or use Search to see all results.
+                  </p>
+                ) : (
+                  <ul className="min-w-0 divide-y divide-neutral-100">
+                    {suggestions.map((p) => (
+                      <li key={p.id} role="presentation">
+                        <PropertySearchSuggestionLink
+                          property={p}
+                          href={`/properties/${encodeURIComponent(p.slug)}`}
+                          variant="hero"
+                          onSelect={() => {
+                            setSuggestOpen(false);
+                            persistRecent();
+                          }}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {!suggestLoading &&
+                suggestions.length > 0 &&
+                suggestTotal > 5 ? (
+                  <p className="border-t border-neutral-100 px-4 py-2 text-xs text-neutral-500">
+                    Showing top 5 of {suggestTotal} matching listings.
+                  </p>
+                ) : null}
+                {!suggestLoading && suggestions.length > 0 ? (
+                  <div className="border-t border-neutral-100 px-2 py-1.5">
+                    <Link
+                      href={resultsHref}
+                      onClick={() => {
+                        setSuggestOpen(false);
+                        persistRecent();
+                      }}
+                      className="inline-flex w-full items-center justify-center gap-1 rounded-md px-2 py-2 text-center text-sm font-semibold text-brand-gold hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
+                    >
+                      View all results
+                      <ChevronRight
+                        className="h-4 w-4 shrink-0 opacity-90"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

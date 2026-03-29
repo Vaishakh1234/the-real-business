@@ -67,6 +67,8 @@ export interface Property {
   is_featured: boolean;
   category_id: string | null;
   price: number;
+  /** Generated in DB for text search (see migration); optional until migrated. */
+  price_search_text?: string | null;
   price_type?: "total" | "percent";
   area_sqft: number | null;
   /** Land extent in cents (e.g. Kerala); null if unset. */

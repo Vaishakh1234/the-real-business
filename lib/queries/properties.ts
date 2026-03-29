@@ -1,6 +1,11 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { toUserFriendlyMessage } from "@/lib/db-errors";
 import { canonicalListingRef } from "@/lib/listing-ref";
+import { sortPropertiesForSuggestions } from "@/lib/search/propertySuggestionRank";
+import {
+  buildPropertySubstringSearchOrClause,
+  sanitizePropertySearchTerm,
+} from "@/lib/search/propertyTextSearch";
 import { normalizePropertyTags } from "@/lib/utils";
 import type {
   PropertyWithRelations,
@@ -48,6 +53,54 @@ export interface PublicPropertiesOptions {
   max_total_cent?: number;
   /** When true, only `is_featured` listings. */
   featured?: boolean;
+  /** PostgREST count mode; default `exact`, or `planned` when `publicSearchSuggest` is true. */
+  countPrecision?: "exact" | "planned" | "estimated";
+  /**
+   * Lighter select + planned count for typeahead — cuts payload and avoids expensive exact counts
+   * on wide `OR`/trigram queries (reduces intermittent timeouts / “connection” errors).
+   */
+  publicSearchSuggest?: boolean;
+}
+
+const PUBLIC_SUGGEST_SELECT = [
+  "id",
+  "slug",
+  "title",
+  "price",
+  "city",
+  "state",
+  "address",
+  "zip_code",
+  "country",
+  "listing_ref",
+  "plot_number",
+  "facing",
+  "short_description",
+  "description",
+  "meta_title",
+  "meta_description",
+  "meta_keywords",
+  "cover_image_url",
+  "created_at",
+  "category_id",
+  "structure_type",
+  "type",
+  "area_sqft",
+  "total_cent",
+  "price_type",
+  "category:categories(id,name,slug)",
+].join(", ");
+
+function isMissingPriceSearchTextError(err: unknown): boolean {
+  const e = err as { message?: string; details?: string; code?: string };
+  const blob = `${e?.code ?? ""} ${e?.message ?? ""} ${e?.details ?? ""}`.toLowerCase();
+  if (!blob.includes("price_search_text")) return false;
+  return (
+    blob.includes("does not exist") ||
+    blob.includes("undefined_column") ||
+    blob.includes("42703") ||
+    blob.includes("schema cache")
+  );
 }
 
 export async function getProperties(
@@ -71,57 +124,131 @@ export async function getProperties(
     min_total_cent,
     max_total_cent,
     featured,
+    countPrecision,
+    publicSearchSuggest,
   } = opts;
 
-  let query = supabase
-    .from("properties")
-    .select("*, category:categories(id,name,slug)", { count: "exact" });
+  const countPref =
+    countPrecision ?? (publicSearchSuggest ? "planned" : "exact");
+  const selectStr = publicSearchSuggest
+    ? PUBLIC_SUGGEST_SELECT
+    : "*, category:categories(id,name,slug)";
 
-  if (status && status !== "all") query = query.eq("status", status);
-  if (type && type !== "all") query = query.eq("type", type);
-  if (category_id) query = query.eq("category_id", category_id);
-  if (structure_type === "plot") {
-    query = query.eq("structure_type", "plot");
-  } else if (structure_type === "house") {
-    query = query.or("structure_type.eq.house,structure_type.is.null");
+  const run = async (includePriceSearchOr: boolean) => {
+    let query = supabase
+      .from("properties")
+      .select(selectStr, { count: countPref });
+
+    if (status && status !== "all") query = query.eq("status", status);
+    if (type && type !== "all") query = query.eq("type", type);
+    if (category_id) query = query.eq("category_id", category_id);
+    if (structure_type === "plot") {
+      query = query.eq("structure_type", "plot");
+    } else if (structure_type === "house") {
+      query = query.or("structure_type.eq.house,structure_type.is.null");
+    }
+    if (city) query = query.ilike("city", `%${city}%`);
+    if (min_price !== undefined) query = query.gte("price", min_price);
+    if (max_price !== undefined) query = query.lte("price", max_price);
+    if (bedrooms !== undefined) query = query.eq("bedrooms", bedrooms);
+    if (price_type) query = query.eq("price_type", price_type);
+    if (min_total_cent !== undefined)
+      query = query.gte("total_cent", min_total_cent);
+    if (max_total_cent !== undefined)
+      query = query.lte("total_cent", max_total_cent);
+    if (featured === true) query = query.eq("is_featured", true);
+    if (search) {
+      const safe = sanitizePropertySearchTerm(search);
+      if (safe) {
+        query = query.or(
+          buildPropertySubstringSearchOrClause(safe, includePriceSearchOr),
+        );
+      }
+    }
+
+    switch (sort) {
+      case "oldest":
+        query = query.order("created_at", { ascending: true });
+        break;
+      case "price_asc":
+        query = query.order("price", { ascending: true });
+        break;
+      case "price_desc":
+        query = query.order("price", { ascending: false });
+        break;
+      default:
+        query = query.order("created_at", { ascending: false });
+    }
+
+    const from = (page - 1) * limit;
+    query = query.range(from, from + limit - 1);
+
+    return query;
+  };
+
+  let includePriceOr = true;
+  let { data, error, count } = await run(includePriceOr);
+  if (
+    error &&
+    search &&
+    includePriceOr &&
+    isMissingPriceSearchTextError(error)
+  ) {
+    includePriceOr = false;
+    ({ data, error, count } = await run(includePriceOr));
   }
-  if (city) query = query.ilike("city", `%${city}%`);
-  if (min_price !== undefined) query = query.gte("price", min_price);
-  if (max_price !== undefined) query = query.lte("price", max_price);
-  if (bedrooms !== undefined) query = query.eq("bedrooms", bedrooms);
-  if (price_type) query = query.eq("price_type", price_type);
-  if (min_total_cent !== undefined)
-    query = query.gte("total_cent", min_total_cent);
-  if (max_total_cent !== undefined)
-    query = query.lte("total_cent", max_total_cent);
-  if (featured === true) query = query.eq("is_featured", true);
-  if (search) {
-    query = query.or(
-      `title.ilike.%${search}%,address.ilike.%${search}%,city.ilike.%${search}%,listing_ref.ilike.%${search}%`,
-    );
-  }
 
-  switch (sort) {
-    case "oldest":
-      query = query.order("created_at", { ascending: true });
-      break;
-    case "price_asc":
-      query = query.order("price", { ascending: true });
-      break;
-    case "price_desc":
-      query = query.order("price", { ascending: false });
-      break;
-    default:
-      query = query.order("created_at", { ascending: false });
-  }
-
-  const from = (page - 1) * limit;
-  query = query.range(from, from + limit - 1);
-
-  const { data, error, count } = await query;
   if (error) throw new Error(toUserFriendlyMessage(error));
 
-  return { data: (data as PropertyWithRelations[]) ?? [], total: count ?? 0 };
+  return {
+    data: (data as unknown as PropertyWithRelations[]) ?? [],
+    total: count ?? 0,
+  };
+}
+
+export interface PublicPropertySearchSuggestionsOptions {
+  search: string;
+  category_id?: string;
+  /** First-page pool size (newest first); same text search as /properties. */
+  candidateLimit?: number;
+  resultLimit?: number;
+}
+
+/**
+ * Hero/header typeahead: top substring matches (same fields as property list search), capped.
+ */
+export async function getPublicPropertySearchSuggestions(
+  opts: PublicPropertySearchSuggestionsOptions,
+): Promise<{ data: PropertyWithRelations[]; total: number }> {
+  const {
+    search,
+    category_id,
+    candidateLimit = 50,
+    resultLimit = 5,
+  } = opts;
+  const q = search.trim();
+  if (!q) return { data: [], total: 0 };
+
+  const { data: candidates, total } = await getProperties({
+    page: 1,
+    limit: candidateLimit,
+    search: q,
+    status: "active",
+    category_id,
+    sort: "newest",
+    publicSearchSuggest: true,
+    countPrecision: "planned",
+  });
+
+  const safe = sanitizePropertySearchTerm(q);
+  const ranked = safe
+    ? sortPropertiesForSuggestions(candidates, safe)
+    : candidates;
+
+  return {
+    data: ranked.slice(0, resultLimit),
+    total,
+  };
 }
 
 export async function getPropertiesForAdmin(
@@ -155,9 +282,10 @@ export async function getPropertiesForAdmin(
   if (max_price !== undefined) query = query.lte("price", max_price);
   if (bedrooms !== undefined) query = query.eq("bedrooms", bedrooms);
   if (search) {
-    query = query.or(
-      `title.ilike.%${search}%,address.ilike.%${search}%,city.ilike.%${search}%,listing_ref.ilike.%${search}%`,
-    );
+    const safe = sanitizePropertySearchTerm(search);
+    if (safe) {
+      query = query.or(buildPropertySubstringSearchOrClause(safe));
+    }
   }
 
   query = query.order(sort_by, { ascending: sort_order === "asc" });

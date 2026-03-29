@@ -7,6 +7,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -19,6 +20,7 @@ import {
   Grid3x3,
   Phone,
   ChevronDown,
+  ChevronRight,
   MapPin,
   HousePlus,
   LayoutGrid,
@@ -34,8 +36,10 @@ import {
   ArrowUpRight,
   Search,
   Heart,
+  Loader2,
   type LucideIcon,
 } from "lucide-react";
+import { PropertySearchSuggestionLink } from "@/components/properties/PropertySearchSuggestionLink";
 import { cn } from "@/lib/utils";
 import {
   POST_PROPERTY_HREF,
@@ -46,8 +50,10 @@ import {
   publicContentFrameClass,
   PUBLIC_ROUTES_WITH_TOP_HERO,
 } from "@/lib/constants/publicLayout";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useSearchTypewriter } from "@/hooks/useSearchTypewriter";
 import { useWishlist } from "@/hooks/useWishlist";
+import type { PropertyWithRelations } from "@/types";
 
 const BOTTOM_NAV_HEIGHT = "4rem";
 
@@ -292,6 +298,14 @@ export function Navbar() {
   );
   const [headerSearch, setHeaderSearch] = useState("");
   const [headerSearchFocused, setHeaderSearchFocused] = useState(false);
+  const [headerSuggestions, setHeaderSuggestions] = useState<
+    PropertyWithRelations[]
+  >([]);
+  const [headerSuggestTotal, setHeaderSuggestTotal] = useState(0);
+  const [headerSuggestLoading, setHeaderSuggestLoading] = useState(false);
+  const [headerSuggestOpen, setHeaderSuggestOpen] = useState(false);
+  const headerSuggestContainerRef = useRef<HTMLDivElement>(null);
+  const debouncedHeaderSearch = useDebounce(headerSearch, 300);
   const [headerTypewriterHint, setHeaderTypewriterHint] = useState(0);
   const [headerTypewriterLen, setHeaderTypewriterLen] = useState(0);
   const headerSearchIdlePrev = useRef(false);
@@ -313,13 +327,95 @@ export function Navbar() {
     [headerSearch, router],
   );
 
+  const headerResultsHref = useMemo(() => {
+    const q = headerSearch.trim();
+    if (!q) return "/properties";
+    return `/properties?${new URLSearchParams({ search: q }).toString()}`;
+  }, [headerSearch]);
+
+  useEffect(() => {
+    if (!isHome || !headerSolid) {
+      setHeaderSuggestions([]);
+      setHeaderSuggestTotal(0);
+      setHeaderSuggestLoading(false);
+      return;
+    }
+
+    const q = debouncedHeaderSearch.trim();
+    if (q.length < 2) {
+      setHeaderSuggestions([]);
+      setHeaderSuggestTotal(0);
+      setHeaderSuggestLoading(false);
+      return;
+    }
+
+    const ac = new AbortController();
+    setHeaderSuggestLoading(true);
+    const params = new URLSearchParams({ search: q });
+
+    fetch(`/api/properties/suggest?${params.toString()}`, {
+      signal: ac.signal,
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (ac.signal.aborted) return;
+        const json = (await res.json()) as {
+          data?: PropertyWithRelations[];
+          total?: number;
+        };
+        if (!res.ok) {
+          setHeaderSuggestions([]);
+          setHeaderSuggestTotal(0);
+          return;
+        }
+        if (ac.signal.aborted) return;
+        setHeaderSuggestions(json.data ?? []);
+        setHeaderSuggestTotal(json.total ?? 0);
+      })
+      .catch(() => {
+        if (!ac.signal.aborted) {
+          setHeaderSuggestions([]);
+          setHeaderSuggestTotal(0);
+        }
+      })
+      .finally(() => {
+        if (!ac.signal.aborted) setHeaderSuggestLoading(false);
+      });
+
+    return () => ac.abort();
+  }, [debouncedHeaderSearch, isHome, headerSolid]);
+
+  useEffect(() => {
+    if (debouncedHeaderSearch.trim().length < 2) setHeaderSuggestOpen(false);
+  }, [debouncedHeaderSearch]);
+
+  useEffect(() => {
+    if (!headerSolid) setHeaderSuggestOpen(false);
+  }, [headerSolid]);
+
+  useEffect(() => {
+    if (!headerSuggestOpen) return;
+    const onDown = (e: MouseEvent) => {
+      const el = headerSuggestContainerRef.current;
+      if (el && !el.contains(e.target as Node)) setHeaderSuggestOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [headerSuggestOpen]);
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeMenus();
+      if (e.key === "Escape") {
+        if (headerSuggestOpen) {
+          setHeaderSuggestOpen(false);
+          return;
+        }
+        closeMenus();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [closeMenus]);
+  }, [closeMenus, headerSuggestOpen]);
 
   const headerSearchIdle =
     !headerSearch.trim() && !headerSearchFocused && isHome && headerSolid;
@@ -410,6 +506,8 @@ export function Navbar() {
   }, [pathname]);
 
   const overlayNav = headerOverlaysHero && !headerSolid;
+  const showHeaderSuggestPanel =
+    headerSuggestOpen && debouncedHeaderSearch.trim().length >= 2;
   /** Mobile: hide bottom nav on `/properties/{slug}` only; keep it on the listing. */
   const isPropertyDetailPage = /^\/properties\/[^/]+/.test(pathname);
 
@@ -455,51 +553,142 @@ export function Navbar() {
               role="search"
               aria-label="Search properties"
             >
-              <div className="flex h-11 w-full min-w-0 items-stretch overflow-hidden rounded-lg border border-border/60 bg-white shadow-sm ring-1 ring-black/[0.04] transition-[border-color,box-shadow,ring-width,ring-color] focus-within:border-brand-gold/55 focus-within:shadow-md focus-within:ring-2 focus-within:ring-brand-gold/25 focus-within:ring-offset-0 md:h-12 md:rounded-xl">
-                <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 py-1.5 pl-3 pr-2 md:gap-2.5 md:pl-4 md:pr-3 md:py-0">
-                  <Search
-                    className="h-4 w-4 shrink-0 text-brand-gold"
-                    strokeWidth={2}
-                    aria-hidden
-                  />
-                  <div className="relative min-h-0 min-w-0 flex-1 self-stretch">
-                    <input
-                      type="search"
-                      name="q"
-                      value={headerSearch}
-                      onChange={(e) => setHeaderSearch(e.target.value)}
-                      onFocus={() => setHeaderSearchFocused(true)}
-                      onBlur={() => setHeaderSearchFocused(false)}
-                      placeholder={
-                        headerSearchFocused
-                          ? "Area, project, or keyword"
-                          : undefined
-                      }
-                      className="relative z-10 h-full min-h-0 w-full min-w-0 border-0 bg-transparent py-0 pr-1 text-sm leading-normal text-brand-charcoal outline-none placeholder:text-muted-foreground md:text-[15px]"
-                      autoComplete="off"
-                      aria-label="Search location or keyword"
+              <div
+                ref={headerSuggestContainerRef}
+                className="relative w-full min-w-0"
+              >
+                <div className="flex h-11 w-full min-w-0 items-stretch overflow-hidden rounded-lg border border-border/60 bg-white shadow-sm ring-1 ring-black/[0.04] transition-[border-color,box-shadow,ring-width,ring-color] focus-within:border-brand-gold/55 focus-within:shadow-md focus-within:ring-2 focus-within:ring-brand-gold/25 focus-within:ring-offset-0 md:h-12 md:rounded-xl">
+                  <div className="flex min-h-0 min-w-0 flex-1 items-center gap-2 py-1.5 pl-3 pr-2 md:gap-2.5 md:pl-4 md:pr-3 md:py-0">
+                    <Search
+                      className="h-4 w-4 shrink-0 text-brand-gold"
+                      strokeWidth={2}
+                      aria-hidden
                     />
-                    {headerSearchIdle ? (
-                      <span
-                        role="status"
-                        aria-live="polite"
-                        className="pointer-events-none absolute left-0 top-1/2 z-0 max-w-[calc(100%-0.5rem)] -translate-y-1/2 truncate text-left text-sm text-muted-foreground md:max-w-[calc(100%-0.75rem)] md:text-[15px]"
-                      >
-                        {headerTypewriterText}
+                    <div className="relative min-h-0 min-w-0 flex-1 self-stretch">
+                      <input
+                        type="search"
+                        name="q"
+                        value={headerSearch}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setHeaderSearch(v);
+                          if (v.trim().length >= 2) setHeaderSuggestOpen(true);
+                        }}
+                        onFocus={() => {
+                          setHeaderSearchFocused(true);
+                          if (headerSearch.trim().length >= 2) {
+                            setHeaderSuggestOpen(true);
+                          }
+                        }}
+                        onBlur={() => {
+                          setHeaderSearchFocused(false);
+                          requestAnimationFrame(() => {
+                            const root = headerSuggestContainerRef.current;
+                            if (
+                              root &&
+                              document.activeElement &&
+                              root.contains(document.activeElement)
+                            ) {
+                              return;
+                            }
+                            setHeaderSuggestOpen(false);
+                          });
+                        }}
+                        placeholder={
+                          headerSearchFocused
+                            ? "Area, project, or keyword"
+                            : undefined
+                        }
+                        className="relative z-10 h-full min-h-0 w-full min-w-0 border-0 bg-transparent py-0 pr-1 text-sm leading-normal text-brand-charcoal outline-none placeholder:text-muted-foreground md:text-[15px]"
+                        autoComplete="off"
+                        aria-label="Search location or keyword"
+                        aria-expanded={showHeaderSuggestPanel}
+                        aria-controls="header-suggest-list"
+                        aria-autocomplete="list"
+                      />
+                      {headerSearchIdle ? (
                         <span
-                          className="ml-px inline-block h-[1em] w-px translate-y-px animate-pulse bg-muted-foreground/70 align-middle"
+                          role="status"
+                          aria-live="polite"
+                          className="pointer-events-none absolute left-0 top-1/2 z-0 max-w-[calc(100%-0.5rem)] -translate-y-1/2 truncate text-left text-sm text-muted-foreground md:max-w-[calc(100%-0.75rem)] md:text-[15px]"
+                        >
+                          {headerTypewriterText}
+                          <span
+                            className="ml-px inline-block h-[1em] w-px translate-y-px animate-pulse bg-muted-foreground/70 align-middle"
+                            aria-hidden
+                          />
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="shrink-0 bg-brand-gold px-4 text-[11px] font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand-gold/90 focus:outline-none focus-visible:relative focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold md:px-5 md:text-xs"
+                  >
+                    Search
+                  </button>
+                </div>
+
+                {showHeaderSuggestPanel ? (
+                  <div
+                    id="header-suggest-list"
+                    role="listbox"
+                    aria-label="Matching listings"
+                    className="absolute left-0 right-0 top-[calc(100%+0.25rem)] z-[60] max-h-[min(20rem,50vh)] overflow-y-auto rounded-lg border border-border/80 bg-white py-1 shadow-lg md:rounded-xl"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {headerSuggestLoading ? (
+                      <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-muted-foreground">
+                        <Loader2
+                          className="h-4 w-4 shrink-0 animate-spin"
                           aria-hidden
                         />
-                      </span>
+                        Searching…
+                      </div>
+                    ) : headerSuggestions.length === 0 ? (
+                      <p className="px-4 py-4 text-sm text-muted-foreground">
+                        No listings match that search yet. Try a different
+                        keyword or use Search to browse all results.
+                      </p>
+                    ) : (
+                      <ul className="min-w-0 divide-y divide-border/60">
+                        {headerSuggestions.map((p) => (
+                          <li key={p.id} role="presentation">
+                            <PropertySearchSuggestionLink
+                              property={p}
+                              href={`/properties/${encodeURIComponent(p.slug)}`}
+                              variant="header"
+                              onSelect={() => setHeaderSuggestOpen(false)}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {!headerSuggestLoading &&
+                    headerSuggestions.length > 0 &&
+                    headerSuggestTotal > 5 ? (
+                      <p className="border-t border-border/60 px-4 py-2 text-xs text-muted-foreground">
+                        Showing top 5 of {headerSuggestTotal} matching listings.
+                      </p>
+                    ) : null}
+                    {!headerSuggestLoading && headerSuggestions.length > 0 ? (
+                      <div className="border-t border-border/60 px-2 py-1.5">
+                        <Link
+                          href={headerResultsHref}
+                          onClick={() => setHeaderSuggestOpen(false)}
+                          className="inline-flex w-full items-center justify-center gap-1 rounded-md px-2 py-2 text-center text-sm font-semibold text-brand-gold hover:bg-muted/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
+                        >
+                          View all results
+                          <ChevronRight
+                            className="h-4 w-4 shrink-0 opacity-90"
+                            strokeWidth={2}
+                            aria-hidden
+                          />
+                        </Link>
+                      </div>
                     ) : null}
                   </div>
-                </div>
-                <button
-                  type="submit"
-                  className="shrink-0 bg-brand-gold px-4 text-[11px] font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand-gold/90 focus:outline-none focus-visible:relative focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold md:px-5 md:text-xs"
-                >
-                  Search
-                </button>
+                ) : null}
               </div>
             </form>
           ) : (

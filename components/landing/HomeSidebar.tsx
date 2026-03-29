@@ -3,7 +3,14 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { cva } from "class-variance-authority";
-import { Home, MessageCircle, UserRound, type LucideIcon } from "lucide-react";
+import {
+  Home,
+  HousePlus,
+  MessageCircle,
+  UserRound,
+  type LucideIcon,
+} from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { CONTACT, POST_PROPERTY_HREF } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 
@@ -114,7 +121,7 @@ export function HomeSidebar() {
       >
         <div className="flex flex-col gap-3">
           <Link href="/contact" className={audienceCta({ intent: "charcoal" })}>
-            <MessageCircle className="shrink-0" aria-hidden />
+            <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
             {CONTACT.contactUsLabel}
           </Link>
           <a
@@ -123,6 +130,7 @@ export function HomeSidebar() {
             rel="noopener noreferrer"
             className={audienceCta({ intent: "whatsapp" })}
           >
+            <WhatsAppIcon className="h-5 w-5 shrink-0" />
             {CONTACT.whatsappLabel}
           </a>
         </div>
@@ -140,6 +148,7 @@ export function HomeSidebar() {
           href={POST_PROPERTY_HREF}
           className={audienceCta({ intent: "gold" })}
         >
+          <HousePlus className="h-5 w-5 shrink-0" aria-hidden />
           Start a listing conversation
         </Link>
       </AudienceCard>
