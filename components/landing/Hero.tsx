@@ -120,9 +120,9 @@ export function Hero() {
 
             <HeroCategoryButtons />
           </div>
-        </div>
 
-        {/* <HeroSearchPanel /> */}
+          <HeroSearchPanel stackedBelowCategories />
+        </div>
       </div>
     </section>
   );
