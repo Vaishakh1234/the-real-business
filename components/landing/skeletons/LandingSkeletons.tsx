@@ -9,7 +9,7 @@ export function NavbarSkeleton() {
       <div
         className={cn(
           publicContentFrameClass,
-          "flex h-14 items-center justify-between md:h-20",
+          "flex h-16 items-center justify-between md:h-20",
         )}
       >
         <Skeleton className="h-8 w-32 rounded" />

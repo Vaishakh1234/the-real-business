@@ -92,7 +92,7 @@ export function Hero() {
         className={cn(
           publicContentFrameClass,
           "relative z-10 flex min-h-0 flex-1 flex-col",
-          "pt-[calc(3.25rem+env(safe-area-inset-top))] pb-2 sm:pt-36 sm:pb-[max(1rem,env(safe-area-inset-bottom))] md:pt-44 lg:pt-44 xl:pt-52",
+          "pt-[calc(4rem+env(safe-area-inset-top))] pb-2 sm:pt-36 sm:pb-[max(1rem,env(safe-area-inset-bottom))] md:pt-44 lg:pt-44 xl:pt-52",
         )}
       >
         {/*

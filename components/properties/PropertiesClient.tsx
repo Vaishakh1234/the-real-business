@@ -26,6 +26,15 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
+import {
+  mobileFilterBottomSheetContentClassName,
+  mobileFilterSheetSectionLabelClassName,
+  MobileFilterSheetHandle,
+  MobileFilterSheetHead,
+  MobileFilterSheetList,
+  MobileFilterSheetOption,
+  MobileFilterSheetScrollBody,
+} from "@/components/ui/mobile-filter-sheet";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { usePublicCategories } from "@/hooks/useCategories";
 import { useInfinitePublicProperties } from "@/hooks/useProperties";
@@ -62,24 +71,6 @@ const SORT_OPTIONS: { value: ListingSortValue; label: string }[] = [
   { value: "price_asc", label: "Price: Low to high" },
   { value: "price_desc", label: "Price: High to low" },
 ];
-
-const MOBILE_FILTER_SHEET_SECTION_LABEL =
-  "text-xs font-bold uppercase tracking-[0.14em] text-neutral-500";
-
-const MOBILE_FILTER_SHEET_CONTENT_CLASS =
-  "max-h-[min(88vh,720px)] overflow-y-auto rounded-t-[1.25rem] border-0 bg-white px-5 pb-5 pt-3 shadow-[0_-8px_32px_rgba(0,0,0,0.12)]";
-
-const MOBILE_LIST_SHEET_CONTENT_CLASS =
-  "rounded-t-[1.25rem] border-0 bg-white px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_32px_rgba(0,0,0,0.12)]";
-
-function mobileListingOptionClass(selected: boolean) {
-  return cn(
-    "flex min-h-[52px] w-full items-center rounded-xl border-2 px-4 text-left text-[15px] font-semibold leading-snug text-[#1a2b4b] transition-colors",
-    selected
-      ? "border-brand-gold bg-white shadow-sm"
-      : "border-transparent hover:border-neutral-200 hover:bg-neutral-50/90 active:bg-neutral-100/80",
-  );
-}
 
 /** Decode legacy `?price=` presets for API filters and headlines (no budget UI). */
 const PRICE_RANGES = [
@@ -638,7 +629,7 @@ export function PropertiesClient() {
 
   return (
     <>
-      <section className="sticky top-0 z-40 border-b border-border bg-white pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 lg:hidden">
+      <section className="sticky top-[calc(env(safe-area-inset-top)+4rem)] z-40 border-b border-border bg-white pb-3 pt-3 lg:hidden">
         <div className={publicContentFrameClass}>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
@@ -801,190 +792,200 @@ export function PropertiesClient() {
           if (!open) setMobileFilterSheetFocus("all");
         }}
       >
-        <SheetContent side="bottom" className={MOBILE_FILTER_SHEET_CONTENT_CLASS}>
-          <SheetHeader className="space-y-0 pr-10 text-left">
-            <SheetTitle className="text-lg font-bold text-[#1a2b4b]">
-              {mobileFilterSheetFocus === "price"
-                ? "Price basis"
-                : "All filters"}
-            </SheetTitle>
-          </SheetHeader>
-          <div className="grid gap-6 pb-2 pt-1">
-            {mobileFilterSheetFocus === "all" ? (
-              <>
-                <div className="flex flex-col gap-2">
-                  <label className={MOBILE_FILTER_SHEET_SECTION_LABEL}>
-                    Search
-                  </label>
-                  <div className="relative">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+        <SheetContent
+          side="bottom"
+          className={mobileFilterBottomSheetContentClassName}
+        >
+          <MobileFilterSheetHandle />
+          <MobileFilterSheetHead>
+            <SheetHeader className="space-y-0 border-0 p-0 text-left">
+              <SheetTitle className="text-base font-semibold tracking-tight text-[#1a2b4b]">
+                {mobileFilterSheetFocus === "price"
+                  ? "Price basis"
+                  : "All filters"}
+              </SheetTitle>
+            </SheetHeader>
+          </MobileFilterSheetHead>
+          <MobileFilterSheetScrollBody className="flex-1">
+            <div className="grid gap-4 pb-1">
+              {mobileFilterSheetFocus === "all" ? (
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      className={mobileFilterSheetSectionLabelClassName}
+                      htmlFor="mobile-filters-search"
+                    >
+                      Search
+                    </label>
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+                      <input
+                        id="mobile-filters-search"
+                        type="search"
+                        placeholder={PROPERTIES_LISTING_SEARCH_PLACEHOLDER}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        className="min-h-[46px] w-full rounded-lg border border-neutral-200 bg-white py-2.5 pl-10 pr-3 text-[15px] text-brand-charcoal placeholder:text-neutral-400 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/35"
+                        aria-label="Search properties"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <p className={mobileFilterSheetSectionLabelClassName}>
+                      Property kind
+                    </p>
+                    <MobileFilterSheetList>
+                      {(
+                        [
+                          { value: "" as const, label: "All types" },
+                          { value: "house" as const, label: "House / villa" },
+                          { value: "plot" as const, label: "Plots & land" },
+                        ] as const
+                      ).map((o) => (
+                        <MobileFilterSheetOption
+                          key={o.value || "all"}
+                          selected={(structure_type ?? "") === o.value}
+                          onClick={() =>
+                            updateParams({
+                              structure_type:
+                                o.value === "plot" || o.value === "house"
+                                  ? o.value
+                                  : undefined,
+                            })
+                          }
+                        >
+                          {o.label}
+                        </MobileFilterSheetOption>
+                      ))}
+                    </MobileFilterSheetList>
+                  </div>
+                  <div className="space-y-1.5">
+                    <p className={mobileFilterSheetSectionLabelClassName}>
+                      Category
+                    </p>
+                    {categoriesPending ? (
+                      <p className="py-2 text-sm text-neutral-500">
+                        Loading categories…
+                      </p>
+                    ) : (
+                      <MobileFilterSheetList>
+                        <MobileFilterSheetOption
+                          selected={!category_id}
+                          onClick={() =>
+                            updateParams({ category_id: undefined })
+                          }
+                        >
+                          All categories
+                        </MobileFilterSheetOption>
+                        {categories.map((c) => (
+                          <MobileFilterSheetOption
+                            key={c.id}
+                            selected={category_id === c.id}
+                            onClick={() => updateParams({ category_id: c.id })}
+                          >
+                            {c.name}
+                          </MobileFilterSheetOption>
+                        ))}
+                      </MobileFilterSheetList>
+                    )}
+                  </div>
+                </>
+              ) : null}
+              <div
+                id="filters-price-basis-block"
+                className="scroll-mt-3 space-y-1.5"
+              >
+                {mobileFilterSheetFocus === "all" ? (
+                  <p className={mobileFilterSheetSectionLabelClassName}>
+                    Price basis
+                  </p>
+                ) : null}
+                <MobileFilterSheetList>
+                  {(
+                    [
+                      { value: "" as const, label: "Any (total or per cent)" },
+                      { value: "total" as const, label: "Total price" },
+                      { value: "percent" as const, label: "Per cent" },
+                    ] as const
+                  ).map((o) => (
+                    <MobileFilterSheetOption
+                      key={o.value || "any"}
+                      selected={(price_type_filter ?? "") === o.value}
+                      onClick={() =>
+                        updateParams({
+                          price_type:
+                            o.value === "percent" || o.value === "total"
+                              ? o.value
+                              : undefined,
+                        })
+                      }
+                    >
+                      {o.label}
+                    </MobileFilterSheetOption>
+                  ))}
+                </MobileFilterSheetList>
+              </div>
+              <div className="space-y-1.5">
+                <p className={mobileFilterSheetSectionLabelClassName}>
+                  Extent (cent)
+                </p>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-medium text-neutral-600">
+                      Min
+                    </label>
                     <input
-                      type="search"
-                      placeholder={PROPERTIES_LISTING_SEARCH_PLACEHOLDER}
-                      value={searchInput}
-                      onChange={(e) => setSearchInput(e.target.value)}
-                      className="min-h-[52px] w-full rounded-xl border border-neutral-200 bg-white py-3 pl-10 pr-4 text-base text-brand-charcoal placeholder:text-neutral-400 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/35"
-                      aria-label="Search properties"
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="e.g. 5"
+                      value={minCentInput}
+                      onChange={(e) => setMinCentInput(e.target.value)}
+                      onBlur={syncCentParamsToUrl}
+                      className="min-h-[44px] w-full rounded-lg border border-neutral-200 bg-white px-2.5 text-[15px] text-brand-charcoal tabular-nums placeholder:text-neutral-400 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/35"
+                      aria-label="Minimum extent in cent"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-medium text-neutral-600">
+                      Max
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="e.g. 25"
+                      value={maxCentInput}
+                      onChange={(e) => setMaxCentInput(e.target.value)}
+                      onBlur={syncCentParamsToUrl}
+                      className="min-h-[44px] w-full rounded-lg border border-neutral-200 bg-white px-2.5 text-[15px] text-brand-charcoal tabular-nums placeholder:text-neutral-400 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/35"
+                      aria-label="Maximum extent in cent"
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p className={MOBILE_FILTER_SHEET_SECTION_LABEL}>
-                    Property kind
-                  </p>
-                  <div className="grid gap-2">
-                    {(
-                      [
-                        { value: "" as const, label: "All types" },
-                        { value: "house" as const, label: "House / villa" },
-                        { value: "plot" as const, label: "Plots & land" },
-                      ] as const
-                    ).map((o) => (
-                      <button
-                        key={o.value || "all"}
-                        type="button"
-                        onClick={() =>
-                          updateParams({
-                            structure_type:
-                              o.value === "plot" || o.value === "house"
-                                ? o.value
-                                : undefined,
-                          })
-                        }
-                        className={mobileListingOptionClass(
-                          (structure_type ?? "") === o.value,
-                        )}
-                      >
-                        {o.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <p className={MOBILE_FILTER_SHEET_SECTION_LABEL}>Category</p>
-                  {categoriesPending ? (
-                    <p className="py-3 text-sm text-neutral-500">
-                      Loading categories…
-                    </p>
-                  ) : (
-                    <div className="grid max-h-[min(45vh,280px)] gap-2 overflow-y-auto overscroll-contain pr-0.5 [scrollbar-gutter:stable]">
-                      <button
-                        type="button"
-                        onClick={() => updateParams({ category_id: undefined })}
-                        className={mobileListingOptionClass(!category_id)}
-                      >
-                        All categories
-                      </button>
-                      {categories.map((c) => (
-                        <button
-                          key={c.id}
-                          type="button"
-                          onClick={() => updateParams({ category_id: c.id })}
-                          className={mobileListingOptionClass(
-                            category_id === c.id,
-                          )}
-                        >
-                          {c.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : null}
-            <div
-              id="filters-price-basis-block"
-              className="space-y-2 scroll-mt-4"
-            >
+              </div>
               {mobileFilterSheetFocus === "all" ? (
-                <p className={MOBILE_FILTER_SHEET_SECTION_LABEL}>Price basis</p>
+                <div className="space-y-1.5">
+                  <p className={mobileFilterSheetSectionLabelClassName}>
+                    Highlight
+                  </p>
+                  <MobileFilterSheetList>
+                    <MobileFilterSheetOption
+                      selected={!featuredOnly}
+                      onClick={() => updateParams({ featured: undefined })}
+                    >
+                      All listings
+                    </MobileFilterSheetOption>
+                    <MobileFilterSheetOption
+                      selected={featuredOnly}
+                      onClick={() => updateParams({ featured: "1" })}
+                    >
+                      Featured only
+                    </MobileFilterSheetOption>
+                  </MobileFilterSheetList>
+                </div>
               ) : null}
-              <div className="grid gap-2">
-                {(
-                  [
-                    { value: "" as const, label: "Any (total or per cent)" },
-                    { value: "total" as const, label: "Total price" },
-                    { value: "percent" as const, label: "Per cent" },
-                  ] as const
-                ).map((o) => (
-                  <button
-                    key={o.value || "any"}
-                    type="button"
-                    onClick={() =>
-                      updateParams({
-                        price_type:
-                          o.value === "percent" || o.value === "total"
-                            ? o.value
-                            : undefined,
-                      })
-                    }
-                    className={mobileListingOptionClass(
-                      (price_type_filter ?? "") === o.value,
-                    )}
-                  >
-                    {o.label}
-                  </button>
-                ))}
-              </div>
             </div>
-            <div className="space-y-2">
-              <p className={MOBILE_FILTER_SHEET_SECTION_LABEL}>Extent (cent)</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-neutral-600">
-                    Min
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    placeholder="e.g. 5"
-                    value={minCentInput}
-                    onChange={(e) => setMinCentInput(e.target.value)}
-                    onBlur={syncCentParamsToUrl}
-                    className="min-h-[48px] w-full rounded-xl border border-neutral-200 bg-white px-3 text-base text-brand-charcoal tabular-nums placeholder:text-neutral-400 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/35"
-                    aria-label="Minimum extent in cent"
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-neutral-600">
-                    Max
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    placeholder="e.g. 25"
-                    value={maxCentInput}
-                    onChange={(e) => setMaxCentInput(e.target.value)}
-                    onBlur={syncCentParamsToUrl}
-                    className="min-h-[48px] w-full rounded-xl border border-neutral-200 bg-white px-3 text-base text-brand-charcoal tabular-nums placeholder:text-neutral-400 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/35"
-                    aria-label="Maximum extent in cent"
-                  />
-                </div>
-              </div>
-            </div>
-            {mobileFilterSheetFocus === "all" ? (
-              <div className="space-y-2">
-                <p className={MOBILE_FILTER_SHEET_SECTION_LABEL}>Highlight</p>
-                <div className="grid gap-2">
-                  <button
-                    type="button"
-                    onClick={() => updateParams({ featured: undefined })}
-                    className={mobileListingOptionClass(!featuredOnly)}
-                  >
-                    All listings
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => updateParams({ featured: "1" })}
-                    className={mobileListingOptionClass(featuredOnly)}
-                  >
-                    Featured only
-                  </button>
-                </div>
-              </div>
-            ) : null}
-          </div>
-          <SheetFooter className="mt-4 flex flex-row flex-wrap items-stretch justify-end gap-3 border-t border-neutral-100 bg-white pt-4 sm:justify-end">
+          </MobileFilterSheetScrollBody>
+          <SheetFooter className="mt-0 flex shrink-0 flex-row flex-wrap items-stretch justify-end gap-2 border-t border-neutral-100 bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:justify-end">
             {hasFilters && (
               <button
                 type="button"
@@ -992,7 +993,7 @@ export function PropertiesClient() {
                   clearFilters();
                   setFilterSheetOpen(false);
                 }}
-                className="flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-xl border-2 border-neutral-200 bg-white px-5 font-semibold text-[#1a2b4b] hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/50"
+                className="flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 text-sm font-semibold text-[#1a2b4b] hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/50"
               >
                 <X className="h-4 w-4 shrink-0" aria-hidden />
                 <span>Clear all</span>
@@ -1001,7 +1002,7 @@ export function PropertiesClient() {
             <button
               type="button"
               onClick={() => setFilterSheetOpen(false)}
-              className="min-h-[48px] shrink-0 rounded-xl bg-brand-charcoal px-6 font-semibold text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/50"
+              className="min-h-[44px] shrink-0 rounded-lg bg-brand-charcoal px-5 text-sm font-semibold text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold/50"
             >
               Done
             </button>
@@ -1010,29 +1011,36 @@ export function PropertiesClient() {
       </Sheet>
 
       <Sheet open={sortSheetOpen} onOpenChange={setSortSheetOpen}>
-        <SheetContent side="bottom" className={MOBILE_LIST_SHEET_CONTENT_CLASS}>
-          <SheetHeader className="space-y-0 pr-10 text-left">
-            <SheetTitle className="text-lg font-bold text-[#1a2b4b]">
-              Sort
-            </SheetTitle>
-          </SheetHeader>
-          <div className="grid max-h-[min(70vh,420px)] gap-2 overflow-y-auto overscroll-contain pb-1 pt-2 [scrollbar-gutter:stable]">
-            {SORT_OPTIONS.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => {
-                  updateParams({
-                    sort: o.value,
-                  });
-                  setSortSheetOpen(false);
-                }}
-                className={mobileListingOptionClass(sort === o.value)}
-              >
-                {o.label}
-              </button>
-            ))}
-          </div>
+        <SheetContent
+          side="bottom"
+          className={mobileFilterBottomSheetContentClassName}
+        >
+          <MobileFilterSheetHandle />
+          <MobileFilterSheetHead>
+            <SheetHeader className="space-y-0 border-0 p-0 text-left">
+              <SheetTitle className="text-base font-semibold tracking-tight text-[#1a2b4b]">
+                Sort
+              </SheetTitle>
+            </SheetHeader>
+          </MobileFilterSheetHead>
+          <MobileFilterSheetScrollBody>
+            <MobileFilterSheetList>
+              {SORT_OPTIONS.map((o) => (
+                <MobileFilterSheetOption
+                  key={o.value}
+                  selected={sort === o.value}
+                  onClick={() => {
+                    updateParams({
+                      sort: o.value,
+                    });
+                    setSortSheetOpen(false);
+                  }}
+                >
+                  {o.label}
+                </MobileFilterSheetOption>
+              ))}
+            </MobileFilterSheetList>
+          </MobileFilterSheetScrollBody>
         </SheetContent>
       </Sheet>
 
@@ -1040,112 +1048,127 @@ export function PropertiesClient() {
         open={propertyTypeSheetOpen}
         onOpenChange={setPropertyTypeSheetOpen}
       >
-        <SheetContent side="bottom" className={MOBILE_LIST_SHEET_CONTENT_CLASS}>
-          <SheetHeader className="space-y-0 pr-10 text-left">
-            <SheetTitle className="text-lg font-bold text-[#1a2b4b]">
-              Property type
-            </SheetTitle>
-          </SheetHeader>
-          <div className="grid gap-2 py-2">
-            {(
-              [
-                { value: "" as const, label: "All types" },
-                { value: "house" as const, label: "House / villa" },
-                { value: "plot" as const, label: "Plots & land" },
-              ] as const
-            ).map((o) => (
-              <button
-                key={o.value || "all"}
-                type="button"
-                onClick={() => {
-                  updateParams({
-                    structure_type: o.value || undefined,
-                  });
-                  setPropertyTypeSheetOpen(false);
-                }}
-                className={mobileListingOptionClass(
-                  (structure_type ?? "") === o.value,
-                )}
-              >
-                {o.label}
-              </button>
-            ))}
-          </div>
+        <SheetContent
+          side="bottom"
+          className={mobileFilterBottomSheetContentClassName}
+        >
+          <MobileFilterSheetHandle />
+          <MobileFilterSheetHead>
+            <SheetHeader className="space-y-0 border-0 p-0 text-left">
+              <SheetTitle className="text-base font-semibold tracking-tight text-[#1a2b4b]">
+                Property type
+              </SheetTitle>
+            </SheetHeader>
+          </MobileFilterSheetHead>
+          <MobileFilterSheetScrollBody>
+            <MobileFilterSheetList>
+              {(
+                [
+                  { value: "" as const, label: "All types" },
+                  { value: "house" as const, label: "House / villa" },
+                  { value: "plot" as const, label: "Plots & land" },
+                ] as const
+              ).map((o) => (
+                <MobileFilterSheetOption
+                  key={o.value || "all"}
+                  selected={(structure_type ?? "") === o.value}
+                  onClick={() => {
+                    updateParams({
+                      structure_type: o.value || undefined,
+                    });
+                    setPropertyTypeSheetOpen(false);
+                  }}
+                >
+                  {o.label}
+                </MobileFilterSheetOption>
+              ))}
+            </MobileFilterSheetList>
+          </MobileFilterSheetScrollBody>
         </SheetContent>
       </Sheet>
 
       <Sheet open={categorySheetOpen} onOpenChange={setCategorySheetOpen}>
-        <SheetContent side="bottom" className={MOBILE_LIST_SHEET_CONTENT_CLASS}>
-          <SheetHeader className="space-y-0 pr-10 text-left">
-            <SheetTitle className="text-lg font-bold text-[#1a2b4b]">
-              Category
-            </SheetTitle>
-          </SheetHeader>
-          <div className="grid max-h-[min(55dvh,22rem)] gap-2 overflow-y-auto overscroll-contain py-2 [scrollbar-gutter:stable]">
+        <SheetContent
+          side="bottom"
+          className={mobileFilterBottomSheetContentClassName}
+        >
+          <MobileFilterSheetHandle />
+          <MobileFilterSheetHead>
+            <SheetHeader className="space-y-0 border-0 p-0 text-left">
+              <SheetTitle className="text-base font-semibold tracking-tight text-[#1a2b4b]">
+                Category
+              </SheetTitle>
+            </SheetHeader>
+          </MobileFilterSheetHead>
+          <MobileFilterSheetScrollBody className="max-h-[min(52dvh,20rem)]">
             {categoriesPending ? (
-              <p className="py-3 text-sm text-neutral-500">
+              <p className="py-2 text-sm text-neutral-500">
                 Loading categories…
               </p>
             ) : (
-              <>
-                <button
-                  type="button"
+              <MobileFilterSheetList>
+                <MobileFilterSheetOption
+                  selected={!category_id}
                   onClick={() => {
                     updateParams({ category_id: undefined });
                     setCategorySheetOpen(false);
                   }}
-                  className={mobileListingOptionClass(!category_id)}
                 >
                   All categories
-                </button>
+                </MobileFilterSheetOption>
                 {categories.map((c) => (
-                  <button
+                  <MobileFilterSheetOption
                     key={c.id}
-                    type="button"
+                    selected={category_id === c.id}
                     onClick={() => {
                       updateParams({ category_id: c.id });
                       setCategorySheetOpen(false);
                     }}
-                    className={mobileListingOptionClass(category_id === c.id)}
                   >
                     {c.name}
-                  </button>
+                  </MobileFilterSheetOption>
                 ))}
-              </>
+              </MobileFilterSheetList>
             )}
-          </div>
+          </MobileFilterSheetScrollBody>
         </SheetContent>
       </Sheet>
 
       <Sheet open={highlightSheetOpen} onOpenChange={setHighlightSheetOpen}>
-        <SheetContent side="bottom" className={MOBILE_LIST_SHEET_CONTENT_CLASS}>
-          <SheetHeader className="space-y-0 pr-10 text-left">
-            <SheetTitle className="text-lg font-bold text-[#1a2b4b]">
-              Highlights
-            </SheetTitle>
-          </SheetHeader>
-          <div className="grid gap-2 py-2">
-            <button
-              type="button"
-              onClick={() => {
-                updateParams({ featured: undefined });
-                setHighlightSheetOpen(false);
-              }}
-              className={mobileListingOptionClass(!featuredOnly)}
-            >
-              All listings
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                updateParams({ featured: "1" });
-                setHighlightSheetOpen(false);
-              }}
-              className={mobileListingOptionClass(featuredOnly)}
-            >
-              Featured only
-            </button>
-          </div>
+        <SheetContent
+          side="bottom"
+          className={mobileFilterBottomSheetContentClassName}
+        >
+          <MobileFilterSheetHandle />
+          <MobileFilterSheetHead>
+            <SheetHeader className="space-y-0 border-0 p-0 text-left">
+              <SheetTitle className="text-base font-semibold tracking-tight text-[#1a2b4b]">
+                Highlights
+              </SheetTitle>
+            </SheetHeader>
+          </MobileFilterSheetHead>
+          <MobileFilterSheetScrollBody>
+            <MobileFilterSheetList>
+              <MobileFilterSheetOption
+                selected={!featuredOnly}
+                onClick={() => {
+                  updateParams({ featured: undefined });
+                  setHighlightSheetOpen(false);
+                }}
+              >
+                All listings
+              </MobileFilterSheetOption>
+              <MobileFilterSheetOption
+                selected={featuredOnly}
+                onClick={() => {
+                  updateParams({ featured: "1" });
+                  setHighlightSheetOpen(false);
+                }}
+              >
+                Featured only
+              </MobileFilterSheetOption>
+            </MobileFilterSheetList>
+          </MobileFilterSheetScrollBody>
         </SheetContent>
       </Sheet>
 

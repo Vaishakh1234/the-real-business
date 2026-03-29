@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 export function PublicMain({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const isPropertiesListing = pathname === "/properties";
   const isPropertyDetailPage = /^\/properties\/[^/]+/.test(pathname);
 
   return (
@@ -19,11 +18,7 @@ export function PublicMain({ children }: { children: ReactNode }) {
         isPropertyDetailPage
           ? "pb-[max(1rem,env(safe-area-inset-bottom))]"
           : "pb-[max(5rem,env(safe-area-inset-bottom))]",
-        isHome
-          ? "pt-0"
-          : isPropertiesListing
-            ? "max-md:pt-0 pt-14 md:pt-20"
-            : "pt-14 md:pt-20",
+        isHome ? "pt-0" : "pt-16 md:pt-20",
       )}
     >
       {children}

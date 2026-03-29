@@ -48,8 +48,8 @@ import { useWishlist } from "@/hooks/useWishlist";
 
 const BOTTOM_NAV_HEIGHT = "4rem";
 
-/** Desktop header — keep in sync with `PublicMain` top padding (non-home routes) */
-const HEADER_CLASS = "h-14 md:h-20";
+/** Header bar height — keep in sync with `PublicMain` top padding (non-home routes) */
+const HEADER_CLASS = "h-16 md:h-20";
 
 /** Equal-width desktop header triggers (Buy in Palakkad + mega-menus) */
 const NAV_TRIGGER_CELL =
@@ -349,7 +349,6 @@ export function Navbar() {
   }, [pathname]);
 
   const overlayNav = isHome && !headerSolid;
-  const isPropertiesListing = pathname === "/properties";
   /** Mobile: hide bottom nav on `/properties/{slug}` only; keep it on the listing. */
   const isPropertyDetailPage = /^\/properties\/[^/]+/.test(pathname);
 
@@ -362,7 +361,6 @@ export function Navbar() {
           headerSolid
             ? "border-b border-border/60 bg-white shadow-[0_1px_0_rgba(0,0,0,0.05)]"
             : "border-b border-transparent bg-transparent shadow-none",
-          isPropertiesListing && "max-md:hidden",
         )}
       >
         <nav
@@ -381,7 +379,7 @@ export function Navbar() {
             <Link
               href="/"
               className={cn(
-                "font-site-wordmark min-w-0 shrink-0 text-lg font-semibold leading-tight tracking-tight xs:text-xl sm:text-2xl sm:whitespace-nowrap md:text-3xl",
+                "font-site-wordmark min-w-0 shrink-0 text-xl font-semibold leading-tight tracking-tight xs:text-2xl sm:text-2xl sm:whitespace-nowrap md:text-3xl",
                 overlayNav ? "text-white drop-shadow-sm" : "text-brand-gold",
               )}
             >
@@ -630,7 +628,7 @@ export function Navbar() {
               href="/wishlist"
               prefetch={true}
               className={cn(
-                "relative hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-full border text-[#1a2b4b] transition-[background-color,box-shadow,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98] md:inline-flex",
+                "relative inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border text-[#1a2b4b] transition-[background-color,box-shadow,transform] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98]",
                 overlayNav
                   ? "border-white/35 bg-white/15 text-white shadow-sm hover:bg-white/22 focus-visible:ring-offset-0 focus-visible:ring-offset-transparent"
                   : "border-neutral-200 bg-neutral-100 shadow-sm hover:bg-neutral-200/90 focus-visible:ring-offset-2",

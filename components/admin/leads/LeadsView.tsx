@@ -39,6 +39,12 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import {
+  mobileFilterBottomSheetContentClassName,
+  MobileFilterSheetHandle,
+  MobileFilterSheetHead,
+  MobileFilterSheetScrollBody,
+} from "@/components/ui/mobile-filter-sheet";
+import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
@@ -496,13 +502,21 @@ export function LeadsView({
                 </Button>
               </div>
               <Sheet open={filterSheetOpen} onOpenChange={setFilterSheetOpen}>
-                <SheetContent side="bottom" className="rounded-t-2xl">
-                  <SheetHeader>
-                    <SheetTitle>Filters</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6 space-y-4">
+                <SheetContent
+                  side="bottom"
+                  className={mobileFilterBottomSheetContentClassName}
+                >
+                  <MobileFilterSheetHandle />
+                  <MobileFilterSheetHead>
+                    <SheetHeader className="space-y-0 border-0 p-0 text-left">
+                      <SheetTitle className="text-base font-semibold text-foreground">
+                        Filters
+                      </SheetTitle>
+                    </SheetHeader>
+                  </MobileFilterSheetHead>
+                  <MobileFilterSheetScrollBody className="space-y-3 pt-1">
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-foreground">
+                      <label className="mb-1 block text-xs font-medium text-foreground">
                         Status
                       </label>
                       <Select
@@ -526,7 +540,7 @@ export function LeadsView({
                       </Select>
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-foreground">
+                      <label className="mb-1 block text-xs font-medium text-foreground">
                         Source
                       </label>
                       <Select
@@ -549,7 +563,7 @@ export function LeadsView({
                       </Select>
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-foreground">
+                      <label className="mb-1 block text-xs font-medium text-foreground">
                         Sort
                       </label>
                       <Select
@@ -574,24 +588,24 @@ export function LeadsView({
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="flex gap-2 pt-2">
-                      {hasFilters && (
-                        <Button
-                          variant="outline"
-                          onClick={clearFilters}
-                          className="flex-1 rounded-xl border-border gap-1.5"
-                        >
-                          <X className="h-4 w-4 shrink-0" />
-                          Clear
-                        </Button>
-                      )}
+                  </MobileFilterSheetScrollBody>
+                  <div className="flex shrink-0 gap-2 border-t border-neutral-100 bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                    {hasFilters && (
                       <Button
-                        className="min-h-[44px] flex-1 rounded-xl"
-                        onClick={() => setFilterSheetOpen(false)}
+                        variant="outline"
+                        onClick={clearFilters}
+                        className="min-h-[44px] flex-1 rounded-lg gap-1.5"
                       >
-                        Apply
+                        <X className="h-4 w-4 shrink-0" />
+                        Clear
                       </Button>
-                    </div>
+                    )}
+                    <Button
+                      className="min-h-[44px] flex-1 rounded-lg"
+                      onClick={() => setFilterSheetOpen(false)}
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </SheetContent>
               </Sheet>

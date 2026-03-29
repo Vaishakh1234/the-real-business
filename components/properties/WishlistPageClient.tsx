@@ -56,8 +56,8 @@ export function WishlistPageClient() {
   return (
     <div className="min-h-[50vh] bg-muted/40 pb-[max(4rem,calc(4rem+env(safe-area-inset-bottom)))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pb-16 md:bg-muted/50 md:pb-20 md:pt-8">
       <div className={cn(publicContentFrameClass, "flex flex-col gap-6 sm:gap-8")}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="flex w-full items-center gap-3 md:items-start">
             <button
               type="button"
               onClick={() => {
@@ -70,28 +70,40 @@ export function WishlistPageClient() {
                   router.push("/properties");
                 }
               }}
-              className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100 text-[#1a2b4b] shadow-sm active:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold md:mt-1"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-100 text-[#1a2b4b] shadow-sm active:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold md:mt-1"
               aria-label="Go back"
             >
               <ChevronLeft className="h-5 w-5" aria-hidden />
             </button>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1 md:flex-none">
               <h1 className="text-2xl font-bold tracking-tight text-brand-charcoal sm:text-3xl">
                 Saved listings
               </h1>
-              <p className="mt-1 text-sm text-muted-foreground sm:text-[15px]">
+              <p className="mt-1 hidden text-sm text-muted-foreground md:block md:text-[15px]">
                 Properties you saved on this device. Sign in is not required.
               </p>
             </div>
+            {count > 0 ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="h-11 w-11 shrink-0 rounded-full border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800 md:hidden"
+                onClick={() => setClearAllOpen(true)}
+                aria-label="Clear all saved listings"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden />
+              </Button>
+            ) : null}
           </div>
           {count > 0 ? (
             <Button
               type="button"
               variant="outline"
-              className="shrink-0 self-start border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800"
+              className="hidden shrink-0 border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800 md:inline-flex"
               onClick={() => setClearAllOpen(true)}
             >
-              <Trash2 className="mr-2 h-4 w-4" aria-hidden />
+              <Trash2 className="h-4 w-4" aria-hidden />
               Clear all
             </Button>
           ) : null}

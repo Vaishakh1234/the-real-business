@@ -12,7 +12,14 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Search, Clock, ChevronRight, HousePlus, Mic } from "lucide-react";
+import {
+  Search,
+  Clock,
+  ChevronRight,
+  HousePlus,
+  Mic,
+  Heart,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -239,24 +246,56 @@ export function HeroSearchPanel({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "w-full min-w-0 max-w-[42rem] flex-shrink-0 self-start space-y-2 sm:space-y-4 xl:max-w-5xl",
+        "w-full min-w-0 max-w-[42rem] flex-shrink-0 self-start space-y-1.5 sm:space-y-4 xl:max-w-5xl",
         stackedBelowCategories
           ? "mt-0 pb-0 sm:mt-10 sm:pb-4 lg:pb-4"
           : "mt-3 pb-6 sm:mt-4 sm:pb-8 lg:pb-10",
       )}
     >
-      <div className="w-full min-w-0">
+      {/* Mobile: larger prompt + cart / browse CTAs (full search card from md+) */}
+      <div className="w-full min-w-0 md:hidden">
+        <p className="text-balance font-heading text-[1.25rem] font-bold leading-[1.22] tracking-[-0.015em] text-white xs:text-[1.375rem]">
+          {HOME_HERO_SEARCH_PROMPT}
+        </p>
+        <div className="mt-4 grid grid-cols-1 gap-2.5 xs:grid-cols-2 xs:gap-3">
+          <Link
+            href="/wishlist"
+            className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/12 px-4 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
+            aria-label="Open saved listings (wishlist)"
+          >
+            <Heart
+              className="h-[1.125rem] w-[1.125rem] shrink-0"
+              strokeWidth={2}
+              aria-hidden
+            />
+            Add to cart
+          </Link>
+          <Link
+            href="/properties"
+            className="inline-flex min-h-[48px] w-full items-center justify-center gap-1.5 rounded-xl border border-white bg-white px-4 py-3 text-sm font-semibold text-brand-charcoal shadow-md transition-[background-color,border-color] hover:border-white hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
+          >
+            View property
+            <ChevronRight
+              className="h-4 w-4 shrink-0 opacity-90"
+              strokeWidth={2}
+              aria-hidden
+            />
+          </Link>
+        </div>
+      </div>
+
+      <div className="hidden w-full min-w-0 md:block">
         {/*
-         * ── Hero search card ─────────────────────────────────────────
+         * ── Hero search card (tablet/desktop) ────────────────────────
          * Row 1: headline + vertical rule + Post property
          * Row 2: category select | search field | SEARCH button
          */}
-        <div className="overflow-hidden rounded-2xl bg-white shadow-[0_16px_40px_rgba(0,0,0,0.16)] ring-1 ring-black/[0.06] sm:rounded-2xl sm:shadow-[0_12px_40px_rgba(0,0,0,0.14)] sm:ring-black/[0.04]">
+        <div className="overflow-hidden rounded-xl bg-white shadow-[0_16px_40px_rgba(0,0,0,0.16)] ring-1 ring-black/[0.06] sm:rounded-2xl sm:shadow-[0_12px_40px_rgba(0,0,0,0.14)] sm:ring-black/[0.04]">
           {/* Row 1: headline + Post property */}
           <div className="flex flex-col gap-0 border-b border-neutral-200/90 lg:flex-row lg:items-stretch lg:justify-between">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center px-3 py-2.5 sm:min-h-[56px] sm:px-4 sm:py-3">
-                <p className="font-heading text-[0.875rem] font-bold leading-snug tracking-tight text-neutral-800 xs:text-[0.9375rem] sm:text-lg sm:leading-snug sm:text-neutral-700 md:text-xl">
+              <div className="flex items-center px-2.5 py-1.5 sm:min-h-[56px] sm:px-4 sm:py-3">
+                <p className="font-heading text-[0.8125rem] font-bold leading-tight tracking-tight text-neutral-800 xs:text-[0.875rem] sm:text-lg sm:leading-snug sm:text-neutral-700 md:text-xl">
                   {HOME_HERO_SEARCH_PROMPT}
                 </p>
               </div>
@@ -264,10 +303,10 @@ export function HeroSearchPanel({
 
             <div className="hidden h-auto w-px shrink-0 bg-neutral-200 lg:block" />
 
-            <div className="flex items-center justify-center border-t border-neutral-200 bg-neutral-50/80 px-3 py-2 sm:px-4 sm:py-3 lg:min-h-0 lg:border-t-0 lg:bg-transparent lg:py-0 lg:pr-5">
+            <div className="flex items-center justify-center border-t border-neutral-200 bg-neutral-50/80 px-2.5 py-1 sm:px-4 sm:py-3 lg:min-h-0 lg:border-t-0 lg:bg-transparent lg:py-0 lg:pr-5">
               <Link
                 href={postPropertyHrefWithCta("POST_PROPERTY_HP_SEARCH_BAR")}
-                className="inline-flex min-h-[44px] min-w-0 w-full max-w-none items-center justify-center gap-2 rounded-lg py-2 text-[14px] font-semibold text-neutral-800 transition-colors active:bg-neutral-100/80 hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:min-h-0 sm:w-auto sm:rounded-none sm:bg-transparent sm:px-0 sm:text-sm"
+                className="inline-flex min-h-[40px] min-w-0 w-full max-w-none items-center justify-center gap-1.5 rounded-lg py-1.5 text-[13px] font-semibold text-neutral-800 transition-colors active:bg-neutral-100/80 hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:min-h-0 sm:w-auto sm:gap-2 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-2 sm:text-sm"
               >
                 Post property
                 <HousePlus
@@ -280,9 +319,9 @@ export function HeroSearchPanel({
           </div>
 
           {/* Row 2: single search bar (reference layout: dropdown | input | utility icons | search) */}
-          <div className="p-2.5 sm:p-4 md:p-5">
-            <div className="flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.06)] md:h-14 md:flex-row md:items-stretch md:rounded-xl md:bg-white md:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <div className="relative flex min-h-[2.875rem] shrink-0 items-stretch border-b border-neutral-200 bg-white md:min-h-0 md:w-[min(10.25rem,32vw)] md:max-w-[11rem] md:border-b-0 md:border-r md:border-neutral-200">
+          <div className="p-2 sm:p-4 md:p-5">
+            <div className="flex flex-col overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.06)] sm:rounded-xl md:h-14 md:flex-row md:items-stretch md:rounded-xl md:bg-white md:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+              <div className="relative flex min-h-[2.5rem] shrink-0 items-stretch border-b border-neutral-200 bg-white sm:min-h-[2.875rem] md:min-h-0 md:w-[min(10.25rem,32vw)] md:max-w-[11rem] md:border-b-0 md:border-r md:border-neutral-200">
                 <Select
                   value={categoryId || HERO_CATEGORY_ALL}
                   onValueChange={(v) =>
@@ -294,7 +333,7 @@ export function HeroSearchPanel({
                     id="hero-property-type"
                     aria-label="Property type"
                     className={cn(
-                      "h-full min-h-[2.875rem] w-full rounded-none border-0 bg-transparent px-3 py-2.5 text-left text-[14px] font-semibold text-neutral-800 shadow-none ring-0 ring-offset-0 focus:ring-2 focus:ring-brand-gold/50 focus:ring-offset-0 data-[state=open]:ring-2 data-[state=open]:ring-brand-gold/40 sm:text-[15px] md:min-h-0 md:h-14 md:rounded-l-xl md:px-3.5 md:py-0",
+                      "h-full min-h-[2.5rem] w-full rounded-none border-0 bg-transparent px-2.5 py-2 text-left text-[13px] font-semibold text-neutral-800 shadow-none ring-0 ring-offset-0 focus:ring-2 focus:ring-brand-gold/50 focus:ring-offset-0 data-[state=open]:ring-2 data-[state=open]:ring-brand-gold/40 sm:min-h-[2.875rem] sm:px-3 sm:py-2.5 sm:text-[15px] md:min-h-0 md:h-14 md:rounded-l-xl md:px-3.5 md:py-0",
                       "[&>svg]:h-4 [&>svg]:w-4 [&>svg]:shrink-0 [&>svg]:text-neutral-500 [&>svg]:opacity-100",
                     )}
                   >
@@ -325,7 +364,7 @@ export function HeroSearchPanel({
                 </Select>
               </div>
 
-              <div className="relative flex min-h-[2.875rem] min-w-0 flex-1 items-center bg-white px-3 md:min-h-0 md:bg-transparent md:px-4">
+              <div className="relative flex min-h-[2.5rem] min-w-0 flex-1 items-center bg-white px-2.5 sm:min-h-[2.875rem] md:min-h-0 md:bg-transparent md:px-4">
                 <input
                   ref={searchInputRef}
                   type="search"
@@ -339,14 +378,14 @@ export function HeroSearchPanel({
                   onChange={(e) => setSearch(e.target.value)}
                   onFocus={() => setHeroQueryFocused(true)}
                   onBlur={() => setHeroQueryFocused(false)}
-                  className="relative z-10 min-w-0 flex-1 border-0 bg-transparent py-2.5 text-[15px] text-neutral-900 outline-none placeholder:text-neutral-500 sm:text-[16px] md:py-0 md:text-[17px]"
+                  className="relative z-10 min-w-0 flex-1 border-0 bg-transparent py-2 text-[14px] text-neutral-900 outline-none placeholder:text-neutral-500 sm:py-2.5 sm:text-[16px] md:py-0 md:text-[17px]"
                   aria-label="Search locality, project, society, or landmark"
                 />
                 {heroQueryIdle ? (
                   <span
                     role="status"
                     aria-live="polite"
-                    className="pointer-events-none absolute left-3 top-1/2 z-0 max-w-[calc(100%-0.75rem)] -translate-y-1/2 truncate text-left text-[13px] leading-snug text-neutral-500 sm:left-3.5 sm:max-w-[calc(100%-1.75rem)] sm:text-[15px] md:left-4 md:max-w-[calc(100%-2rem)] md:text-[17px]"
+                    className="pointer-events-none absolute left-2.5 top-1/2 z-0 max-w-[calc(100%-0.5rem)] -translate-y-1/2 truncate text-left text-[12px] leading-snug text-neutral-500 sm:left-3.5 sm:max-w-[calc(100%-1.75rem)] sm:text-[15px] md:left-4 md:max-w-[calc(100%-2rem)] md:text-[17px]"
                   >
                     {heroTypewriterText}
                     <span
@@ -357,7 +396,7 @@ export function HeroSearchPanel({
                 ) : null}
               </div>
 
-              <div className="flex min-h-[3rem] items-center justify-end gap-2 border-t border-neutral-200 bg-white px-2.5 py-2 md:min-h-0 md:h-14 md:gap-2 md:border-t-0 md:border-l md:border-neutral-200 md:px-2.5 md:py-2">
+              <div className="flex min-h-[2.5rem] items-center justify-end gap-1.5 border-t border-neutral-200 bg-white px-2 py-1.5 sm:min-h-[3rem] sm:gap-2 sm:px-2.5 sm:py-2 md:min-h-0 md:h-14 md:gap-2 md:border-t-0 md:border-l md:border-neutral-200 md:px-2.5 md:py-2">
                 <button
                   type="button"
                   onClick={startVoiceSearch}
@@ -365,7 +404,7 @@ export function HeroSearchPanel({
                   aria-pressed={voiceListening}
                   aria-busy={voiceListening}
                   className={cn(
-                    "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border bg-white shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 disabled:cursor-wait md:h-10 md:w-10",
+                    "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border bg-white shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 disabled:cursor-wait sm:h-10 sm:w-10 sm:rounded-lg md:h-10 md:w-10",
                     voiceListening
                       ? "border-red-400/80 text-red-600 ring-2 ring-red-400/40"
                       : "border-neutral-200 text-neutral-500 hover:border-neutral-300 hover:text-neutral-800",
@@ -381,7 +420,7 @@ export function HeroSearchPanel({
                 >
                   <Mic
                     className={cn(
-                      "h-5 w-5 md:h-[18px] md:w-[18px]",
+                      "h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5 md:h-[18px] md:w-[18px]",
                       voiceListening && "animate-pulse",
                     )}
                     strokeWidth={1.75}
@@ -392,11 +431,11 @@ export function HeroSearchPanel({
                 <Link
                   href={resultsHref}
                   onClick={persistRecent}
-                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-black text-white shadow-sm transition-colors hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 md:h-10 md:w-10"
+                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-black text-white shadow-sm transition-colors hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:h-10 sm:w-10 sm:rounded-lg md:h-10 md:w-10"
                   aria-label="Search listings"
                 >
                   <Search
-                    className="h-5 w-5 md:h-[18px] md:w-[18px]"
+                    className="h-[1.125rem] w-[1.125rem] sm:h-5 sm:w-5 md:h-[18px] md:w-[18px]"
                     strokeWidth={2.25}
                     aria-hidden
                   />
@@ -407,9 +446,9 @@ export function HeroSearchPanel({
         </div>
       </div>
 
-      {/* Recent searches (same localStorage key as before extraction) */}
+      {/* Recent searches — desktop hero only (mobile uses quick actions above) */}
       {recent.length > 0 ? (
-        <div className="flex flex-col gap-2 pb-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:pb-0">
+        <div className="hidden flex-col gap-2 pb-1 md:flex md:flex-row md:flex-wrap md:items-center md:gap-3 md:pb-0">
           <span className="flex items-center gap-1.5 text-[0.6875rem] font-medium uppercase tracking-wider text-white/65 sm:text-xs sm:text-white/60">
             <Clock className="h-3.5 w-3.5" aria-hidden />
             Recent searches
