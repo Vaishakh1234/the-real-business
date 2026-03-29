@@ -236,7 +236,6 @@ const mobileNavLinks: { label: string; href: string; icon: LucideIcon }[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Properties", href: "/properties", icon: Building2 },
   { label: "Saved", href: "/wishlist", icon: Heart },
-  { label: "About", href: "/about", icon: Info },
   { label: "Services", href: "/services", icon: Briefcase },
   { label: "Contact", href: "/contact", icon: MessageCircle },
 ];
