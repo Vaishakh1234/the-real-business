@@ -23,7 +23,7 @@ function HeroCategoryButtons() {
   if (isLoading) {
     return (
       <div
-        className="-mx-1 mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:mx-0 sm:mt-7 sm:flex-wrap sm:overflow-x-visible sm:pb-0 [&::-webkit-scrollbar]:hidden"
+        className="-mx-1 mt-3 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] sm:mx-0 sm:mt-7 sm:gap-2 sm:flex-wrap sm:overflow-x-visible sm:pb-0 [&::-webkit-scrollbar]:hidden"
         aria-busy="true"
         aria-label="Loading categories"
       >
@@ -41,21 +41,21 @@ function HeroCategoryButtons() {
 
   return (
     <nav
-      className="-mx-1 mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:mx-0 sm:mt-7 sm:flex-wrap sm:overflow-x-visible sm:pb-0 [&::-webkit-scrollbar]:hidden"
+      className="-mx-1 mt-3 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] sm:mx-0 sm:mt-7 sm:gap-2 sm:flex-wrap sm:overflow-x-visible sm:pb-0 [&::-webkit-scrollbar]:hidden"
       aria-label="Browse by category"
     >
       {topCategories.map((c) => (
         <Link
           key={c.id}
           href={`/properties?${new URLSearchParams({ category_id: c.id }).toString()}`}
-          className="inline-flex shrink-0 snap-start items-center rounded-full border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] duration-200 hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal sm:snap-none sm:px-5 sm:py-2.5 sm:text-[15px]"
+          className="inline-flex shrink-0 snap-start items-center rounded-full border border-white/30 bg-white/10 px-3.5 py-2 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] duration-200 hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal sm:snap-none sm:px-5 sm:py-2.5 sm:text-[15px]"
         >
           {c.name}
         </Link>
       ))}
       <Link
         href="/properties"
-        className="inline-flex shrink-0 snap-start items-center gap-1 rounded-full border border-white bg-white px-4 py-2.5 text-sm font-semibold text-brand-charcoal shadow-sm transition-[background-color,border-color,color,opacity] duration-200 hover:border-white hover:bg-neutral-100 hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal sm:snap-none sm:gap-1.5 sm:px-5 sm:py-2.5 sm:text-[15px]"
+        className="inline-flex shrink-0 snap-start items-center gap-1 rounded-full border border-white bg-white px-3.5 py-2 text-sm font-semibold text-brand-charcoal shadow-sm transition-[background-color,border-color,color,opacity] duration-200 hover:border-white hover:bg-neutral-100 hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal sm:snap-none sm:gap-1.5 sm:px-5 sm:py-2.5 sm:text-[15px]"
       >
         View All
         <ChevronRight
@@ -72,7 +72,7 @@ export function Hero() {
   return (
     <section
       id="home-hero"
-      className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-brand-charcoal md:min-h-[min(82vh,680px)] md:max-h-[min(92vh,920px)]"
+      className="relative flex min-h-[min(88svh,720px)] w-full flex-col overflow-hidden bg-brand-charcoal md:min-h-[min(82vh,680px)] md:max-h-[min(92vh,920px)]"
       aria-label="Hero"
     >
       {/* Full-bleed background image + dark gradient for headline contrast */}
@@ -92,14 +92,14 @@ export function Hero() {
         className={cn(
           publicContentFrameClass,
           "relative z-10 flex min-h-0 flex-1 flex-col",
-          "pt-[calc(3.75rem+env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] sm:pt-36 md:pt-44 lg:pt-44 xl:pt-52",
+          "pt-[calc(3.25rem+env(safe-area-inset-top))] pb-2 sm:pt-36 sm:pb-[max(1rem,env(safe-area-inset-bottom))] md:pt-44 lg:pt-44 xl:pt-52",
         )}
       >
         {/*
           Mobile: column fills viewport; headline + categories at top; search pinned to bottom (thumb reach).
           md+: original flow — extra top offset restores desktop vertical rhythm.
         */}
-        <div className="flex min-h-[calc(100svh-5.5rem)] min-w-0 flex-1 flex-col gap-6 md:mt-[120px] md:min-h-0 md:flex-none md:gap-0">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 md:mt-[120px] md:min-h-0 md:flex-none md:gap-0 max-md:justify-between max-md:pt-1">
           <div className="min-w-0 max-w-[42rem] shrink-0 xl:max-w-4xl">
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -109,7 +109,7 @@ export function Hero() {
                 delay: 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className="min-w-0 text-balance font-heading text-[1.75rem] font-bold leading-[1.08] tracking-[-0.02em] text-white xs:text-[2rem] sm:text-5xl sm:leading-[1.05] md:text-6xl md:leading-[1.05] lg:text-7xl lg:leading-[1.04] xl:text-[4.75rem] xl:leading-[1.03]"
+              className="min-w-0 text-balance font-heading text-[1.5625rem] font-bold leading-[1.07] tracking-[-0.02em] text-white xs:text-[1.75rem] sm:text-5xl sm:leading-[1.05] md:text-6xl md:leading-[1.05] lg:text-7xl lg:leading-[1.04] xl:text-[4.75rem] xl:leading-[1.03]"
             >
               {HOME_HERO.titleLine1}
               <br />
@@ -121,7 +121,7 @@ export function Hero() {
             <HeroCategoryButtons />
           </div>
 
-          <div className="mt-auto w-full min-w-0 pb-1 md:mt-0 md:pb-0">
+          <div className="mt-auto w-full min-w-0 pb-0 md:mt-0 md:pb-0 max-md:pt-1">
             <HeroSearchPanel stackedBelowCategories />
           </div>
         </div>

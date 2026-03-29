@@ -239,9 +239,9 @@ export function HeroSearchPanel({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "w-full min-w-0 max-w-[42rem] flex-shrink-0 self-start space-y-3 sm:space-y-4 xl:max-w-5xl",
+        "w-full min-w-0 max-w-[42rem] flex-shrink-0 self-start space-y-2 sm:space-y-4 xl:max-w-5xl",
         stackedBelowCategories
-          ? "mt-2 pb-0 sm:mt-10 sm:pb-4 lg:pb-4"
+          ? "mt-0 pb-0 sm:mt-10 sm:pb-4 lg:pb-4"
           : "mt-3 pb-6 sm:mt-4 sm:pb-8 lg:pb-10",
       )}
     >
@@ -251,12 +251,12 @@ export function HeroSearchPanel({
          * Row 1: headline + vertical rule + Post property
          * Row 2: category select | search field | SEARCH button
          */}
-        <div className="overflow-hidden rounded-[1.25rem] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.18)] ring-1 ring-black/[0.06] sm:rounded-2xl sm:shadow-[0_12px_40px_rgba(0,0,0,0.14)] sm:ring-black/[0.04]">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-[0_16px_40px_rgba(0,0,0,0.16)] ring-1 ring-black/[0.06] sm:rounded-2xl sm:shadow-[0_12px_40px_rgba(0,0,0,0.14)] sm:ring-black/[0.04]">
           {/* Row 1: headline + Post property */}
           <div className="flex flex-col gap-0 border-b border-neutral-200/90 lg:flex-row lg:items-stretch lg:justify-between">
             <div className="min-w-0 flex-1">
-              <div className="flex min-h-[3.25rem] items-center px-3.5 py-3 sm:min-h-[56px] sm:px-4 sm:py-3">
-                <p className="font-heading text-[0.9375rem] font-bold leading-[1.35] tracking-tight text-neutral-800 xs:text-base sm:text-lg sm:leading-snug sm:text-neutral-700 md:text-xl">
+              <div className="flex items-center px-3 py-2.5 sm:min-h-[56px] sm:px-4 sm:py-3">
+                <p className="font-heading text-[0.875rem] font-bold leading-snug tracking-tight text-neutral-800 xs:text-[0.9375rem] sm:text-lg sm:leading-snug sm:text-neutral-700 md:text-xl">
                   {HOME_HERO_SEARCH_PROMPT}
                 </p>
               </div>
@@ -264,10 +264,10 @@ export function HeroSearchPanel({
 
             <div className="hidden h-auto w-px shrink-0 bg-neutral-200 lg:block" />
 
-            <div className="flex min-h-[2.75rem] items-center justify-center border-t border-neutral-200 bg-neutral-50/80 px-4 py-3 lg:min-h-0 lg:border-t-0 lg:bg-transparent lg:py-0 lg:pr-5">
+            <div className="flex items-center justify-center border-t border-neutral-200 bg-neutral-50/80 px-3 py-2 sm:px-4 sm:py-3 lg:min-h-0 lg:border-t-0 lg:bg-transparent lg:py-0 lg:pr-5">
               <Link
                 href={postPropertyHrefWithCta("POST_PROPERTY_HP_SEARCH_BAR")}
-                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-lg px-1 text-[15px] font-semibold text-neutral-800 transition-colors active:bg-neutral-100/80 hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:min-h-0 sm:min-w-0 sm:rounded-none sm:bg-transparent sm:px-0 sm:text-sm"
+                className="inline-flex min-h-[44px] min-w-0 w-full max-w-none items-center justify-center gap-2 rounded-lg py-2 text-[14px] font-semibold text-neutral-800 transition-colors active:bg-neutral-100/80 hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:min-h-0 sm:w-auto sm:rounded-none sm:bg-transparent sm:px-0 sm:text-sm"
               >
                 Post property
                 <HousePlus
@@ -280,9 +280,9 @@ export function HeroSearchPanel({
           </div>
 
           {/* Row 2: single search bar (reference layout: dropdown | input | utility icons | search) */}
-          <div className="p-3 sm:p-4 md:p-5">
-            <div className="flex flex-col overflow-hidden rounded-[0.875rem] border border-neutral-200 bg-neutral-50/40 shadow-[0_1px_3px_rgba(0,0,0,0.06)] md:h-14 md:flex-row md:items-stretch md:rounded-xl md:bg-white md:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-              <div className="relative flex min-h-[3.25rem] shrink-0 items-stretch border-b border-neutral-200 bg-white md:min-h-0 md:w-[min(10.25rem,32vw)] md:max-w-[11rem] md:border-b-0 md:border-r md:border-neutral-200">
+          <div className="p-2.5 sm:p-4 md:p-5">
+            <div className="flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50/50 shadow-[0_1px_3px_rgba(0,0,0,0.06)] md:h-14 md:flex-row md:items-stretch md:rounded-xl md:bg-white md:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+              <div className="relative flex min-h-[2.875rem] shrink-0 items-stretch border-b border-neutral-200 bg-white md:min-h-0 md:w-[min(10.25rem,32vw)] md:max-w-[11rem] md:border-b-0 md:border-r md:border-neutral-200">
                 <Select
                   value={categoryId || HERO_CATEGORY_ALL}
                   onValueChange={(v) =>
@@ -294,7 +294,7 @@ export function HeroSearchPanel({
                     id="hero-property-type"
                     aria-label="Property type"
                     className={cn(
-                      "h-full min-h-[3.25rem] w-full rounded-none border-0 bg-transparent px-3.5 py-3 text-left text-[15px] font-semibold text-neutral-800 shadow-none ring-0 ring-offset-0 focus:ring-2 focus:ring-brand-gold/50 focus:ring-offset-0 data-[state=open]:ring-2 data-[state=open]:ring-brand-gold/40 md:min-h-0 md:h-14 md:rounded-l-xl md:px-3.5 md:py-0",
+                      "h-full min-h-[2.875rem] w-full rounded-none border-0 bg-transparent px-3 py-2.5 text-left text-[14px] font-semibold text-neutral-800 shadow-none ring-0 ring-offset-0 focus:ring-2 focus:ring-brand-gold/50 focus:ring-offset-0 data-[state=open]:ring-2 data-[state=open]:ring-brand-gold/40 sm:text-[15px] md:min-h-0 md:h-14 md:rounded-l-xl md:px-3.5 md:py-0",
                       "[&>svg]:h-4 [&>svg]:w-4 [&>svg]:shrink-0 [&>svg]:text-neutral-500 [&>svg]:opacity-100",
                     )}
                   >
@@ -325,7 +325,7 @@ export function HeroSearchPanel({
                 </Select>
               </div>
 
-              <div className="relative flex min-h-[3.25rem] min-w-0 flex-1 items-center bg-white px-3.5 md:min-h-0 md:bg-transparent md:px-4">
+              <div className="relative flex min-h-[2.875rem] min-w-0 flex-1 items-center bg-white px-3 md:min-h-0 md:bg-transparent md:px-4">
                 <input
                   ref={searchInputRef}
                   type="search"
@@ -339,14 +339,14 @@ export function HeroSearchPanel({
                   onChange={(e) => setSearch(e.target.value)}
                   onFocus={() => setHeroQueryFocused(true)}
                   onBlur={() => setHeroQueryFocused(false)}
-                  className="relative z-10 min-w-0 flex-1 border-0 bg-transparent py-3 text-[16px] text-neutral-900 outline-none placeholder:text-neutral-500 md:py-0 md:text-[17px]"
+                  className="relative z-10 min-w-0 flex-1 border-0 bg-transparent py-2.5 text-[15px] text-neutral-900 outline-none placeholder:text-neutral-500 sm:text-[16px] md:py-0 md:text-[17px]"
                   aria-label="Search locality, project, society, or landmark"
                 />
                 {heroQueryIdle ? (
                   <span
                     role="status"
                     aria-live="polite"
-                    className="pointer-events-none absolute left-3.5 top-1/2 z-0 max-w-[calc(100%-1.75rem)] -translate-y-1/2 truncate text-left text-[16px] text-neutral-500 md:left-4 md:max-w-[calc(100%-2rem)] md:text-[17px]"
+                    className="pointer-events-none absolute left-3 top-1/2 z-0 max-w-[calc(100%-0.75rem)] -translate-y-1/2 truncate text-left text-[13px] leading-snug text-neutral-500 sm:left-3.5 sm:max-w-[calc(100%-1.75rem)] sm:text-[15px] md:left-4 md:max-w-[calc(100%-2rem)] md:text-[17px]"
                   >
                     {heroTypewriterText}
                     <span
@@ -357,7 +357,7 @@ export function HeroSearchPanel({
                 ) : null}
               </div>
 
-              <div className="flex min-h-[3.5rem] items-center justify-end gap-2.5 border-t border-neutral-200 bg-white px-3 py-3 md:min-h-0 md:h-14 md:gap-2 md:border-t-0 md:border-l md:border-neutral-200 md:px-2.5 md:py-2">
+              <div className="flex min-h-[3rem] items-center justify-end gap-2 border-t border-neutral-200 bg-white px-2.5 py-2 md:min-h-0 md:h-14 md:gap-2 md:border-t-0 md:border-l md:border-neutral-200 md:px-2.5 md:py-2">
                 <button
                   type="button"
                   onClick={startVoiceSearch}
@@ -365,7 +365,7 @@ export function HeroSearchPanel({
                   aria-pressed={voiceListening}
                   aria-busy={voiceListening}
                   className={cn(
-                    "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-white shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 disabled:cursor-wait md:h-10 md:w-10 md:rounded-lg",
+                    "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border bg-white shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 disabled:cursor-wait md:h-10 md:w-10",
                     voiceListening
                       ? "border-red-400/80 text-red-600 ring-2 ring-red-400/40"
                       : "border-neutral-200 text-neutral-500 hover:border-neutral-300 hover:text-neutral-800",
@@ -392,7 +392,7 @@ export function HeroSearchPanel({
                 <Link
                   href={resultsHref}
                   onClick={persistRecent}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-black text-white shadow-sm transition-colors hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 md:h-10 md:w-10 md:rounded-lg"
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-black text-white shadow-sm transition-colors hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 md:h-10 md:w-10"
                   aria-label="Search listings"
                 >
                   <Search

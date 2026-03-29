@@ -16,7 +16,8 @@ import {
   Building2,
   Info,
   Briefcase,
-  MessageCircle,
+  Grid3x3,
+  Phone,
   ChevronDown,
   MapPin,
   HousePlus,
@@ -236,8 +237,8 @@ const mobileNavLinks: { label: string; href: string; icon: LucideIcon }[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Properties", href: "/properties", icon: Building2 },
   { label: "Saved", href: "/wishlist", icon: Heart },
-  { label: "Services", href: "/services", icon: Briefcase },
-  { label: "Contact", href: "/contact", icon: MessageCircle },
+  { label: "Services", href: "/services", icon: Grid3x3 },
+  { label: "Contact", href: "/contact", icon: Phone },
 ];
 
 function isNavItemActive(
@@ -349,6 +350,8 @@ export function Navbar() {
 
   const overlayNav = isHome && !headerSolid;
   const isPropertiesListing = pathname === "/properties";
+  /** Mobile: hide bottom nav on `/properties/{slug}` only; keep it on the listing. */
+  const isPropertyDetailPage = /^\/properties\/[^/]+/.test(pathname);
 
   return (
     <>
@@ -378,7 +381,7 @@ export function Navbar() {
             <Link
               href="/"
               className={cn(
-                "font-site-wordmark min-w-0 max-w-[12rem] truncate text-xl font-semibold leading-tight tracking-tight sm:max-w-none sm:text-2xl sm:whitespace-nowrap md:text-3xl",
+                "font-site-wordmark min-w-0 shrink-0 text-lg font-semibold leading-tight tracking-tight xs:text-xl sm:text-2xl sm:whitespace-nowrap md:text-3xl",
                 overlayNav ? "text-white drop-shadow-sm" : "text-brand-gold",
               )}
             >
@@ -674,7 +677,7 @@ export function Navbar() {
         aria-label="Main navigation"
         className={cn(
           "fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-white shadow-[0_-1px_6px_rgba(0,0,0,0.06)] pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] [touch-action:manipulation] md:hidden",
-          isPropertiesListing && "hidden",
+          isPropertyDetailPage && "hidden",
         )}
         style={{ minHeight: BOTTOM_NAV_HEIGHT }}
       >

@@ -185,10 +185,10 @@ export function HomePropertyListingCard({
         ease: [0.22, 1, 0.36, 1],
       }}
       className={cn(
-        "group flex h-full min-h-0 flex-col overflow-hidden rounded-xl border bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]",
+        "group flex h-full min-h-0 flex-col overflow-hidden border bg-white shadow-[0_2px_14px_rgba(15,23,42,0.07)] transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(15,23,42,0.1)]",
         isRelated
-          ? "border-neutral-200/90 ring-1 ring-black/[0.04] sm:min-h-[196px]"
-          : "border-neutral-200",
+          ? "rounded-xl border-neutral-200/90 ring-1 ring-black/[0.04] sm:min-h-[196px]"
+          : "rounded-2xl border-neutral-200/90 ring-1 ring-black/[0.05]",
       )}
     >
       <div
@@ -203,7 +203,7 @@ export function HomePropertyListingCard({
             "relative shrink-0 bg-neutral-100",
             isRelated
               ? "aspect-[2/1] w-full p-2.5 sm:aspect-auto sm:flex sm:w-[40%] sm:max-w-[220px] sm:min-w-[148px] sm:self-stretch sm:p-3"
-              : "aspect-[2/1] w-full overflow-hidden sm:aspect-auto sm:w-[min(44%,300px)] sm:min-h-[156px] sm:self-stretch",
+              : "block aspect-[4/3] w-full overflow-hidden sm:aspect-auto sm:w-[min(46%,320px)] sm:min-h-[200px] sm:max-w-[340px] sm:self-stretch",
           )}
         >
           <div
@@ -211,7 +211,7 @@ export function HomePropertyListingCard({
               "relative w-full overflow-hidden bg-neutral-200/40",
               isRelated
                 ? "absolute inset-2.5 rounded-lg sm:static sm:inset-auto sm:flex sm:min-h-[152px] sm:flex-1"
-                : "min-h-[8rem] sm:absolute sm:inset-0 sm:min-h-0",
+                : "absolute inset-0",
             )}
           >
             {property.cover_image_url ? (
@@ -220,10 +220,10 @@ export function HomePropertyListingCard({
                 alt=""
                 fill
                 className={cn(
-                  "object-cover transition-transform duration-500 group-hover:scale-[1.02]",
+                  "object-cover transition-transform duration-500 group-hover:scale-[1.03]",
                   isRelated && "rounded-lg",
                 )}
-                sizes="(max-width: 640px) 100vw, 300px"
+                sizes="(max-width: 640px) 100vw, 360px"
                 unoptimized={
                   !isRemoteImageOptimizedUrl(property.cover_image_url)
                 }
@@ -267,7 +267,9 @@ export function HomePropertyListingCard({
         <div
           className={cn(
             "flex min-h-0 min-w-0 flex-1 flex-col justify-between gap-3",
-            isRelated ? "px-4 py-4 sm:px-5 sm:py-5 sm:pl-4" : "p-3 sm:p-4",
+            isRelated
+              ? "px-4 py-4 sm:px-5 sm:py-5 sm:pl-4"
+              : "p-4 sm:p-5",
           )}
         >
           <div
@@ -345,15 +347,17 @@ export function HomePropertyListingCard({
 
           <div
             className={cn(
-              "mt-auto flex flex-col gap-2 border-t border-neutral-200",
-              isRelated ? "pt-3 sm:pt-3.5" : "pt-2.5",
+              "mt-auto flex flex-col border-t pt-3",
+              isRelated
+                ? "gap-2 border-neutral-200 pt-3 sm:pt-3.5"
+                : "gap-2.5 border-neutral-100 bg-neutral-50/40 sm:gap-3 sm:bg-transparent sm:pt-3.5",
             )}
           >
             <div className="min-w-0 w-full space-y-1">
               <p
                 className={cn(
                   "font-bold tabular-nums leading-tight",
-                  isRelated ? "text-lg sm:text-xl" : "text-base sm:text-lg",
+                  isRelated ? "text-lg sm:text-xl" : "text-lg sm:text-xl",
                 )}
                 style={{ color: LISTING_CARD.navy }}
               >
@@ -380,7 +384,7 @@ export function HomePropertyListingCard({
             </div>
             <Link
               href={href}
-              className="inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-lg bg-[#ff0018] px-4 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0018] focus-visible:ring-offset-2"
+              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#ff0018] px-4 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(255,0,24,0.25)] transition-[opacity,transform] hover:opacity-95 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0018] focus-visible:ring-offset-2"
             >
               View
               <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
@@ -772,6 +776,8 @@ export function DirectoryPropertyListingCard({
   property: PropertyWithRelations;
   index: number;
 }) {
+  const { has, toggle } = useWishlist();
+  const inWishlist = has(property.id);
   const href = `/properties/${property.slug}`;
   const { line1, line2 } = addressTwoLines(property);
   const refCode = propertyListingRefCode(property, index);
@@ -826,25 +832,30 @@ export function DirectoryPropertyListingCard({
       />
 
       <div className="hidden min-h-0 flex-col lg:flex lg:flex-row">
-        <Link
-          href={href}
-          className="relative aspect-[2/1] w-full shrink-0 overflow-hidden bg-neutral-100 lg:aspect-auto lg:w-[min(42%,340px)] lg:min-h-[172px] lg:self-stretch"
-        >
-          {property.cover_image_url ? (
-            <Image
-              src={property.cover_image_url}
-              alt=""
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-              sizes="(max-width: 640px) 100vw, 380px"
-              unoptimized={!isRemoteImageOptimizedUrl(property.cover_image_url)}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-4xl text-neutral-400">
-              🏠
-            </div>
-          )}
-          <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-2">
+        <div className="relative aspect-[2/1] w-full shrink-0 overflow-hidden bg-neutral-100 lg:aspect-auto lg:w-[min(42%,340px)] lg:min-h-[172px] lg:self-stretch group/image">
+          <Link
+            href={href}
+            className="absolute inset-0 z-0 block"
+            aria-label={`View ${property.title}`}
+          >
+            {property.cover_image_url ? (
+              <Image
+                src={property.cover_image_url}
+                alt=""
+                fill
+                className="object-cover transition-transform duration-500 group-hover/image:scale-[1.02]"
+                sizes="(max-width: 640px) 100vw, 380px"
+                unoptimized={!isRemoteImageOptimizedUrl(
+                  property.cover_image_url,
+                )}
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-4xl text-neutral-400">
+                🏠
+              </div>
+            )}
+          </Link>
+          <div className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-5rem)] flex-wrap items-center gap-2">
             {property.is_featured ? (
               <span
                 className="inline-flex items-center gap-1 rounded-md border border-white/20 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-md ring-1 ring-black/15"
@@ -864,7 +875,29 @@ export function DirectoryPropertyListingCard({
               {refCode}
             </span>
           </div>
-        </Link>
+          <div className="absolute right-3 top-3 z-20 flex gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggle(property.id);
+              }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#1a2b4b] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+              aria-label={
+                inWishlist ? "Remove from favorites" : "Add to favorites"
+              }
+              title={inWishlist ? "Remove from saved" : "Save listing"}
+            >
+              <Heart
+                className="h-4 w-4"
+                fill={inWishlist ? "currentColor" : "none"}
+                strokeWidth={2}
+                aria-hidden
+              />
+            </button>
+          </div>
+        </div>
 
         <div className="flex min-w-0 flex-1 flex-col gap-2 p-3 sm:p-4 md:gap-3">
           <div className="min-w-0 space-y-1.5">
@@ -1016,7 +1049,7 @@ export function PropertyListingCardSkeleton({
   const imageClass =
     variant === "directory"
       ? "aspect-[2/1] w-full shrink-0 lg:aspect-auto lg:min-h-[172px] lg:w-[min(42%,340px)] lg:self-stretch"
-      : "aspect-[2/1] w-full shrink-0 sm:aspect-auto sm:min-h-[156px] sm:w-[min(44%,300px)] sm:self-stretch";
+      : "aspect-[4/3] w-full shrink-0 sm:aspect-auto sm:min-h-[200px] sm:w-[min(46%,320px)] sm:max-w-[340px] sm:self-stretch";
 
   if (variant === "directory") {
     return (
@@ -1159,7 +1192,7 @@ export function PropertyListingCardSkeleton({
 
   return (
     <div
-      className="overflow-hidden rounded-xl border border-neutral-200/80 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-black/[0.03]"
+      className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-[0_2px_14px_rgba(15,23,42,0.07)] ring-1 ring-black/[0.05]"
       style={{ backgroundColor: "#ffffff" }}
     >
       <div className="flex min-h-0 flex-col sm:flex-row">

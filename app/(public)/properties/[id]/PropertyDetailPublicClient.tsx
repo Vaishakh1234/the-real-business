@@ -6,7 +6,8 @@ import {
   MapPin,
   Bed,
   Bath,
-  Maximize2,
+  Square,
+  LandPlot,
   ArrowLeft,
   Building2,
   Hash,
@@ -15,9 +16,12 @@ import {
   Compass,
   ChevronLeft,
   ChevronRight,
+  Heart,
 } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { toast } from "sonner";
 import { usePublicPropertyByIdOrSlug } from "@/hooks/useProperties";
+import { useWishlist } from "@/hooks/useWishlist";
 import { formatPropertyPriceValue } from "@/lib/utils";
 import { propertyMapIframeSrc } from "@/lib/map-url";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -256,7 +260,7 @@ function SpecChip({
         <p className="text-[9px] font-bold uppercase leading-tight tracking-[0.05em] text-neutral-500 sm:text-[10px] sm:tracking-wide">
           {label}
         </p>
-        <p className="truncate text-[12px] font-bold leading-snug text-neutral-900 sm:text-sm sm:leading-normal">
+        <p className="break-words text-[12px] font-bold leading-snug text-neutral-900 sm:text-sm sm:leading-normal">
           {value}
         </p>
       </div>
@@ -436,7 +440,7 @@ function PropertyInformationCollapsible({
   if (!hasContent) return null;
 
   return (
-    <div className={DETAIL_SURFACE_CARD}>
+    <div className={cn(DETAIL_SURFACE_CARD, "min-w-0 max-w-full")}>
       <button
         type="button"
         id={`${panelId}-trigger`}
@@ -461,17 +465,17 @@ function PropertyInformationCollapsible({
           id={`${panelId}-panel`}
           role="region"
           aria-labelledby={`${panelId}-trigger`}
-          className="border-t border-neutral-200/90 bg-white px-3.5 pb-4 pt-2 sm:px-5 sm:pb-5 sm:pt-3"
+          className="min-w-0 max-w-full border-t border-neutral-200/90 bg-white px-3.5 pb-4 pt-2 sm:px-5 sm:pb-5 sm:pt-3"
         >
           <div
             ref={bodyRef}
             className={cn(
-              "relative",
+              "relative min-w-0 max-w-full break-words",
               bodyOverflows && !bodyExpanded && "max-h-[20rem] overflow-hidden",
             )}
           >
             {shortDescription?.trim() ? (
-              <p className="mb-3 text-[13px] leading-relaxed text-neutral-600 sm:mb-4 sm:text-sm">
+              <p className="mb-3 break-words text-[13px] leading-relaxed text-neutral-600 sm:mb-4 sm:text-sm">
                 {shortDescription.trim()}
               </p>
             ) : null}
@@ -479,7 +483,10 @@ function PropertyInformationCollapsible({
               <div
                 className={cn(
                   PROPERTY_DESCRIPTION_HTML_CLASS,
-                  "text-[13px] text-neutral-600 sm:text-[15px]",
+                  "min-w-0 max-w-full text-[13px] text-neutral-600 sm:text-[15px]",
+                  "[&_h1]:!mt-3 [&_h1]:!text-lg [&_h1]:!font-bold [&_h1]:!leading-snug",
+                  "[&_h2]:!mt-3 [&_h2]:!text-base [&_h2]:!font-semibold [&_h2]:!leading-snug",
+                  "[&_p]:break-words [&_li]:break-words [&_div]:break-words",
                 )}
                 dangerouslySetInnerHTML={{ __html: descriptionHtml }}
               />
@@ -513,6 +520,7 @@ export function PropertyDetailPublicClient({
   identifier,
 }: PropertyDetailPublicClientProps) {
   const router = useRouter();
+  const { has, toggle } = useWishlist();
   const {
     data: property,
     isLoading,
@@ -521,6 +529,8 @@ export function PropertyDetailPublicClient({
 
   if (isLoading) return <DetailSkeleton />;
   if (isError || !property) return <DetailEmpty />;
+
+  const saved = has(property.id);
 
   const coverUrl = property.cover_image_url ?? "";
   const gallery = property.gallery_images?.filter(Boolean) ?? [];
@@ -560,7 +570,7 @@ export function PropertyDetailPublicClient({
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-16 lg:bg-muted/30">
+    <div className="min-h-screen overflow-x-clip bg-neutral-50 pb-16 lg:bg-muted/30">
       <div className={DETAIL_OUTER_FRAME}>
         <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-3">
           <button
@@ -582,9 +592,35 @@ export function PropertyDetailPublicClient({
             <PropertyDetailGallery images={allImages} title={property.title} />
 
             <div className="space-y-3 px-0.5 sm:space-y-4 sm:px-0">
-              <h1 className="font-heading text-[1.375rem] font-bold leading-snug tracking-tight text-[#1a2b4b] sm:text-3xl md:text-[2rem] md:leading-tight">
-                {property.title}
-              </h1>
+              <div className="flex items-start gap-2.5 sm:gap-3">
+                <h1 className="min-w-0 flex-1 font-heading text-[1.375rem] font-bold leading-snug tracking-tight text-[#1a2b4b] sm:text-3xl md:text-[2rem] md:leading-tight">
+                  {property.title}
+                </h1>
+                <button
+                  type="button"
+                  className={cn(
+                    "mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full border bg-white text-[#1a2b4b] shadow-sm transition-colors hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold lg:hidden",
+                    saved
+                      ? "border-rose-200 bg-rose-50 text-rose-600"
+                      : "border-neutral-200",
+                  )}
+                  aria-label={saved ? "Remove from saved" : "Save property"}
+                  aria-pressed={saved}
+                  onClick={() => {
+                    const wasSaved = saved;
+                    toggle(property.id);
+                    toast.success(
+                      wasSaved ? "Removed from saved" : "Saved to your list",
+                    );
+                  }}
+                >
+                  <Heart
+                    className={cn("h-5 w-5", saved && "fill-current")}
+                    strokeWidth={2}
+                    aria-hidden
+                  />
+                </button>
+              </div>
 
               {locationDisplay ? (
                 <p className="flex items-start gap-2 text-[13px] leading-relaxed text-neutral-500 sm:text-base sm:text-neutral-600">
@@ -627,14 +663,14 @@ export function PropertyDetailPublicClient({
               ) : null}
               {property.area_sqft != null ? (
                 <SpecChip
-                  icon={Maximize2}
+                  icon={Square}
                   label="Area"
                   value={`${property.area_sqft} sqft`}
                 />
               ) : null}
               {property.total_cent != null ? (
                 <SpecChip
-                  icon={Maximize2}
+                  icon={LandPlot}
                   label="Total cent"
                   value={Number(property.total_cent).toLocaleString("en-IN", {
                     maximumFractionDigits: 4,

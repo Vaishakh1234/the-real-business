@@ -56,7 +56,7 @@ export function HomeExplorePropertyList() {
 
   return (
     <div className="min-w-0 w-full">
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 sm:items-stretch">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 sm:items-stretch">
         {isLoading
           ? Array.from({ length: listLimit }, (_, i) => (
               <PropertyListingCardSkeleton key={i} variant="home" />
