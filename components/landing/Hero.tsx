@@ -14,7 +14,7 @@ import type { Category } from "@/types";
 
 const HERO_CATEGORY_BUTTON_LIMIT = 5;
 /** Mobile hero row: this many category chips plus “View All”. */
-const HERO_CATEGORY_MOBILE_ROW = 3;
+const HERO_CATEGORY_MOBILE_ROW = 2;
 
 const heroTitleClassName =
   "min-w-0 text-balance font-heading text-[2.5rem] font-bold leading-[1.06] tracking-[-0.02em] text-white xs:text-[2.875rem] sm:text-[4.5rem] sm:leading-[1.05] md:text-[5.25rem] md:leading-[1.04] lg:text-[5.75rem] lg:leading-[1.03] xl:text-[6rem] xl:leading-[1.02]";
@@ -246,10 +246,8 @@ export function Hero() {
               </span>
             </motion.h1>
             <HeroCategoryButtons singleRowCompact className="mt-0" />
-            <p className="text-balance font-heading text-[1.0625rem] font-bold leading-snug tracking-[-0.015em] text-white xs:text-[1.1875rem]">
-              {HOME_HERO_SEARCH_PROMPT}
-            </p>
-            <div className="flex flex-col gap-2">
+           
+            <div className="flex flex-col gap-2 mt-4">
               <Link
                 href="/properties"
                 className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white bg-white px-3.5 py-2.5 text-sm font-semibold text-brand-charcoal shadow-md transition-[background-color,border-color] hover:border-white hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
