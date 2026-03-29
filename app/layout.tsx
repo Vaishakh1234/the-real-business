@@ -1,0 +1,59 @@
+import type { Metadata } from "next";
+import { Inter, Lora } from "next/font/google";
+import { siteWordmarkFont } from "@/lib/fonts";
+import "./globals.css";
+import { QueryProvider } from "@/components/providers/QueryProvider";
+import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
+import { NetworkStatusListener } from "@/components/NetworkStatusListener";
+import { Toaster } from "sonner";
+
+const inter = Inter({ subsets: ["latin"] });
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
+export const metadata: Metadata = {
+  title: {
+    default: "The Real Business — Premier Real Estate",
+    template: "%s | The Real Business",
+  },
+  description:
+    "Discover premium properties for sale and rent. Find your dream home with The Real Business.",
+  keywords: ["real estate", "properties", "buy", "sell", "rent", "India"],
+  icons: {
+    icon: "/logo-icon-bg.png",
+    apple: "/logo-icon-bg.png",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    siteName: "The Real Business",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.className} ${lora.variable} ${siteWordmarkFont.variable}`}
+      >
+        <QueryProvider>
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+          <NetworkStatusListener />
+          <Toaster richColors position="top-right" />
+        </QueryProvider>
+      </body>
+    </html>
+  );
+}
