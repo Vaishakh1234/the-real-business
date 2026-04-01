@@ -91,12 +91,12 @@ export default function TeamPage() {
       {/* Hero */}
       <section className="bg-[#f8f8f6] pt-20 pb-16">
         <div className={publicContentFrameClass}>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+          <div className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
             <div>
               <p className="text-sm text-gray-400 tracking-widest mb-3">
                 /Our Team
               </p>
-              <h1 className="text-5xl sm:text-6xl lg:text-[72px] font-bold text-black leading-[0.95] tracking-tight max-w-2xl">
+              <h1 className="text-5xl sm:text-6xl xl:text-[72px] font-bold text-black leading-[0.95] tracking-tight max-w-2xl">
                 The experts
                 <br />
                 behind your

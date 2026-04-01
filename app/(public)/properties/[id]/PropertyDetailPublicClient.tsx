@@ -64,7 +64,7 @@ function DetailSkeleton() {
             detailSkeletonPulse,
           )}
         />
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_max(18rem,calc(100%*5/12-100px))] lg:gap-10 lg:items-start">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_max(18rem,calc(100%*5/12-100px))] xl:gap-10 xl:items-start">
           <div className="min-w-0 space-y-4 sm:space-y-6">
             <div
               className={cn(
@@ -141,7 +141,7 @@ function DetailSkeleton() {
           </div>
 
           <aside className="min-w-0">
-            <div className="lg:sticky lg:top-24">
+            <div className="xl:sticky xl:top-24">
               <div className={cn(DETAIL_SURFACE_CARD, "p-4 sm:p-6")}>
                 <div className="mb-4 flex justify-end gap-2">
                   <Skeleton
@@ -587,7 +587,7 @@ export function PropertyDetailPublicClient({
           </button>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_max(18rem,calc(100%*5/12-100px))] lg:gap-10 lg:items-start">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_max(18rem,calc(100%*5/12-100px))] xl:gap-10 xl:items-start">
           <div className="min-w-0 space-y-4 sm:space-y-6">
             <PropertyDetailGallery images={allImages} title={property.title} />
 
@@ -599,7 +599,7 @@ export function PropertyDetailPublicClient({
                 <button
                   type="button"
                   className={cn(
-                    "mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full border bg-white text-[#1a2b4b] shadow-sm transition-colors hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold lg:hidden",
+                    "mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full border bg-white text-[#1a2b4b] shadow-sm transition-colors hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold xl:hidden",
                     saved
                       ? "border-rose-200 bg-rose-50 text-rose-600"
                       : "border-neutral-200",
@@ -740,7 +740,7 @@ export function PropertyDetailPublicClient({
           </div>
 
           <aside className="min-w-0">
-            <div className="lg:sticky lg:top-24">
+            <div className="xl:sticky xl:top-24">
               <PropertyEnquirySidebar
                 propertyId={property.id}
                 propertyTitle={property.title}

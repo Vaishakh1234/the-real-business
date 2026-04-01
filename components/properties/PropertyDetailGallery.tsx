@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { Building2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { isRemoteImageOptimizedUrl } from "@/lib/public-image-hosts";
+import { PropertyImage } from "@/components/ui/PropertyImage";
 
 const AUTO_ADVANCE_MS = 5000;
 
@@ -108,7 +108,7 @@ export function PropertyDetailGallery({
       >
         <div className="relative h-full min-h-[168px] w-full overflow-hidden rounded-lg sm:min-h-[180px] sm:rounded-xl">
           {current ? (
-            <Image
+            <PropertyImage
               src={current}
               alt={`${title} — photo ${safeIndex + 1} of ${images.length}`}
               fill
@@ -185,7 +185,7 @@ export function PropertyDetailGallery({
                     : "border-neutral-200/80 opacity-85 hover:opacity-100",
                 )}
               >
-                <Image
+                <PropertyImage
                   src={url}
                   alt=""
                   fill

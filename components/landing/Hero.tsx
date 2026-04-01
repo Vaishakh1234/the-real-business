@@ -17,7 +17,7 @@ const HERO_CATEGORY_BUTTON_LIMIT = 5;
 const HERO_CATEGORY_MOBILE_ROW = 2;
 
 const heroTitleClassName =
-  "min-w-0 text-balance font-heading text-[2.5rem] font-bold leading-[1.06] tracking-[-0.02em] text-white xs:text-[2.875rem] sm:text-[4.5rem] sm:leading-[1.05] md:text-[5.25rem] md:leading-[1.04] lg:text-[5.75rem] lg:leading-[1.03] xl:text-[6rem] xl:leading-[1.02]";
+  "min-w-0 text-balance font-heading text-[2.5rem] font-bold leading-[1.06] tracking-[-0.02em] text-white xs:text-[2.875rem] sm:text-[4.5rem] sm:leading-[1.05] md:text-[clamp(2.75rem,7vw,3.5rem)] md:leading-[1.08] lg:text-[5.25rem] lg:leading-[1.04] xl:text-[5.75rem] xl:leading-[1.03] 2xl:text-[6rem] 2xl:leading-[1.02]";
 
 const categoryChipClass =
   "inline-flex shrink-0 snap-start items-center rounded-full border border-white/30 bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] duration-200 hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal sm:snap-none sm:px-5 sm:py-2.5 sm:text-[15px]";
@@ -91,12 +91,7 @@ function HeroCategoryButtons({
       <div
         className={cn(
           "-mx-1 mt-2 flex gap-2 pb-0.5 sm:mx-0 sm:mt-7 sm:pb-0",
-          singleRowCompact &&
-            "flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-          !singleRowCompact &&
-            (autoScroll
-              ? "flex-wrap overflow-x-visible"
-              : "overflow-x-auto [scrollbar-width:none] sm:flex-wrap sm:overflow-x-visible [&::-webkit-scrollbar]:hidden"),
+          "flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           autoScroll && !singleRowCompact && "overflow-hidden",
           className,
         )}
@@ -160,7 +155,7 @@ function HeroCategoryButtons({
   return (
     <nav
       className={cn(
-        "-mx-1 mt-2 flex gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:mx-0 sm:mt-7 sm:gap-2 sm:flex-wrap sm:overflow-x-visible sm:pb-0 [&::-webkit-scrollbar]:hidden",
+        "-mx-1 mt-2 flex flex-wrap gap-1.5 pb-0.5 sm:mx-0 sm:mt-7 sm:gap-2.5 sm:pb-0",
         className,
       )}
       aria-label="Browse by category"
@@ -194,14 +189,14 @@ export function Hero() {
         className={cn(
           publicContentFrameClass,
           "relative z-10 flex min-h-0 flex-1 flex-col",
-          "pt-[calc(3.25rem+env(safe-area-inset-top))] pb-10 sm:pt-36 sm:pb-[max(2.75rem,calc(env(safe-area-inset-bottom)+0.75rem))] md:pb-[max(3.25rem,calc(env(safe-area-inset-bottom)+0.75rem))] md:pt-44 lg:pt-44 xl:pt-52",
+          "pt-[calc(3.25rem+env(safe-area-inset-top))] pb-14 sm:pt-36 sm:pb-[max(3.5rem,calc(env(safe-area-inset-bottom)+1.5rem))] md:pb-[max(4rem,calc(env(safe-area-inset-bottom)+2rem))] md:pt-44 lg:pt-44 xl:pt-52",
         )}
       >
         {/*
           Mobile: spacer; headline + chip row (3 categories + View All) + prompt + CTAs.
           md+: headline, categories, search card.
         */}
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 max-md:min-h-0 md:mt-[120px] md:min-h-0 md:flex-none md:gap-0">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 max-md:min-h-0 md:mt-[60px] md:min-h-0 md:flex-none md:gap-0">
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -222,7 +217,7 @@ export function Hero() {
             </span>
           </motion.h1>
 
-          <div className="order-2 hidden min-w-0 max-w-[42rem] md:block xl:max-w-4xl">
+          <div className="order-2 hidden min-w-0 w-full md:block">
             <HeroCategoryButtons />
           </div>
 
@@ -246,7 +241,7 @@ export function Hero() {
               </span>
             </motion.h1>
             <HeroCategoryButtons singleRowCompact className="mt-0" />
-           
+
             <div className="flex flex-col gap-2 mt-4">
               <Link
                 href="/properties"

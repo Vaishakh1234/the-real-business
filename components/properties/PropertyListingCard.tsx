@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { PropertyImage } from "@/components/ui/PropertyImage";
+import { PROPERTY_PLACEHOLDER_SRC } from "@/components/ui/PropertyImage";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
   ChevronDown,
+  Clock,
   Heart,
   MapPin,
   Maximize2,
@@ -215,7 +217,7 @@ export function HomePropertyListingCard({
             )}
           >
             {property.cover_image_url ? (
-              <Image
+              <PropertyImage
                 src={property.cover_image_url}
                 alt=""
                 fill
@@ -229,9 +231,13 @@ export function HomePropertyListingCard({
                 }
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-4xl text-neutral-400">
-                🏠
-              </div>
+              <PropertyImage
+                src={PROPERTY_PLACEHOLDER_SRC}
+                alt="No photo available"
+                fill
+                className="object-contain bg-[#eef4fb]"
+                unoptimized
+              />
             )}
             <div
               className={cn(
@@ -464,9 +470,6 @@ function DirectoryListingCardMobile({
     "";
 
   const telHref = phoneToTelHref(CONTACT.phone);
-  const highlights = (property.highlights ?? []).filter(
-    (h): h is string => typeof h === "string" && h.trim().length > 0,
-  );
 
   return (
     <div className="flex flex-col lg:hidden">
@@ -482,7 +485,7 @@ function DirectoryListingCardMobile({
               className="relative h-full min-w-full shrink-0 snap-center"
             >
               {src ? (
-                <Image
+                <PropertyImage
                   src={src}
                   alt=""
                   fill
@@ -492,9 +495,13 @@ function DirectoryListingCardMobile({
                   unoptimized={!isRemoteImageOptimizedUrl(src)}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-5xl text-neutral-400">
-                  🏠
-                </div>
+                <PropertyImage
+                  src={PROPERTY_PLACEHOLDER_SRC}
+                  alt="No photo available"
+                  fill
+                  className="object-contain bg-[#eef4fb]"
+                  unoptimized
+                />
               )}
             </div>
           ))}
@@ -594,20 +601,15 @@ function DirectoryListingCardMobile({
 
         <div className="flex min-h-[4.75rem] divide-x divide-neutral-200 rounded-lg border border-neutral-200 bg-neutral-50/80 px-2 py-2.5">
           <div className="flex min-w-0 flex-1 flex-col justify-center pr-2">
-            <p className="text-[12px] font-semibold uppercase tracking-wide text-neutral-500">
-              {property.price_type === "percent" ? "Per cent" : "Total"}
-            </p>
             <p
-              className="mt-0.5 text-xl font-bold tabular-nums leading-tight"
+              className="text-xl font-bold tabular-nums leading-tight"
               style={{ color: LISTING_CARD.navy }}
             >
               {priceWithInr}
             </p>
-            {perSqft ? (
-              <p className="mt-1 text-[13px] font-semibold text-neutral-600">
-                {perSqft}/sqft
-              </p>
-            ) : null}
+            <p className="mt-0.5 text-[12px] font-semibold uppercase tracking-wide text-neutral-500">
+              {property.price_type === "percent" ? "Per cent" : "Total amount"}
+            </p>
           </div>
           <div className="flex min-w-0 flex-1 flex-col justify-center pl-2">
             {property.total_cent != null ? (
@@ -622,7 +624,7 @@ function DirectoryListingCardMobile({
                   cent
                 </p>
                 <p className="mt-1 text-[12px] font-medium uppercase tracking-wide text-neutral-500">
-                  Total cent
+                  Total area
                 </p>
               </>
             ) : plotCentApproxFromSqft != null ? (
@@ -638,7 +640,7 @@ function DirectoryListingCardMobile({
                   cent
                 </p>
                 <p className="mt-1 text-[12px] font-medium uppercase tracking-wide text-neutral-500">
-                  Total cent (from plot area)
+                  Total area (approx)
                 </p>
               </>
             ) : areaSqft != null ? (
@@ -656,9 +658,7 @@ function DirectoryListingCardMobile({
                   ) : null}
                 </p>
                 <p className="mt-1 text-[12px] font-medium uppercase tracking-wide text-neutral-500">
-                  {property.structure_type === "plot"
-                    ? "Plot area"
-                    : "Built-up area"}
+                  Total area
                 </p>
               </>
             ) : (
@@ -666,25 +666,6 @@ function DirectoryListingCardMobile({
             )}
           </div>
         </div>
-
-        {highlights.length > 0 ? (
-          <div>
-            <p className="mb-1.5 text-[12px] font-semibold text-neutral-700">
-              Highlights :
-            </p>
-            <div className="-mx-0.5 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {highlights.map((h) => (
-                <span
-                  key={h}
-                  style={{ backgroundColor: LISTING_CARD.navy }}
-                  className="shrink-0 rounded-full border border-brand-gold/45 px-3 py-1.5 text-[11px] font-semibold leading-tight text-white shadow-[0_2px_6px_rgba(26,43,75,0.28)]"
-                >
-                  {h}
-                </span>
-              ))}
-            </div>
-          </div>
-        ) : null}
 
         {descBody ? (
           <button
@@ -701,25 +682,19 @@ function DirectoryListingCardMobile({
         ) : null}
 
         <div className="flex flex-col gap-3 border-t border-neutral-100 pt-3">
-          <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-2">
             <p
               className="text-sm font-bold leading-snug text-balance"
               style={{ color: LISTING_CARD.navy }}
             >
               {SITE_NAME}
             </p>
-            <p className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] leading-snug text-neutral-500">
-              <span>Broker</span>
-              <span className="text-neutral-400" aria-hidden>
-                ·
+            <span className="inline-flex items-center gap-1 rounded-md bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-500">
+              <Clock className="h-3 w-3" aria-hidden />
+              <span className="tabular-nums">
+                {formatRelativeTime(property.created_at)}
               </span>
-              <span className="inline-flex max-w-full items-center rounded-full border border-brand-gold/50 bg-brand-gold/15 px-2.5 py-0.5 text-[11px] font-semibold text-[#1a2b4b] shadow-sm ring-1 ring-inset ring-brand-gold/20">
-                Listed at{" "}
-                <span className="ml-0.5 tabular-nums">
-                  {formatRelativeTime(property.created_at)}
-                </span>
-              </span>
-            </p>
+            </span>
           </div>
           <div className="flex flex-row items-center gap-2">
             <Link
@@ -785,11 +760,12 @@ export function DirectoryPropertyListingCard({
   const areaSqft = property.area_sqft;
   const hasArea = areaSqft != null;
   const metricCount = 2 + (showTotalCentCol ? 1 : 0) + (hasArea ? 1 : 0);
+  /** Keep 2 columns through `lg` when the directory sidebar shares the row — four tight columns overlap labels. */
   const metricsGridClass =
     metricCount >= 4
-      ? "grid-cols-2 lg:grid-cols-4"
+      ? "grid-cols-2 xl:grid-cols-4"
       : metricCount === 3
-        ? "grid-cols-2 lg:grid-cols-3"
+        ? "grid-cols-2 xl:grid-cols-3"
         : "grid-cols-2";
 
   const statCardClass =
@@ -825,20 +801,24 @@ export function DirectoryPropertyListingCard({
             aria-label={`View ${property.title}`}
           >
             {property.cover_image_url ? (
-              <Image
+              <PropertyImage
                 src={property.cover_image_url}
                 alt=""
                 fill
                 className="object-cover transition-transform duration-500 group-hover/image:scale-[1.02]"
-                sizes="(max-width: 640px) 100vw, 380px"
+                sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 380px"
                 unoptimized={
                   !isRemoteImageOptimizedUrl(property.cover_image_url)
                 }
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-4xl text-neutral-400">
-                🏠
-              </div>
+              <PropertyImage
+                src={PROPERTY_PLACEHOLDER_SRC}
+                alt="No photo available"
+                fill
+                className="object-contain bg-[#eef4fb]"
+                unoptimized
+              />
             )}
           </Link>
           <div className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-5rem)] flex-wrap items-center gap-2">
@@ -945,7 +925,7 @@ export function DirectoryPropertyListingCard({
             </div>
             {showTotalCentCol ? (
               <div className={statCardClass}>
-                <p className={statLabelClass}>Total cent</p>
+                <p className={statLabelClass}>Total area</p>
                 <div className="mt-1 sm:mt-1.5">
                   {property.total_cent != null ? (
                     <p
@@ -1145,7 +1125,7 @@ export function PropertyListingCardSkeleton({
                   <div className={`h-3 w-4/5 ${P}`} />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 rounded-lg border border-neutral-200/75 bg-white p-2.5 lg:grid-cols-4 lg:gap-3 lg:p-3">
+              <div className="grid grid-cols-2 gap-2 rounded-lg border border-neutral-200/75 bg-white p-2.5 xl:grid-cols-4 xl:gap-3 xl:p-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}

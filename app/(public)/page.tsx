@@ -25,7 +25,7 @@ export default function LandingPage() {
           aria-labelledby="home-explore-heading"
         >
           <HomeExploreSectionIntro />
-          <div className="mt-8 grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_min(100%,380px)] lg:gap-10 xl:gap-12">
+          <div className="mt-8 grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,1fr)_min(100%,380px)] xl:gap-10 2xl:gap-12">
             <div className="min-w-0 w-full">
               <HomeExplorePropertyList />
             </div>

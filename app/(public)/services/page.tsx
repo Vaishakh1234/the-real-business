@@ -204,7 +204,7 @@ export default function ServicesPage() {
       {/* Company overview */}
       <section className="py-16 sm:py-20 lg:py-24 bg-white border-b border-border">
         <div className={publicContentFrameClass}>
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid gap-12 xl:grid-cols-2 xl:gap-16 items-center">
             <div>
               <span className="inline-block text-brand-gold font-semibold tracking-widest uppercase text-xs mb-4">
                 About our company
@@ -242,13 +242,13 @@ export default function ServicesPage() {
                 ))}
               </ul>
             </div>
-            <div className="relative aspect-[4/3] w-full max-h-[680px] lg:max-h-[800px]">
+            <div className="relative aspect-[4/3] w-full max-h-[680px] xl:max-h-[800px]">
               <Image
                 src={SECTION_IMAGE}
                 alt="Our team and approach"
                 fill
                 className="object-contain object-center"
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                sizes="(max-width: 1279px) 100vw, 50vw"
               />
             </div>
           </div>
@@ -270,7 +270,7 @@ export default function ServicesPage() {
               need under one roof.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-3">
             {services.map((service) => {
               const Icon = service.icon;
               return (
@@ -322,7 +322,7 @@ export default function ServicesPage() {
               beyond.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
             {processSteps.map((item) => (
               <div key={item.step} className="relative">
                 <div className="relative bg-muted/50 rounded-2xl p-6 sm:p-8 border border-border/50">
@@ -357,7 +357,7 @@ export default function ServicesPage() {
               goals first.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-4">
             {whyUs.map((item) => {
               const Icon = item.icon;
               return (
@@ -384,7 +384,7 @@ export default function ServicesPage() {
       {/* Stats strip */}
       <section className="py-12 sm:py-16 bg-brand-charcoal text-white">
         <div className={publicContentFrameClass}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+          <div className="grid grid-cols-2 gap-8 sm:gap-12 xl:grid-cols-4">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-gold mb-1">

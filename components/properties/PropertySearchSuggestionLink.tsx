@@ -1,10 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Home, LandPlot } from "lucide-react";
 import { cn, formatPropertyPriceValue } from "@/lib/utils";
 import { isRemoteImageOptimizedUrl } from "@/lib/public-image-hosts";
+import {
+  PropertyImage,
+  PROPERTY_PLACEHOLDER_SRC,
+} from "@/components/ui/PropertyImage";
 import type { PropertyWithRelations } from "@/types";
 
 type PropertySearchSuggestionLinkProps = {
@@ -90,8 +93,7 @@ export function PropertySearchSuggestionLink({
     variant === "hero"
       ? "mt-0.5 line-clamp-2 min-w-0 break-words text-[13px] leading-snug text-neutral-600"
       : "mt-0.5 line-clamp-2 min-w-0 break-words text-[13px] leading-snug text-muted-foreground";
-  const iconClass =
-    "mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-gold";
+  const iconClass = "mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-gold";
 
   const metaLine = buildSuggestMetaLine(p, variant);
   const TypeIcon = plot ? LandPlot : Home;
@@ -111,7 +113,7 @@ export function PropertySearchSuggestionLink({
     >
       <div className="relative h-[3.25rem] w-[4.25rem] shrink-0 overflow-hidden rounded-md bg-neutral-200 sm:h-14 sm:w-[4.5rem]">
         {cover ? (
-          <Image
+          <PropertyImage
             src={cover}
             alt=""
             fill
@@ -120,9 +122,13 @@ export function PropertySearchSuggestionLink({
             unoptimized={!isRemoteImageOptimizedUrl(cover)}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-lg text-neutral-400">
-            {plot ? "🌴" : "🏠"}
-          </div>
+          <PropertyImage
+            src={PROPERTY_PLACEHOLDER_SRC}
+            alt="No photo"
+            fill
+            className="object-contain bg-[#eef4fb]"
+            unoptimized
+          />
         )}
       </div>
       <div className="flex min-w-0 flex-1 items-start gap-2">

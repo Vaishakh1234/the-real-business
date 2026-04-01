@@ -65,7 +65,7 @@ export default function AboutPage() {
       {/* Company story — from ABOUT + CONTACT */}
       <section className="py-16 sm:py-20 lg:py-24 bg-white border-b border-border">
         <div className={publicContentFrameClass}>
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid gap-12 xl:grid-cols-2 xl:gap-16 items-center">
             <div>
               <span className="inline-block text-brand-gold font-semibold tracking-widest uppercase text-xs mb-4">
                 Our legacy
@@ -115,7 +115,7 @@ export default function AboutPage() {
                   alt="Our approach to real estate"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1279px) 100vw, 50vw"
                 />
               </div>
               <div className="absolute -bottom-6 -left-4 sm:left-0 bg-brand-gold p-6 sm:p-8 rounded-2xl shadow-lg">
@@ -134,7 +134,7 @@ export default function AboutPage() {
       {/* Stats — from ABOUT */}
       <section className="py-12 sm:py-16 bg-muted/50">
         <div className={publicContentFrameClass}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 text-center">
+          <div className="grid grid-cols-2 gap-8 sm:gap-12 xl:grid-cols-4 text-center">
             {ABOUT.stats.map((stat) => (
               <div key={stat.label}>
                 <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-gold mb-2">
@@ -193,7 +193,7 @@ export default function AboutPage() {
               {subtitle}
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8 xl:grid-cols-4">
             {ABOUT.values.map((value, i) => {
               const Icon = valueIcons[i];
               return (

@@ -18,7 +18,7 @@ export function PropertiesFilterSidebarStatic() {
   const label = "text-sm font-semibold text-brand-charcoal";
 
   return (
-    <div className="space-y-6 rounded-xl border border-border bg-white p-5 shadow-sm">
+    <div className="@container space-y-6 rounded-xl border border-border bg-white p-5 shadow-sm">
       <div>
         <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-black">
           Filters
@@ -80,7 +80,7 @@ export function PropertiesFilterSidebarStatic() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 @[14rem]:grid-cols-2">
           <div className="space-y-1.5">
             <label className={label}>Min extent (cent)</label>
             <input

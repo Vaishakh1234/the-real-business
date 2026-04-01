@@ -106,8 +106,8 @@ export function HomeSidebar() {
   return (
     <aside
       className={cn(
-        "flex flex-col gap-5 lg:gap-6",
-        "lg:sticky lg:top-24 lg:z-10 lg:self-start",
+        "flex flex-col gap-5 xl:gap-6",
+        "xl:sticky xl:top-24 xl:z-10 xl:self-start",
       )}
       aria-label="Quick links for buyers and sellers"
     >

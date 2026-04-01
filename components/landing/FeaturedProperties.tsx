@@ -14,6 +14,10 @@ import {
   Hash,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  PropertyNativeImg,
+  PROPERTY_PLACEHOLDER_SRC,
+} from "@/components/ui/PropertyImage";
 import type { PropertyWithRelations } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
@@ -130,8 +134,7 @@ function PropertyCard({
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {property.cover_image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <PropertyNativeImg
             src={property.cover_image_url}
             alt={property.title ?? ""}
             loading="lazy"
@@ -139,9 +142,12 @@ function PropertyCard({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center text-muted-foreground text-4xl">
-            🏠
-          </div>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={PROPERTY_PLACEHOLDER_SRC}
+            alt="No photo available"
+            className="h-full w-full object-contain bg-[#eef4fb]"
+          />
         )}
         <div className="absolute top-3 left-3 flex flex-wrap gap-2">
           <span className="bg-brand-charcoal/90 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full">
@@ -308,7 +314,7 @@ export function FeaturedProperties() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)
             : properties

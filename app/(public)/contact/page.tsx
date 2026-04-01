@@ -107,7 +107,7 @@ export default function ContactPage() {
 
       <section className="py-16 sm:py-24 bg-white">
         <div className={publicContentFrameClass}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 gap-16 xl:grid-cols-2">
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}

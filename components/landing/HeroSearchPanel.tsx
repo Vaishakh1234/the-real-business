@@ -226,7 +226,7 @@ export function HeroSearchPanel({
       className={cn(
         "w-full min-w-0 max-w-[42rem] flex-shrink-0 self-start space-y-1.5 sm:space-y-4 xl:max-w-5xl",
         stackedBelowCategories
-          ? "mt-0 pb-0 sm:mt-10 sm:pb-4 lg:pb-4"
+          ? "mt-0 pb-4 sm:mt-10 sm:pb-4 lg:pb-4"
           : "mt-3 pb-6 sm:mt-4 sm:pb-8 lg:pb-10",
       )}
     >
@@ -266,7 +266,7 @@ export function HeroSearchPanel({
          */}
         <div className="overflow-hidden rounded-xl bg-white shadow-[0_16px_40px_rgba(0,0,0,0.16)] ring-1 ring-black/[0.06] sm:rounded-2xl sm:shadow-[0_12px_40px_rgba(0,0,0,0.14)] sm:ring-black/[0.04]">
           {/* Row 1: headline + Post property */}
-          <div className="flex flex-col gap-0 border-b border-neutral-200/90 lg:flex-row lg:items-stretch lg:justify-between">
+          <div className="flex flex-col gap-0 border-b border-neutral-200/90 md:flex-row md:items-stretch md:justify-between">
             <div className="min-w-0 flex-1">
               <div className="flex items-center px-2.5 py-1.5 sm:min-h-[56px] sm:px-4 sm:py-3">
                 <p className="font-heading text-[0.8125rem] font-bold leading-tight tracking-tight text-neutral-800 xs:text-[0.875rem] sm:text-lg sm:leading-snug sm:text-neutral-700 md:text-xl">
@@ -275,9 +275,9 @@ export function HeroSearchPanel({
               </div>
             </div>
 
-            <div className="hidden h-auto w-px shrink-0 bg-neutral-200 lg:block" />
+            <div className="hidden h-auto w-px shrink-0 bg-neutral-200 md:block" />
 
-            <div className="flex items-center justify-center border-t border-neutral-200 bg-neutral-50/80 px-2.5 py-1 sm:px-4 sm:py-3 lg:min-h-0 lg:border-t-0 lg:bg-transparent lg:py-0 lg:pr-5">
+            <div className="flex items-center justify-center border-t border-neutral-200 bg-neutral-50/80 px-2.5 py-1 sm:px-4 sm:py-3 md:min-h-0 md:border-t-0 md:bg-transparent md:py-0 md:pr-5">
               <Link
                 href={postPropertyHrefWithCta("POST_PROPERTY_HP_SEARCH_BAR")}
                 className="inline-flex min-h-[40px] min-w-0 w-full max-w-none items-center justify-center gap-1.5 rounded-lg py-1.5 text-[13px] font-semibold text-neutral-800 transition-colors active:bg-neutral-100/80 hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:min-h-0 sm:w-auto sm:gap-2 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-2 sm:text-sm"

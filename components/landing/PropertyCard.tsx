@@ -8,6 +8,10 @@ import {
   Hash,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  PropertyNativeImg,
+  PROPERTY_PLACEHOLDER_SRC,
+} from "@/components/ui/PropertyImage";
 import type { PropertyWithRelations } from "@/types";
 import { formatPropertyPriceValue } from "@/lib/utils";
 
@@ -23,8 +27,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
       {/* Image */}
       <div className="relative h-52 bg-muted overflow-hidden">
         {property.cover_image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <PropertyNativeImg
             src={property.cover_image_url}
             alt={property.title}
             loading="lazy"
@@ -32,9 +35,12 @@ export function PropertyCard({ property }: PropertyCardProps) {
             className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center text-muted-foreground text-4xl">
-            🏠
-          </div>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={PROPERTY_PLACEHOLDER_SRC}
+            alt="No photo available"
+            className="h-full w-full object-contain bg-[#eef4fb]"
+          />
         )}
 
         {/* Badges */}

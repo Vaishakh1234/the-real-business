@@ -28,7 +28,14 @@ SELECT setval(
       SELECT MAX((regexp_match(listing_ref, '^TRB-([0-9]+)$'))[1]::bigint)
       FROM public.properties
     ),
-    0
+    1
+  ),
+  COALESCE(
+    (
+      SELECT MAX((regexp_match(listing_ref, '^TRB-([0-9]+)$'))[1]::bigint)
+      FROM public.properties
+    ) IS NOT NULL,
+    false
   )
 );
 

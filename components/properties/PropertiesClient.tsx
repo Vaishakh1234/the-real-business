@@ -322,7 +322,7 @@ export function PropertiesClient() {
   });
 
   const filterSidebar = (
-    <div className="rounded-xl border border-border bg-white p-5 shadow-sm space-y-6">
+    <div className="@container rounded-xl border border-border bg-white p-5 shadow-sm space-y-6">
       <div>
         <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-black">
           Filters
@@ -514,7 +514,7 @@ export function PropertiesClient() {
           icon={<Percent className="h-4 w-4" />}
           triggerClassName="h-11 bg-white"
         />
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 @[14rem]:grid-cols-2">
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-brand-charcoal">
               Min extent (cent)
@@ -571,7 +571,7 @@ export function PropertiesClient() {
   const resultsToolbar = !isLoading &&
     !errorMessage &&
     properties.length > 0 && (
-      <div className="mb-6 hidden md:mb-8 lg:block">
+      <div className="mb-6 hidden md:mb-8 xl:block">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4 sm:gap-y-2">
           <h2 className="min-w-0 shrink text-base font-bold leading-snug sm:py-0.5 sm:text-lg md:text-[1.25rem] md:leading-snug">
             <span className="tabular-nums" style={{ color: LISTING_NAVY }}>
@@ -626,7 +626,7 @@ export function PropertiesClient() {
 
   return (
     <>
-      <section className="sticky top-[calc(env(safe-area-inset-top)+4rem)] z-40 border-b border-border bg-white pb-3 pt-3 lg:hidden">
+      <section className="sticky top-[calc(env(safe-area-inset-top)+4rem)] z-40 border-b border-border bg-white pb-3 pt-3 xl:hidden">
         <div className={publicContentFrameClass}>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
@@ -1155,13 +1155,13 @@ export function PropertiesClient() {
       <section className="bg-muted/40 pb-12 pt-4 sm:pb-16 sm:pt-6 md:bg-muted/50 md:pb-20 md:pt-8 lg:pb-24 lg:pt-10">
         <div className={publicContentFrameClass}>
           {isLoading && (
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-              <aside className="hidden lg:block lg:self-start">
+            <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">
+              <aside className="hidden xl:block xl:self-start">
                 <div className="sticky top-20 z-10 max-h-[calc(100svh-5.5rem)] overflow-y-auto overscroll-y-contain pr-1 md:top-24 md:max-h-[calc(100svh-6.5rem)] [scrollbar-gutter:stable]">
                   {filterSidebar}
                 </div>
               </aside>
-              <div className="min-w-0 lg:min-h-0">
+              <div className="min-w-0 xl:min-h-0">
                 <ListingResultsHeaderSkeleton />
                 <div className="flex flex-col gap-5">
                   {Array.from({ length: PUBLIC_PROPERTIES_PAGE_SIZE }).map(
@@ -1206,56 +1206,63 @@ export function PropertiesClient() {
           )}
 
           {!isLoading && !errorMessage && properties.length === 0 && (
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-              <aside className="hidden lg:block lg:self-start">
+            <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">
+              <aside className="hidden xl:block xl:self-start">
                 <div className="sticky top-20 z-10 max-h-[calc(100svh-5.5rem)] overflow-y-auto overscroll-y-contain pr-1 md:top-24 md:max-h-[calc(100svh-6.5rem)] [scrollbar-gutter:stable]">
                   {filterSidebar}
                 </div>
               </aside>
-              <div className="min-w-0 lg:min-h-0">
+              <div className="min-w-0 xl:min-h-0">
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.25 }}
-                  className="flex justify-center px-4 py-12 sm:py-16 lg:py-14"
+                  transition={{ duration: reduceMotion ? 0 : 0.35, ease: "easeOut" }}
+                  className="flex justify-center px-4 py-14 sm:py-20 xl:py-16"
                 >
-                  <div className="w-full max-w-sm rounded-xl border border-neutral-200 bg-white px-6 py-8 text-center shadow-sm sm:px-8">
-                    <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-neutral-100">
+                  <div className="flex w-full max-w-md flex-col items-center text-center">
+                    <div className="mb-6 flex h-28 w-28 items-center justify-center rounded-full bg-[#eef4fb]">
                       <SearchX
-                        className="h-7 w-7 text-neutral-500"
-                        strokeWidth={1.75}
+                        className="h-12 w-12 text-[#90b4e0]"
+                        strokeWidth={1.5}
                         aria-hidden
                       />
                     </div>
+
                     <h2
-                      className="text-lg font-bold leading-snug text-balance sm:text-xl"
+                      className="text-xl font-bold leading-snug sm:text-2xl"
                       style={{ color: LISTING_NAVY }}
                     >
-                      No properties found
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-neutral-600">
                       {hasFilters
-                        ? "Try clearing filters or widening your search."
-                        : "Nothing listed yet. Check back later."}
+                        ? "No matching properties"
+                        : "No properties yet"}
+                    </h2>
+
+                    <p className="mt-2.5 max-w-xs text-[15px] leading-relaxed text-neutral-500">
+                      {hasFilters
+                        ? "Try adjusting your filters or broadening your search criteria."
+                        : "We're adding new listings regularly. Check back soon!"}
                     </p>
-                    <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-                      {hasFilters ? (
+
+                    <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                      {hasFilters && (
                         <button
                           type="button"
                           onClick={() => router.push("/properties")}
-                          className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-brand-charcoal px-4 text-sm font-semibold text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:w-auto"
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                          style={{ backgroundColor: "#ff0018" }}
                         >
+                          <X className="h-4 w-4" aria-hidden />
                           Clear all filters
                         </button>
-                      ) : null}
+                      )}
                       <Link
                         href="/"
-                        className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-200 bg-white px-4 text-sm font-semibold text-brand-charcoal hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:w-auto"
+                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-200 bg-white px-6 text-sm font-bold transition-colors hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                        style={{ color: LISTING_NAVY }}
                       >
-                        {hasFilters ? "Home" : "Go to homepage"}
+                        Go to homepage
                       </Link>
                     </div>
-                    <p className="mt-6 text-xs text-neutral-400">{SITE_NAME}</p>
                   </div>
                 </motion.div>
               </div>
@@ -1263,14 +1270,14 @@ export function PropertiesClient() {
           )}
 
           {!isLoading && !errorMessage && properties.length > 0 && (
-            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] lg:gap-10 xl:gap-12">
-              <aside className="hidden lg:block lg:self-start">
+            <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">
+              <aside className="hidden xl:block xl:self-start">
                 <div className="sticky top-20 z-10 max-h-[calc(100svh-5.5rem)] overflow-y-auto overscroll-y-contain pr-1 md:top-24 md:max-h-[calc(100svh-6.5rem)] [scrollbar-gutter:stable]">
                   {filterSidebar}
                 </div>
               </aside>
-              <div className="min-w-0 lg:min-h-0">
-                <div className="mb-3 min-w-0 lg:hidden">
+              <div className="min-w-0 xl:min-h-0">
+                <div className="mb-3 min-w-0 xl:hidden">
                   <h2 className="flex min-w-0 items-center gap-x-1.5 text-[15px] font-bold leading-snug text-[#1a2b4b]">
                     <span className="shrink-0 tabular-nums tracking-wide">
                       {formatListingCountCompact(total)} RESULTS
