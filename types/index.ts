@@ -124,7 +124,7 @@ export interface PropertyFilters {
 
 // ─── Leads (initial migration) ─────────────────────────────────────────────
 
-export type LeadSource = "website" | "meta_ads" | "google_ads" | "manual";
+export type LeadSource = "website" | "meta_ads" | "google_ads" | "manual" | "chatbot";
 export type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "lost";
 
 export interface Lead {

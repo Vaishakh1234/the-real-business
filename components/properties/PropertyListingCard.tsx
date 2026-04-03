@@ -480,9 +480,11 @@ function DirectoryListingCardMobile({
           className="flex h-full w-full snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {slides.map((src, i) => (
-            <div
+            <Link
+              href={href}
               key={src ?? `empty-${i}`}
-              className="relative h-full min-w-full shrink-0 snap-center"
+              className="relative block h-full min-w-full shrink-0 snap-center"
+              draggable={false}
             >
               {src ? (
                 <PropertyImage
@@ -503,7 +505,7 @@ function DirectoryListingCardMobile({
                   unoptimized
                 />
               )}
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -704,24 +706,28 @@ function DirectoryListingCardMobile({
             >
               View Details
             </Link>
-            <a
-              href={CONTACT.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm transition-opacity hover:opacity-95 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
-              style={{ backgroundColor: LISTING_CARD.ctaRed }}
-              aria-label={CONTACT.whatsappLabel}
-            >
-              <WhatsAppIcon className="h-5 w-5 shrink-0" />
-            </a>
-            <a
-              href={telHref || "#"}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm transition-opacity hover:opacity-95 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
-              style={{ backgroundColor: LISTING_CARD.ctaRed }}
-              aria-label="Call"
-            >
-              <Phone className="h-5 w-5" strokeWidth={2} aria-hidden />
-            </a>
+            {CONTACT.whatsappUrl && (
+              <a
+                href={CONTACT.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm transition-opacity hover:opacity-95 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                style={{ backgroundColor: LISTING_CARD.ctaRed }}
+                aria-label={CONTACT.whatsappLabel}
+              >
+                <WhatsAppIcon className="h-5 w-5 shrink-0" />
+              </a>
+            )}
+            {telHref && (
+              <a
+                href={telHref}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm transition-opacity hover:opacity-95 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                style={{ backgroundColor: LISTING_CARD.ctaRed }}
+                aria-label="Call"
+              >
+                <Phone className="h-5 w-5" strokeWidth={2} aria-hidden />
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -984,19 +990,31 @@ export function DirectoryPropertyListingCard({
             >
               View details
             </Link>
-            <a
-              href={CONTACT.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-9 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:flex-initial sm:min-w-[148px]"
-              style={{
-                backgroundColor: LISTING_CARD.ctaRed,
-              }}
-              aria-label={CONTACT.whatsappLabel}
-            >
-              <WhatsAppIcon className="h-4 w-4 shrink-0" />
-              Contact
-            </a>
+            {CONTACT.whatsappUrl ? (
+              <a
+                href={CONTACT.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-9 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:flex-initial sm:min-w-[148px]"
+                style={{
+                  backgroundColor: LISTING_CARD.ctaRed,
+                }}
+                aria-label={CONTACT.whatsappLabel}
+              >
+                <WhatsAppIcon className="h-4 w-4 shrink-0" />
+                Contact
+              </a>
+            ) : (
+              <Link
+                href="/contact"
+                className="inline-flex min-h-9 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:flex-initial sm:min-w-[148px]"
+                style={{
+                  backgroundColor: LISTING_CARD.ctaRed,
+                }}
+              >
+                Contact
+              </Link>
+            )}
           </div>
         </div>
       </div>

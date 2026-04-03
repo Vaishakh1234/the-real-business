@@ -1152,7 +1152,7 @@ export function PropertiesClient() {
         </SheetContent>
       </Sheet>
 
-      <section className="bg-muted/40 pb-12 pt-4 sm:pb-16 sm:pt-6 md:bg-muted/50 md:pb-20 md:pt-8 lg:pb-24 lg:pt-10">
+      <section className="min-h-dvh bg-muted/40 pb-12 pt-4 sm:pb-16 sm:pt-6 md:bg-muted/50 md:pb-20 md:pt-8 lg:pb-24 lg:pt-10">
         <div className={publicContentFrameClass}>
           {isLoading && (
             <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">
@@ -1216,7 +1216,10 @@ export function PropertiesClient() {
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.35, ease: "easeOut" }}
+                  transition={{
+                    duration: reduceMotion ? 0 : 0.35,
+                    ease: "easeOut",
+                  }}
                   className="flex justify-center px-4 py-14 sm:py-20 xl:py-16"
                 >
                   <div className="flex w-full max-w-md flex-col items-center text-center">

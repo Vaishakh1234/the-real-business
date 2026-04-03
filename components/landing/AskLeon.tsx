@@ -10,8 +10,11 @@ export function AskLeon() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const ctaHref = ASK_LEON.useWhatsApp ? CONTACT.whatsappUrl : "/contact";
-  const isExternal = ASK_LEON.useWhatsApp;
+  const ctaHref =
+    ASK_LEON.useWhatsApp && CONTACT.whatsappUrl
+      ? CONTACT.whatsappUrl
+      : "/contact";
+  const isExternal = ASK_LEON.useWhatsApp && !!CONTACT.whatsappUrl;
 
   return (
     <section

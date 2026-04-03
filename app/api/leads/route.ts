@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createLead } from "@/lib/queries/leads";
-import type { Lead } from "@/types";
+import type { Lead, LeadSource } from "@/types";
+
+const ALLOWED_SOURCES: LeadSource[] = [
+  "website",
+  "meta_ads",
+  "google_ads",
+  "manual",
+  "chatbot",
+];
+
+function normalizeSource(raw: unknown): LeadSource {
+  if (typeof raw === "string" && ALLOWED_SOURCES.includes(raw as LeadSource)) {
+    return raw as LeadSource;
+  }
+  return "website";
+}
 
 // Public route — accepts lead submissions from the landing page CTA form
 export async function POST(request: NextRequest) {
@@ -16,9 +31,11 @@ export async function POST(request: NextRequest) {
     email,
     phone,
     message,
-    source = "website",
     property_id,
   } = body as Partial<Lead> & { property_id?: string };
+  const source = normalizeSource(
+    (body as Partial<Lead>).source ?? "website",
+  );
 
   if (!name || typeof name !== "string" || name.trim() === "") {
     return NextResponse.json({ error: "Please enter your name" }, { status: 400 });
@@ -37,7 +54,7 @@ export async function POST(request: NextRequest) {
       email: email ?? null,
       phone: phone ?? null,
       message: message ?? null,
-      source: source as Lead["source"],
+      source,
       status: "new",
       property_id: property_id ?? null,
       property_title: null,

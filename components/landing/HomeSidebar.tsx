@@ -124,15 +124,17 @@ export function HomeSidebar() {
             <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
             {CONTACT.contactUsLabel}
           </Link>
-          <a
-            href={CONTACT.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={audienceCta({ intent: "whatsapp" })}
-          >
-            <WhatsAppIcon className="h-5 w-5 shrink-0" />
-            {CONTACT.whatsappLabel}
-          </a>
+          {CONTACT.whatsappUrl && (
+            <a
+              href={CONTACT.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={audienceCta({ intent: "whatsapp" })}
+            >
+              <WhatsAppIcon className="h-5 w-5 shrink-0" />
+              {CONTACT.whatsappLabel}
+            </a>
+          )}
         </div>
       </AudienceCard>
 

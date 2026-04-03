@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-export const leadSourceSchema = z.enum(["website", "meta_ads", "google_ads", "manual"]);
+export const leadSourceSchema = z.enum([
+  "website",
+  "meta_ads",
+  "google_ads",
+  "manual",
+  "chatbot",
+]);
 export const leadStatusSchema = z.enum(["new", "contacted", "qualified", "converted", "lost"]);
 
 export const leadCreateSchema = z

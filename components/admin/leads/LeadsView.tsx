@@ -81,6 +81,7 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   meta_ads: "Meta Ads",
   google_ads: "Google Ads",
   manual: "Manual",
+  chatbot: "Chatbot",
 };
 
 const SOURCE_STYLES: Record<LeadSource, string> = {
@@ -88,6 +89,7 @@ const SOURCE_STYLES: Record<LeadSource, string> = {
   meta_ads: "bg-blue-50 text-blue-700 border-blue-100",
   google_ads: "bg-red-50 text-red-700 border-red-100",
   manual: "bg-gray-100 text-gray-600 border-gray-200",
+  chatbot: "bg-amber-50 text-amber-800 border-amber-100",
 };
 
 const STATUS_STYLES: Record<LeadStatus, string> = {
@@ -559,6 +561,7 @@ export function LeadsView({
                           <SelectItem value="meta_ads">Meta Ads</SelectItem>
                           <SelectItem value="google_ads">Google Ads</SelectItem>
                           <SelectItem value="manual">Manual</SelectItem>
+                          <SelectItem value="chatbot">Chatbot</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -660,6 +663,7 @@ export function LeadsView({
                   <SelectItem value="meta_ads">Meta Ads</SelectItem>
                   <SelectItem value="google_ads">Google Ads</SelectItem>
                   <SelectItem value="manual">Manual</SelectItem>
+                  <SelectItem value="chatbot">Chatbot</SelectItem>
                 </SelectContent>
               </Select>
               <Select

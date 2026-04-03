@@ -8,7 +8,6 @@ const pages = [
   { label: "Home", href: "/" },
   { label: "Properties", href: "/properties" },
   { label: "About", href: "/about" },
-  { label: "Our Team", href: "/team" },
   { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
 ];
@@ -67,10 +66,33 @@ export function Footer() {
                 <span className="block">Business</span>
               </span>
             </Link>
-            <p className="text-white/60 text-base leading-relaxed max-w-sm mb-7 sm:mb-8">
+            <p className="text-white/60 text-base leading-relaxed max-w-sm mb-5 sm:mb-6">
               We provide exceptional real estate services, helping you find the
               perfect property that fits your lifestyle and budget.
             </p>
+            <div className="text-white/60 text-sm leading-relaxed space-y-1 mb-6 sm:mb-7">
+              <p>
+                {CONTACT.address.line1}, {CONTACT.address.city}
+              </p>
+              <p>
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                  className="hover:text-brand-gold transition-colors"
+                >
+                  {CONTACT.email}
+                </a>
+              </p>
+              {CONTACT.phone && (
+                <p>
+                  <a
+                    href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
+                    className="hover:text-brand-gold transition-colors"
+                  >
+                    {CONTACT.phone}
+                  </a>
+                </p>
+              )}
+            </div>
             <div className="flex items-center gap-3">
               {SOCIAL_LINKS.map((social) => (
                 <a
@@ -92,20 +114,14 @@ export function Footer() {
           <FooterLinkColumn title="Legal" links={legal} />
         </div>
 
-        <div className="pt-8 sm:pt-10 flex flex-col sm:flex-row items-center justify-between gap-5">
-          <div className="text-sm text-white/40 text-center sm:text-left">
+        <div className="pt-8 sm:pt-10 flex items-center justify-center">
+          <div className="text-sm text-white/40 text-center">
             &copy; {new Date().getFullYear()}{" "}
             <span className="font-site-wordmark font-normal text-white/55">
               {SITE_NAME}
             </span>
             . All Rights Reserved.
           </div>
-          <a
-            href={`mailto:${CONTACT.email}`}
-            className="text-sm text-white/40 hover:text-brand-gold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold rounded"
-          >
-            {CONTACT.email}
-          </a>
         </div>
       </div>
     </footer>

@@ -85,6 +85,7 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
   meta_ads: "Meta Ads",
   google_ads: "Google Ads",
   manual: "Manual",
+  chatbot: "Chatbot",
 };
 
 function reportsToExportRows(reports: ReportsData): Record<string, unknown>[] {

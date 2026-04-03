@@ -18,7 +18,7 @@ function PropertiesLoading() {
     <div
       className={cn(
         publicContentFrameClass,
-        "bg-muted/40 py-8 sm:py-10 md:bg-muted/50 md:py-12",
+        "min-h-dvh bg-muted/40 py-8 sm:py-10 md:bg-muted/50 md:py-12",
       )}
     >
       <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(260px,300px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">

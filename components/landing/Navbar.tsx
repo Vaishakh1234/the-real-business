@@ -28,9 +28,7 @@ import {
   Sparkles,
   Layers,
   LandPlot,
-  TrendingUp,
   Warehouse,
-  Users,
   FileText,
   Shield,
   ArrowUpRight,
@@ -202,12 +200,6 @@ const navMenus: NavMenu[] = [
         icon: Layers,
       },
       {
-        title: "Valuation & advisory",
-        description: "Expert guidance for your asset",
-        href: "/contact",
-        icon: TrendingUp,
-      },
-      {
         title: "Property management",
         description: "Ongoing care for landlords",
         href: "/contact",
@@ -243,12 +235,6 @@ const navMenus: NavMenu[] = [
         icon: Info,
       },
       {
-        title: "Our team",
-        description: "People behind the brand",
-        href: "/team",
-        icon: Users,
-      },
-      {
         title: "Terms of service",
         description: "Using this website",
         href: "/terms",
@@ -267,6 +253,7 @@ const navMenus: NavMenu[] = [
 const mobileNavLinks: { label: string; href: string; icon: LucideIcon }[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Properties", href: "/properties", icon: Building2 },
+  { label: "About", href: "/about", icon: Info },
   { label: "Services", href: "/services", icon: Grid3x3 },
   { label: "Contact", href: "/contact", icon: Phone },
 ];

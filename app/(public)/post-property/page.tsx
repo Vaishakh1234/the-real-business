@@ -46,20 +46,32 @@ export default function PostPropertyPage() {
             you&apos;re hoping to achieve. Our team will respond with next steps
             and any documents we need.
           </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-2 h-14 rounded-full bg-brand-charcoal px-8 text-base font-semibold tracking-tight text-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-brand-charcoal/92 hover:shadow-[0_4px_20px_rgba(0,0,0,0.14)] focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98] sm:h-16 sm:px-10 sm:text-lg [&_svg]:size-5 sm:[&_svg]:size-6 xl:mt-0"
-          >
-            <Link
-              href={CONTACT.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+          <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row sm:gap-4 xl:mt-0 xl:items-start">
+            {CONTACT.whatsappUrl && (
+              <Button
+                asChild
+                size="lg"
+                className="h-14 rounded-full bg-brand-charcoal px-8 text-base font-semibold tracking-tight text-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-brand-charcoal/92 hover:shadow-[0_4px_20px_rgba(0,0,0,0.14)] focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98] sm:h-16 sm:px-10 sm:text-lg [&_svg]:size-5 sm:[&_svg]:size-6"
+              >
+                <Link
+                  href={CONTACT.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <WhatsAppIcon className="shrink-0" />
+                  Contact through WhatsApp
+                </Link>
+              </Button>
+            )}
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-14 rounded-full border-2 border-brand-charcoal px-8 text-base font-semibold tracking-tight text-brand-charcoal shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-brand-charcoal hover:text-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.14)] focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98] sm:h-16 sm:px-10 sm:text-lg"
             >
-              <WhatsAppIcon className="shrink-0" />
-              Contact through WhatsApp
-            </Link>
-          </Button>
+              <Link href="/contact">{CONTACT.contactUsLabel}</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>

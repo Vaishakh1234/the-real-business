@@ -39,6 +39,7 @@ const SOURCE_LABELS: Record<Lead["source"], string> = {
   meta_ads: "Meta Ads",
   google_ads: "Google Ads",
   manual: "Manual",
+  chatbot: "Chatbot",
 };
 
 const statusOptions: { value: Lead["status"]; label: string }[] = [
@@ -285,6 +286,9 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
                     </SelectItem>
                     <SelectItem value="google_ads" className="rounded-lg">
                       Google Ads
+                    </SelectItem>
+                    <SelectItem value="chatbot" className="rounded-lg">
+                      Chatbot
                     </SelectItem>
                   </SelectContent>
                 </Select>

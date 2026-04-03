@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 /**
- * Seed script: 12 rows each in categories, amenities, properties, leads.
- * Full fields: images (Unsplash), gallery_images, latitude, longitude, map_embed_url (Google Maps),
- * meta_*, highlights, amenities, tags (for related-by-tag demos), furnished, etc.
+ * Seed script for TheRealBusiness.
  *
- * Run: npm run seed   (or npx tsx scripts/seed.ts)
- * Requires .env.local: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
- * Ensure migrations are applied (e.g. supabase db reset) so is_featured exists on properties.
+ * Usage:
+ *   npm run seed          – seed categories, amenities, properties, leads
+ *   npm run seed admin    – create admin user in Supabase Auth + admin_settings row
+ *   npm run seed all      – run both admin + data seed
+ *
+ * Requires .env.local or .env: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
+ * Admin seeder also requires: ADMIN_EMAIL, ADMIN_PASSWORD.
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -18,7 +20,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
 function loadEnv(): Record<string, string> {
-  const envPath = join(ROOT, ".env.local");
+  const envLocal = join(ROOT, ".env.local");
+  const envPath = existsSync(envLocal) ? envLocal : join(ROOT, ".env");
   const env: Record<string, string> = {};
   if (existsSync(envPath)) {
     const content = readFileSync(envPath, "utf-8");
@@ -49,7 +52,7 @@ const SUPABASE_URL = ENV.NEXT_PUBLIC_SUPABASE_URL as string;
 const SERVICE_ROLE_KEY = ENV.SUPABASE_SERVICE_ROLE_KEY as string;
 
 if (!SUPABASE_URL?.trim() || !SERVICE_ROLE_KEY?.trim()) {
-  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local");
+  console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local or .env");
   process.exit(1);
 }
 
@@ -216,14 +219,20 @@ function buildLeads(propertyIds: string[], propertyTitles: string[]) {
     "Meera Krishnan",
   ];
   const emails = names.map((n) => n.toLowerCase().replace(/\s+/, ".") + "@example.com");
-  const sources = ["website", "meta_ads", "google_ads", "manual"] as const;
+  const sources = [
+    "website",
+    "meta_ads",
+    "google_ads",
+    "manual",
+    "chatbot",
+  ] as const;
   const statuses = ["new", "contacted", "qualified", "converted"] as const;
   return names.map((name, i) => ({
     name,
     email: emails[i],
     phone: i % 3 !== 1 ? `9876543${200 + i}` : null,
     message: `Interested in ${propertyTitles[i % propertyTitles.length]}.`,
-    source: sources[i % 4],
+    source: sources[i % sources.length],
     status: statuses[i % 4],
     property_id: propertyIds[i % propertyIds.length],
     property_title: propertyTitles[i % propertyTitles.length],
@@ -231,10 +240,84 @@ function buildLeads(propertyIds: string[], propertyTitles: string[]) {
   }));
 }
 
-async function main() {
+/* ─── Admin seeder ──────────────────────────────────────────────────────── */
+
+async function seedAdmin() {
+  const adminEmail = ENV.ADMIN_EMAIL as string;
+  const adminPassword = ENV.ADMIN_PASSWORD as string;
+
+  if (!adminEmail?.trim() || !adminPassword?.trim()) {
+    console.error("❌ Missing ADMIN_EMAIL or ADMIN_PASSWORD in .env.local or .env");
+    process.exit(1);
+  }
+
+  console.log("\n👤 Seeding admin user...\n");
+
+  // 1) Create user in Supabase Auth (or retrieve existing)
+  let userId: string;
+
+  const { data: listData, error: listErr } = await supabase.auth.admin.listUsers();
+  const existingUser = listErr
+    ? undefined
+    : listData.users.find((u) => u.email === adminEmail);
+
+  if (existingUser) {
+    userId = existingUser.id;
+    console.log(`   Auth user already exists (${userId}), updating password...`);
+    const { error: updateErr } = await supabase.auth.admin.updateUserById(userId, {
+      password: adminPassword,
+      email_confirm: true,
+    });
+    if (updateErr) {
+      console.error("❌ Failed to update auth user:", updateErr.message);
+      process.exit(1);
+    }
+  } else {
+    const { data: created, error: createErr } = await supabase.auth.admin.createUser({
+      email: adminEmail,
+      password: adminPassword,
+      email_confirm: true,
+    });
+    if (createErr) {
+      console.error("❌ Failed to create auth user:", createErr.message);
+      process.exit(1);
+    }
+    userId = created.user.id;
+  }
+  console.log("✅ Supabase Auth user:", adminEmail, `(${userId})`);
+
+  // 2) Upsert admin_settings row
+  const { error: settingsErr } = await supabase
+    .from("admin_settings")
+    .upsert(
+      {
+        email: adminEmail,
+        display_name: "Admin",
+        notifications_enabled: true,
+        email_notifications: true,
+        lead_alerts: true,
+        browser_notifications: true,
+        theme: "system",
+        language: "en",
+        timezone: "Asia/Kolkata",
+      },
+      { onConflict: "email" }
+    );
+  if (settingsErr) {
+    console.error("❌ admin_settings error:", settingsErr.message);
+    process.exit(1);
+  }
+  console.log("✅ admin_settings row upserted for", adminEmail);
+
+  console.log("\n✨ Admin seed complete.\n");
+}
+
+/* ─── Data seeder ───────────────────────────────────────────────────────── */
+
+async function seedData() {
   console.log("\n🌱 Seeding database: 12 rows each in categories, amenities, properties, leads...\n");
 
-  // 1) Categories (upsert by slug, then get 12 ids in order)
+  // 1) Categories
   const slugs = CATEGORIES.map((c) => c.slug);
   const { error: catErr } = await supabase
     .from("categories")
@@ -255,7 +338,7 @@ async function main() {
   }
   console.log("✅ Categories: 12");
 
-  // 2) Amenities (upsert by slug)
+  // 2) Amenities
   const amenityRows = AMENITIES.map((a) => ({ ...a, is_active: true }));
   const { error: amErr } = await supabase.from("amenities").upsert(amenityRows, { onConflict: "slug", ignoreDuplicates: false });
   if (amErr) {
@@ -264,7 +347,7 @@ async function main() {
   }
   console.log("✅ Amenities: 12");
 
-  // 3) Properties (need category_id; upsert by slug)
+  // 3) Properties
   const properties = buildProperties(categoryIds);
   const { data: props, error: propErr } = await supabase
     .from("properties")
@@ -277,7 +360,7 @@ async function main() {
   const propList = (props ?? []) as { id: string; title: string }[];
   console.log("✅ Properties:", propList.length);
 
-  // 4) Leads (insert; optional property_id)
+  // 4) Leads
   const leadRows = buildLeads(
     propList.map((p) => p.id),
     propList.map((p) => p.title)
@@ -289,10 +372,30 @@ async function main() {
   }
   console.log("✅ Leads: 12");
 
-  console.log("\n✨ Seed complete.\n");
+  console.log("\n✨ Data seed complete.\n");
 }
 
-main().catch((err) => {
+/* ─── CLI routing ───────────────────────────────────────────────────────── */
+
+const command = process.argv[2] ?? "data";
+
+(async () => {
+  switch (command) {
+    case "admin":
+      await seedAdmin();
+      break;
+    case "data":
+      await seedData();
+      break;
+    case "all":
+      await seedAdmin();
+      await seedData();
+      break;
+    default:
+      console.error(`Unknown command: "${command}". Use: admin | data | all`);
+      process.exit(1);
+  }
+})().catch((err) => {
   console.error(err);
   process.exit(1);
 });

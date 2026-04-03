@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import PageHero from "@/components/PageHero";
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import { CONTACT, SOCIAL_LINKS } from "@/lib/constants/site";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { useSubmitContactForm } from "@/hooks/useLeads";
 
 const contactFormSchema = z.object({
@@ -316,31 +318,52 @@ export default function ContactPage() {
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                        Head Office
+                        Office
                       </h4>
                       <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                        123 Luxury Avenue, Suite 500
+                        {CONTACT.address.line1}
                         <br />
-                        New York, NY 10022
+                        {CONTACT.address.city}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                      <Phone size={18} className="sm:w-5 sm:h-5" />
+                  {CONTACT.phone && (
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                        <Phone size={18} className="sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                          Phone
+                        </h4>
+                        <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
+                          {CONTACT.phone}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                        Phone
-                      </h4>
-                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                        +1 (555) 123-4567
-                        <br />
-                        +1 (555) 987-6543
-                      </p>
+                  )}
+
+                  {CONTACT.whatsappUrl && (
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                        <MessageCircle size={18} className="sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                          WhatsApp
+                        </h4>
+                        <a
+                          href={CONTACT.whatsappUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-brand-gold text-[13px] sm:text-base leading-snug hover:underline"
+                        >
+                          {CONTACT.whatsappLabel}
+                        </a>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
@@ -350,11 +373,12 @@ export default function ContactPage() {
                       <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
                         Email
                       </h4>
-                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                        hello@therealbusiness.com
-                        <br />
-                        support@therealbusiness.com
-                      </p>
+                      <a
+                        href={`mailto:${CONTACT.email}`}
+                        className="text-gray-600 text-[13px] sm:text-base leading-snug hover:text-brand-gold transition-colors"
+                      >
+                        {CONTACT.email}
+                      </a>
                     </div>
                   </div>
 
@@ -367,13 +391,35 @@ export default function ContactPage() {
                         Working Hours
                       </h4>
                       <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                        Monday - Friday: 9:00 AM - 6:00 PM
+                        {CONTACT.workingHours.weekdays}
                         <br />
-                        Saturday: 10:00 AM - 4:00 PM
+                        {CONTACT.workingHours.saturday}
                       </p>
                     </div>
                   </div>
                 </div>
+
+                {SOCIAL_LINKS.length > 0 && (
+                  <div className="mt-6 sm:mt-8 pt-6 border-t border-border">
+                    <h4 className="font-bold text-foreground mb-3 text-sm sm:text-base">
+                      Follow Us
+                    </h4>
+                    <div className="flex items-center gap-3">
+                      {SOCIAL_LINKS.map((social) => (
+                        <a
+                          key={social.platform}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={social.ariaLabel}
+                          className="h-10 w-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-brand-gold hover:border-brand-gold/50 transition-colors"
+                        >
+                          <SocialIcon platform={social.platform} />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>

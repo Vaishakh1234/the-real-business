@@ -5,7 +5,8 @@ import {
 } from "@/components/landing/HomeExploreProperties";
 import { HomePortalLayout } from "@/components/landing/HomePortalLayout";
 import { HomeSidebar } from "@/components/landing/HomeSidebar";
-import { HomeCoreValuesSection } from "@/components/landing/HomeCoreValuesSection";
+import { HomeFAQ } from "@/components/landing/FAQ";
+import { Testimonials } from "@/components/landing/Testimonials";
 import { SITE_NAME } from "@/lib/constants/site";
 import type { Metadata } from "next";
 
@@ -32,10 +33,9 @@ export default function LandingPage() {
             <HomeSidebar />
           </div>
         </section>
-        <div className="mt-14 sm:mt-16 lg:mt-20">
-          <HomeCoreValuesSection />
-        </div>
       </HomePortalLayout>
+      <HomeFAQ />
+      <Testimonials />
     </>
   );
 }

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import { CONTACT } from "@/lib/constants/site";
 
 export function CTA() {
   const ref = useRef<HTMLDivElement>(null);
@@ -81,13 +82,13 @@ export function CTA() {
           className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4"
         >
           <div className="text-xs text-white/30">
-            Main Street Plaza, Downtown Business District
+            {CONTACT.address.line1}, {CONTACT.address.city}
           </div>
           <a
-            href="mailto:contact@therealbusiness.com"
+            href={`mailto:${CONTACT.email}`}
             className="text-base text-white/50 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold rounded py-2 min-h-[44px] inline-flex items-center"
           >
-            contact@therealbusiness.com
+            {CONTACT.email}
           </a>
         </motion.div>
       </div>

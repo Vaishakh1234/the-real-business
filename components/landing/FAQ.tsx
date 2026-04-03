@@ -3,49 +3,100 @@
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import { cn } from "@/lib/utils";
 
 const faqs = [
   {
-    question: "Does Dream House Estate provide after-sales services?",
+    question:
+      "How does The Real Business help with buying property in Palakkad?",
+    answerMobile:
+      "We shortlist listings, arrange visits, and guide you through to handover.",
     answer:
-      "Yes, we provide comprehensive after-sales services including documentation support, interior consultation referrals, and dedicated customer care for 12 months post-purchase.",
+      "We start by understanding your budget, preferred locality, and timeline — then shortlist plots, land, and homes that genuinely fit. We arrange site visits with owners, help you compare options on the ground, and stay beside you through offers, negotiation, and handover. You get clear updates at every step so nothing feels rushed or unclear.",
   },
   {
-    question: "Does Dream House Estate offer financing options?",
+    question: "What areas in Palakkad do you cover?",
+    answerMobile:
+      "Across Palakkad district — town, Ottapalam, Chittur, Mannarkkad, and nearby.",
     answer:
-      "Yes, we are professionals with trusted financial partners to assist you in finding financing options that suit your needs. Our team will provide guidance and support throughout the financing process.",
+      "We work across Palakkad district, from the town centre to surrounding taluks such as Ottapalam, Chittur, and Mannarkkad, and nearby villages where serious listings come up. Tell us where you want to focus — urban, semi-urban, or agricultural land — and we will align our search and site visits to those areas.",
   },
   {
-    question: "How long will it take to sell my house?",
+    question: "How long does it take to find the right property?",
+    answerMobile:
+      "Often a few weeks; it depends on your brief and what is on the market.",
     answer:
-      "The timeline varies depending on market conditions, property type, and pricing. Typically, well-priced properties in desirable locations sell within 30–60 days.",
+      "Timelines vary with how specific your brief is and what is available at the time. Many clients narrow down to serious options within a few weeks; some move faster when a strong match appears. We do not push you to decide — we keep you informed as new listings fit your criteria and adjust if your priorities change.",
   },
   {
-    question: "How can I schedule a tour of a property?",
+    question: "Do you help with documentation and registration?",
+    answerMobile:
+      "We coordinate with your advocate; legal advice stays with your lawyer.",
     answer:
-      "You can schedule a tour by contacting us via phone, email, or by filling out the contact form on any property listing page. We offer both in-person and virtual tours.",
+      "We coordinate timelines and paperwork with your advocate — title checks, encumbrance certificates, sale deed drafts, and registration appointments. We are your broker for the transaction, not a substitute for legal counsel: your lawyer gives formal advice, and we help the process stay organised and on track so the deal you agreed is what reaches registration.",
+  },
+  {
+    question: "Is there a fee for your brokerage services?",
+    answerMobile:
+      "Fees depend on the service; we explain everything before you commit.",
+    answer:
+      "Our fees depend on whether you are buying, selling, or renting, and the scope of work involved. We explain structure and timing upfront — before you commit — so there are no hidden charges. For a clear breakdown for your situation, contact us and we will walk through it in plain language.",
+  },
+  {
+    question: "Can I schedule a property visit before deciding?",
+    answerMobile:
+      "Yes — call, email, contact form, or enquire from a listing page.",
+    answer:
+      "Absolutely. Reach us by phone, email, the contact form on our site, or the enquiry flow on any property listing. We schedule viewings with owners at practical times, and you can request second visits or extra questions until you are comfortable. There is no obligation to proceed after a visit.",
   },
 ];
 
 function FAQItem({ faq, index }: { faq: (typeof faqs)[0]; index: number }) {
-  const [open, setOpen] = useState(index === 1);
+  const [open, setOpen] = useState(index === 0);
+  const num = String(index + 1).padStart(2, "0");
 
   return (
-    <div className="border-b border-gray-100">
+    <motion.div
+      layout
+      className={cn(
+        "overflow-hidden rounded-2xl border bg-white shadow-[0_1px_12px_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-200",
+        open
+          ? "border-brand-gold/35 shadow-[0_4px_24px_rgba(0,0,0,0.06)] ring-1 ring-brand-gold/10"
+          : "border-neutral-100 hover:border-neutral-200 hover:shadow-[0_2px_16px_rgba(0,0,0,0.05)]",
+      )}
+    >
       <button
+        type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-4 text-left gap-4"
+        className="flex w-full items-start gap-3 px-4 py-4 text-left sm:gap-4 sm:px-5 sm:py-5"
+        aria-expanded={open}
       >
-        <span className="text-sm font-medium text-black leading-snug">
+        <span
+          className="mt-0.5 shrink-0 font-heading text-xs font-bold tabular-nums text-brand-gold/80 sm:text-sm"
+          aria-hidden
+        >
+          {num}
+        </span>
+        <span className="min-w-0 flex-1 text-sm font-semibold leading-snug text-brand-charcoal sm:text-base">
           {faq.question}
         </span>
-        <motion.div
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="shrink-0"
+        <span
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors",
+            open
+              ? "border-brand-gold/40 bg-brand-gold-muted"
+              : "border-neutral-200 bg-neutral-50",
+          )}
         >
-          <ChevronDown className="h-4 w-4 text-gray-400" />
-        </motion.div>
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="inline-flex"
+          >
+            <ChevronDown className="h-4 w-4 text-brand-gold" aria-hidden />
+          </motion.span>
+        </span>
       </button>
       <AnimatePresence initial={false}>
         {open && (
@@ -54,61 +105,70 @@ function FAQItem({ faq, index }: { faq: (typeof faqs)[0]; index: number }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <p className="pb-4 text-sm text-gray-500 leading-relaxed pr-6">
-              {faq.answer}
-            </p>
+            <div className="border-t border-neutral-100 px-4 pb-4 pt-3 sm:px-5 sm:pb-5 sm:pt-4">
+              <p className="pl-0 text-[13px] leading-snug text-muted-foreground sm:hidden">
+                {faq.answerMobile}
+              </p>
+              <p className="hidden pl-0 text-sm leading-relaxed text-muted-foreground sm:block sm:pl-9 sm:text-[15px] sm:leading-[1.65]">
+                {faq.answer}
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
-export function FAQ() {
+export function HomeFAQ() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section className="py-20 bg-white">
-      <div ref={ref} className="container mx-auto px-6 max-w-5xl">
-        <div className="grid md:grid-cols-2 gap-14 items-center">
-          {/* Left image */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative h-72 md:h-[420px] rounded-2xl overflow-hidden"
+    <section
+      className="py-10 sm:py-14 lg:py-16"
+      aria-labelledby="home-faq-heading"
+    >
+      <div ref={ref} className={publicContentFrameClass}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-10 w-full text-left sm:mb-12"
+        >
+          <h2
+            id="home-faq-heading"
+            className="font-heading text-2xl font-bold leading-tight text-brand-charcoal sm:text-3xl lg:text-4xl"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=700&q=80"
-              alt="Property"
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover"
-            />
-          </motion.div>
+            Frequently asked questions
+          </h2>
+          <p className="mt-3 max-w-4xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Straight answers about buying, selling, and renting in Palakkad —
+            from first enquiry to keys in hand.
+          </p>
+        </motion.div>
 
-          {/* Right FAQ */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-black mb-6">
-              General FAQs
-            </h2>
-            <div>
-              {faqs.map((faq, i) => (
-                <FAQItem key={faq.question} faq={faq} index={i} />
-              ))}
-            </div>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{
+            duration: 0.55,
+            ease: [0.22, 1, 0.36, 1],
+            delay: 0.06,
+          }}
+          className="w-full space-y-3"
+        >
+          {faqs.map((faq, i) => (
+            <FAQItem key={faq.question} faq={faq} index={i} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );
 }
+
+/** @deprecated Prefer `HomeFAQ` for the home page; kept for any legacy imports. */
+export const FAQ = HomeFAQ;
