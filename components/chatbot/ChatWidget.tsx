@@ -181,7 +181,7 @@ export function ChatWidget() {
               <div className="absolute inset-0 bg-gradient-to-br from-brand-charcoal via-brand-charcoal to-[hsl(38,20%,18%)]" />
               <div className="relative flex items-center gap-3 min-w-0">
                 <div className="relative">
-                  <BotAvatar className="h-9 w-9" />
+                  <BotAvatar size="lg" />
                   <span className="absolute -bottom-0.5 -right-0.5 block h-2.5 w-2.5 rounded-full border-2 border-brand-charcoal bg-emerald-400" />
                 </div>
                 <div className="min-w-0">

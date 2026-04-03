@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import PageHero from "@/components/PageHero";
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from "lucide-react";
 import {
   Select,
@@ -99,17 +98,9 @@ export default function ContactPage() {
   };
 
   return (
-    <>
-      <PageHero
-        title="Get In Touch"
-        imageSrc="/images/contact-us.png"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
-        description="Whether you're looking to buy, sell, rent, or have a question—our team is here to help. Reach out and we'll get back to you soon."
-      />
-
-      <section className="py-16 sm:py-24 bg-white">
-        <div className={publicContentFrameClass}>
-          <div className="grid grid-cols-1 gap-16 xl:grid-cols-2">
+    <section className="flex min-h-dvh w-full flex-col bg-white py-10 sm:py-14">
+      <div className={cn(publicContentFrameClass, "flex min-h-0 flex-1 flex-col")}>
+        <div className="grid flex-1 grid-cols-1 content-start gap-12 xl:grid-cols-2 xl:gap-16">
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -422,9 +413,8 @@ export default function ContactPage() {
                 )}
               </div>
             </motion.div>
-          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

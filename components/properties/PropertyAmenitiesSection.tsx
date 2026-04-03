@@ -95,7 +95,7 @@ export function PropertyAmenitiesSection({
   if (list.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-neutral-200/90 bg-white p-3.5 shadow-[0_4px_20px_rgba(15,23,42,0.06)] sm:rounded-2xl sm:p-6 sm:shadow-[0_2px_12px_rgba(15,23,42,0.05)]">
+    <div className="rounded-xl border border-neutral-200/90 bg-neutral-50/80 p-3.5 shadow-[0_4px_20px_rgba(15,23,42,0.04)] sm:rounded-2xl sm:p-6 sm:shadow-[0_2px_12px_rgba(15,23,42,0.04)]">
       <h2 className="mb-4 font-heading text-base font-bold text-[#1a2b4b] sm:mb-5 sm:text-xl">
         Amenities
       </h2>
@@ -109,16 +109,16 @@ export function PropertyAmenitiesSection({
           return (
             <li
               key={`${label}-${i}`}
-              className="flex min-w-0 items-start gap-2 rounded-lg px-2 py-2 transition-colors hover:bg-neutral-50 sm:gap-3 sm:rounded-xl sm:px-3 sm:py-2.5"
+              className="flex min-w-0 items-start gap-2.5 rounded-lg bg-white/70 px-2 py-2.5 transition-colors hover:bg-white sm:gap-3.5 sm:rounded-xl sm:px-3 sm:py-3"
             >
-              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-gold-muted sm:h-8 sm:w-8">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)] sm:h-11 sm:w-11">
                 <Icon
-                  className="h-3.5 w-3.5 text-brand-gold sm:h-4 sm:w-4"
-                  strokeWidth={1.6}
+                  className="h-4 w-4 text-brand-gold sm:h-5 sm:w-5"
+                  strokeWidth={1.75}
                   aria-hidden
                 />
               </span>
-              <span className="min-w-0 self-center text-[12px] font-medium leading-snug text-neutral-600 [overflow-wrap:anywhere] sm:text-sm">
+              <span className="min-w-0 self-center text-sm font-bold leading-snug text-neutral-800 [overflow-wrap:anywhere] sm:text-base">
                 {label}
               </span>
             </li>

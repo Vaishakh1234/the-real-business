@@ -1,32 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ChatMessage as ChatMessageType } from "./useChatbot";
 
-export function BotAvatar({ className }: { className?: string }) {
+export function BotAvatar({
+  className,
+  size = "sm",
+}: {
+  className?: string;
+  /** `lg` for chat header; `sm` for message rows and typing indicator */
+  size?: "sm" | "lg";
+}) {
   return (
     <div
       className={cn(
-        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-gold to-[hsl(32,45%,42%)] shadow-sm",
+        "flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-gold to-[hsl(32,45%,42%)] shadow-sm",
+        size === "lg" ? "h-9 w-9" : "h-7 w-7",
         className,
       )}
     >
-      <svg viewBox="0 0 20 20" fill="none" className="h-3.5 w-3.5" aria-hidden>
-        <path
-          d="M10 2L4 6v5.5c0 3.5 2.5 5.5 6 7 3.5-1.5 6-3.5 6-7V6l-6-4z"
-          stroke="white"
-          strokeWidth="1.4"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M7.5 9.5L9.5 11.5L13 7.5"
-          stroke="white"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      <Bot
+        className={cn(
+          "text-white shrink-0",
+          size === "lg" ? "h-5 w-5" : "h-3.5 w-3.5",
+        )}
+        strokeWidth={2}
+        aria-hidden
+      />
     </div>
   );
 }

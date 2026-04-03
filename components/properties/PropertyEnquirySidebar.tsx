@@ -228,15 +228,15 @@ export function PropertyEnquirySidebar({
         </div>
       </div>
 
-      <div className="flex gap-1 rounded-xl border border-neutral-200 bg-white p-1">
+      <div className="flex gap-1 rounded-xl border border-neutral-200 bg-neutral-50/80 p-1">
         <button
           type="button"
           onClick={() => syncMessageWithTab("enquiry")}
           className={cn(
             "min-h-10 flex-1 rounded-lg text-sm font-semibold transition-colors",
             tab === "enquiry"
-              ? "bg-white text-brand-charcoal shadow-[0_1px_3px_rgba(0,0,0,0.08)] ring-1 ring-neutral-200"
-              : "text-muted-foreground hover:bg-neutral-50 hover:text-brand-charcoal",
+              ? "bg-brand-gold-muted text-brand-charcoal shadow-sm"
+              : "text-muted-foreground hover:bg-white/80 hover:text-brand-charcoal",
           )}
         >
           Enquiry
@@ -247,8 +247,8 @@ export function PropertyEnquirySidebar({
           className={cn(
             "min-h-10 flex-1 rounded-lg text-sm font-semibold transition-colors",
             tab === "visit"
-              ? "bg-white text-brand-charcoal shadow-[0_1px_3px_rgba(0,0,0,0.08)] ring-1 ring-neutral-200"
-              : "text-muted-foreground hover:bg-neutral-50 hover:text-brand-charcoal",
+              ? "bg-brand-gold-muted text-brand-charcoal shadow-sm"
+              : "text-muted-foreground hover:bg-white/80 hover:text-brand-charcoal",
           )}
         >
           Book a site visit
