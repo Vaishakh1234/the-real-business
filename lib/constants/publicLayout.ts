@@ -12,8 +12,4 @@ export const publicContentFrameClass =
  * Each page must render `#page-hero` so scroll thresholds and overlay nav styles apply.
  * Home (`/`) is handled separately.
  */
-export const PUBLIC_ROUTES_WITH_TOP_HERO = new Set<string>([
-  "/contact",
-  "/about",
-  "/services",
-]);
+export const PUBLIC_ROUTES_WITH_TOP_HERO = new Set<string>(["/services"]);

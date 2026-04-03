@@ -98,321 +98,319 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="flex min-h-dvh w-full flex-col bg-white py-10 sm:py-14">
-      <div className={cn(publicContentFrameClass, "flex min-h-0 flex-1 flex-col")}>
-        <div className="grid flex-1 grid-cols-1 content-start gap-12 xl:grid-cols-2 xl:gap-16">
-            {/* Contact Form */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+    <section className="flex min-h-[calc(100dvh-4rem)] md:min-h-[calc(100dvh-5rem)] w-full flex-col bg-white py-10 sm:py-14">
+      <div
+        className={cn(publicContentFrameClass, "flex min-h-0 flex-1 flex-col")}
+      >
+        <div className="grid flex-1 grid-cols-1 content-center gap-12 xl:grid-cols-2 xl:gap-16">
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <div className="mb-8">
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Send Us a Message
+              </h2>
+              <p className="text-muted-foreground">
+                Whether you&apos;re looking to buy, sell, or just have a
+                question, our team is ready to assist you.
+              </p>
+            </div>
+
+            <form
+              className="space-y-6"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
             >
-              <div className="mb-8">
-                <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  Send Us a Message
-                </h2>
-                <p className="text-muted-foreground">
-                  Whether you&apos;re looking to buy, sell, or just have a
-                  question, our team is ready to assist you.
-                </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
+                    First Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    {...register("firstName")}
+                    className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
+                    placeholder="e.g. Ramesh"
+                  />
+                  {errors.firstName && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.firstName.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    {...register("lastName")}
+                    className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
+                    placeholder="e.g. Kumar"
+                  />
+                  {errors.lastName && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {errors.lastName.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              <form
-                className="space-y-6"
-                onSubmit={handleSubmit(onSubmit)}
-                noValidate
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      First Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      {...register("firstName")}
-                      className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
-                      placeholder="e.g. Ramesh"
-                    />
-                    {errors.firstName && (
-                      <p className="mt-1 text-sm text-red-500">
-                        {errors.firstName.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      Last Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      {...register("lastName")}
-                      className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
-                      placeholder="e.g. Kumar"
-                    />
-                    {errors.lastName && (
-                      <p className="mt-1 text-sm text-red-500">
-                        {errors.lastName.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      Email Address <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      {...register("email")}
-                      className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
-                      placeholder="e.g. name@example.com"
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-500">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="phone"
-                      className="block text-sm font-medium text-foreground mb-2"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      {...register("phone")}
-                      className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
-                      placeholder="e.g. 98765 43210"
-                    />
-                    {errors.phone && (
-                      <p className="mt-1 text-sm text-red-500">
-                        {errors.phone.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label
-                    htmlFor="interest"
+                    htmlFor="email"
                     className="block text-sm font-medium text-foreground mb-2"
                   >
-                    I&apos;m interested in{" "}
-                    <span className="text-red-500">*</span>
+                    Email Address <span className="text-red-500">*</span>
                   </label>
-                  <Controller
-                    name="interest"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger
-                          id="interest"
-                          className={cn(
-                            "w-full h-[52px] px-4 py-3 rounded-xl border border-border bg-muted text-foreground shadow-sm transition-all",
-                            "focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold focus:ring-offset-0",
-                            "hover:bg-muted/80",
-                            "data-[placeholder]:text-muted-foreground",
-                            errors.interest &&
-                              "border-red-500 focus:ring-red-500/20 focus:border-red-500",
-                          )}
-                        >
-                          <SelectValue placeholder="Choose an option" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl border border-border bg-white shadow-lg">
-                          {interestOptions.map((opt) => (
-                            <SelectItem
-                              key={opt.value}
-                              value={opt.value}
-                              className="rounded-lg py-2.5 pl-3 pr-8 focus:bg-brand-gold/10 focus:text-foreground cursor-pointer"
-                            >
-                              {opt.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
+                  <input
+                    type="email"
+                    id="email"
+                    {...register("email")}
+                    className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
+                    placeholder="e.g. name@example.com"
                   />
-                  {errors.interest && (
+                  {errors.email && (
                     <p className="mt-1 text-sm text-red-500">
-                      {errors.interest.message}
+                      {errors.email.message}
                     </p>
                   )}
                 </div>
-
                 <div>
                   <label
-                    htmlFor="message"
+                    htmlFor="phone"
                     className="block text-sm font-medium text-foreground mb-2"
                   >
-                    Message
+                    Phone Number
                   </label>
-                  <textarea
-                    id="message"
-                    rows={5}
-                    {...register("message")}
-                    className="w-full min-h-[120px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all resize-none"
-                    placeholder="How can we help you? (optional; if provided, min. 10 characters)"
+                  <input
+                    type="tel"
+                    id="phone"
+                    {...register("phone")}
+                    className="w-full min-h-[48px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all"
+                    placeholder="e.g. 98765 43210"
                   />
-                  {errors.message && (
+                  {errors.phone && (
                     <p className="mt-1 text-sm text-red-500">
-                      {errors.message.message}
+                      {errors.phone.message}
                     </p>
                   )}
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={submitContact.isPending}
-                  className="w-full py-4 bg-brand-charcoal text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              <div>
+                <label
+                  htmlFor="interest"
+                  className="block text-sm font-medium text-foreground mb-2"
                 >
-                  <Send size={18} />
-                  {submitContact.isPending ? "Sending…" : "Send Message"}
-                </button>
-              </form>
-            </motion.div>
-
-            {/* Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col"
-            >
-              <div className="bg-muted p-4 sm:p-6 lg:p-8 rounded-2xl border border-border">
-                <h3 className="font-heading text-2xl font-bold text-foreground mb-4 sm:mb-6">
-                  Contact Information
-                </h3>
-
-                <div className="space-y-4 sm:space-y-6">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                      <MapPin size={18} className="sm:w-5 sm:h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                        Office
-                      </h4>
-                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                        {CONTACT.address.line1}
-                        <br />
-                        {CONTACT.address.city}
-                      </p>
-                    </div>
-                  </div>
-
-                  {CONTACT.phone && (
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                        <Phone size={18} className="sm:w-5 sm:h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                          Phone
-                        </h4>
-                        <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                          {CONTACT.phone}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {CONTACT.whatsappUrl && (
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                        <MessageCircle size={18} className="sm:w-5 sm:h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                          WhatsApp
-                        </h4>
-                        <a
-                          href={CONTACT.whatsappUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-brand-gold text-[13px] sm:text-base leading-snug hover:underline"
-                        >
-                          {CONTACT.whatsappLabel}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                      <Mail size={18} className="sm:w-5 sm:h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                        Email
-                      </h4>
-                      <a
-                        href={`mailto:${CONTACT.email}`}
-                        className="text-gray-600 text-[13px] sm:text-base leading-snug hover:text-brand-gold transition-colors"
+                  I&apos;m interested in <span className="text-red-500">*</span>
+                </label>
+                <Controller
+                  name="interest"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id="interest"
+                        className={cn(
+                          "w-full h-[52px] px-4 py-3 rounded-xl border border-border bg-muted text-foreground shadow-sm transition-all",
+                          "focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold focus:ring-offset-0",
+                          "hover:bg-muted/80",
+                          "data-[placeholder]:text-muted-foreground",
+                          errors.interest &&
+                            "border-red-500 focus:ring-red-500/20 focus:border-red-500",
+                        )}
                       >
-                        {CONTACT.email}
-                      </a>
-                    </div>
-                  </div>
+                        <SelectValue placeholder="Choose an option" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border border-border bg-white shadow-lg">
+                        {interestOptions.map((opt) => (
+                          <SelectItem
+                            key={opt.value}
+                            value={opt.value}
+                            className="rounded-lg py-2.5 pl-3 pr-8 focus:bg-brand-gold/10 focus:text-foreground cursor-pointer"
+                          >
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.interest && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.interest.message}
+                  </p>
+                )}
+              </div>
 
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                      <Clock size={18} className="sm:w-5 sm:h-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
-                        Working Hours
-                      </h4>
-                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
-                        {CONTACT.workingHours.weekdays}
-                        <br />
-                        {CONTACT.workingHours.saturday}
-                      </p>
-                    </div>
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-foreground mb-2"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  rows={5}
+                  {...register("message")}
+                  className="w-full min-h-[120px] px-4 py-3 text-base bg-muted border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold transition-all resize-none"
+                  placeholder="How can we help you? (optional; if provided, min. 10 characters)"
+                />
+                {errors.message && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.message.message}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitContact.isPending}
+                className="w-full py-4 bg-brand-charcoal text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <Send size={18} />
+                {submitContact.isPending ? "Sending…" : "Send Message"}
+              </button>
+            </form>
+          </motion.div>
+
+          {/* Contact Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-col"
+          >
+            <div className="bg-muted p-4 sm:p-6 lg:p-8 rounded-2xl border border-border">
+              <h3 className="font-heading text-2xl font-bold text-foreground mb-4 sm:mb-6">
+                Contact Information
+              </h3>
+
+              <div className="space-y-4 sm:space-y-6">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                    <MapPin size={18} className="sm:w-5 sm:h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                      Office
+                    </h4>
+                    <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
+                      {CONTACT.address.line1}
+                      <br />
+                      {CONTACT.address.city}
+                    </p>
                   </div>
                 </div>
 
-                {SOCIAL_LINKS.length > 0 && (
-                  <div className="mt-6 sm:mt-8 pt-6 border-t border-border">
-                    <h4 className="font-bold text-foreground mb-3 text-sm sm:text-base">
-                      Follow Us
-                    </h4>
-                    <div className="flex items-center gap-3">
-                      {SOCIAL_LINKS.map((social) => (
-                        <a
-                          key={social.platform}
-                          href={social.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={social.ariaLabel}
-                          className="h-10 w-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-brand-gold hover:border-brand-gold/50 transition-colors"
-                        >
-                          <SocialIcon platform={social.platform} />
-                        </a>
-                      ))}
+                {CONTACT.phone && (
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                      <Phone size={18} className="sm:w-5 sm:h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                        Phone
+                      </h4>
+                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
+                        {CONTACT.phone}
+                      </p>
                     </div>
                   </div>
                 )}
+
+                {CONTACT.whatsappUrl && (
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                      <MessageCircle size={18} className="sm:w-5 sm:h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                        WhatsApp
+                      </h4>
+                      <a
+                        href={CONTACT.whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-brand-gold text-[13px] sm:text-base leading-snug hover:underline"
+                      >
+                        {CONTACT.whatsappLabel}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                    <Mail size={18} className="sm:w-5 sm:h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                      Email
+                    </h4>
+                    <a
+                      href={`mailto:${CONTACT.email}`}
+                      className="text-gray-600 text-[13px] sm:text-base leading-snug hover:text-brand-gold transition-colors"
+                    >
+                      {CONTACT.email}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
+                    <Clock size={18} className="sm:w-5 sm:h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                      Working Hours
+                    </h4>
+                    <p className="text-gray-600 text-[13px] sm:text-base leading-snug">
+                      {CONTACT.workingHours.weekdays}
+                      <br />
+                      {CONTACT.workingHours.saturday}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </motion.div>
+
+              {SOCIAL_LINKS.length > 0 && (
+                <div className="mt-6 sm:mt-8 pt-6 border-t border-border">
+                  <h4 className="font-bold text-foreground mb-3 text-sm sm:text-base">
+                    Follow Us
+                  </h4>
+                  <div className="flex items-center gap-3">
+                    {SOCIAL_LINKS.map((social) => (
+                      <a
+                        key={social.platform}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.ariaLabel}
+                        className="h-10 w-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-brand-gold hover:border-brand-gold/50 transition-colors"
+                      >
+                        <SocialIcon platform={social.platform} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

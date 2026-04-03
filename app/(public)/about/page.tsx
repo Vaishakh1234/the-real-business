@@ -5,11 +5,9 @@ import {
   ArrowRight,
   ArrowUpRight,
   Award,
-  Compass,
   MapPin,
   Shield,
   Sparkles,
-  Target,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -129,72 +127,59 @@ function AboutJsonLd() {
 
 export default function AboutPage() {
   const [featuredValue, ...otherValues] = ABOUT.values;
+  const foundingYear = new Date().getFullYear() - ABOUT.yearsExperience;
 
   return (
     <>
       <AboutJsonLd />
 
-      {/* 1 — Editorial hero + floating story card */}
-      <section
-        id="page-hero"
-        className="relative min-h-[420px] overflow-hidden xs:min-h-[460px] sm:min-h-[520px] md:min-h-[600px]"
-      >
-        <Image
-          src={PAGE_HERO_IMAGES.about}
-          alt="Modern home and property context — Palakkad real estate brokerage"
-          fill
-          className="object-cover object-center sm:object-top"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/85 via-brand-charcoal/45 to-brand-charcoal/30" />
-        <div
-          className={`relative flex min-h-[420px] flex-col justify-end gap-10 pb-8 pt-28 xs:min-h-[460px] sm:min-h-[520px] sm:pb-10 sm:pt-32 md:min-h-[600px] md:pb-12 ${publicContentFrameClass}`}
-        >
-          <div className="grid items-end gap-8 lg:grid-cols-[1fr_minmax(280px,380px)] lg:gap-12 xl:gap-16">
-            <div className="max-w-3xl">
-              <nav
-                className="mb-4 flex flex-wrap items-center gap-2 text-sm text-white/75"
-                aria-label="Breadcrumb"
-              >
-                <Link href="/" className="transition-colors hover:text-white">
-                  Home
-                </Link>
-                <span className="opacity-50" aria-hidden>
-                  /
-                </span>
-                <span className="font-medium text-white">About</span>
-              </nav>
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-gold">
-                About us
-              </p>
-              <h1 className="font-heading mt-3 text-3xl font-bold leading-[1.08] tracking-tight text-white xs:text-4xl sm:text-5xl md:text-6xl">
-                Setting the standard in{" "}
-                <span className="font-normal text-white/80">
-                  Palakkad real estate
-                </span>
-              </h1>
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-                {ABOUT.tagline}
+      {/* 1 — Editorial hero: cream panel, headline, mission/vision, feature image */}
+      <section className="bg-[#F5F0EB] pb-0 pt-28 sm:pt-32 md:pt-36 lg:pt-40">
+        <div className={publicContentFrameClass}>
+          <h1 className="font-heading text-[clamp(2.25rem,5vw+0.5rem,4.5rem)] leading-[1.08] tracking-tight text-brand-charcoal">
+            <span className="font-normal italic">Explore your real estate</span>{" "}
+            <span className="font-bold">
+              dream into reality.
+              <br />
+              Sharing home since {foundingYear}.
+            </span>
+          </h1>
+
+          <div className="mt-10 grid gap-8 sm:mt-12 md:grid-cols-3 md:gap-10 lg:mt-16 lg:gap-14">
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[15px] md:max-w-none">
+              At {SITE_NAME}, we&apos;re redefining how people find homes by
+              blending smart technology with human expertise. Our mission is to
+              make real estate simple, transparent, and personalized for every
+              client.
+            </p>
+            <div>
+              <h2 className="text-base font-bold text-brand-charcoal sm:text-lg">
+                Mission
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {ABOUT.mission}
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white p-6 shadow-[0_24px_60px_rgba(0,0,0,0.25)] sm:p-8">
-              <p className="font-heading text-lg font-bold text-brand-charcoal sm:text-xl">
-                Our story
+            <div>
+              <h2 className="text-base font-bold text-brand-charcoal sm:text-lg">
+                Vision
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {ABOUT.vision}
               </p>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {ABOUT.shortStory.slice(0, 220)}
-                {ABOUT.shortStory.length > 220 ? "…" : ""}
-              </p>
-              <Link
-                href="#our-story"
-                className="mt-5 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-brand-charcoal underline-offset-4 transition-colors hover:text-brand-gold hover:underline"
-              >
-                Learn more
-                <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
-              </Link>
             </div>
           </div>
+        </div>
+
+        <div className="relative mt-12 aspect-[16/7] w-full sm:mt-16 lg:mt-20">
+          <Image
+            src={PAGE_HERO_IMAGES.about}
+            alt="Modern home at dusk — Palakkad real estate brokerage"
+            fill
+            className="object-cover object-center"
+            priority
+            sizes="100vw"
+          />
         </div>
       </section>
 
@@ -254,40 +239,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 3 — Mission + vision */}
-      <section className="border-t border-border bg-muted/50 py-16 sm:py-20 lg:py-24">
-        <div className={publicContentFrameClass}>
-          <h2 className="font-heading mb-10 text-center text-2xl font-bold text-brand-charcoal sm:mb-12 sm:text-3xl">
-            Mission &amp; vision
-          </h2>
-          <div className="grid gap-8 md:grid-cols-2 md:gap-10">
-            <div className="rounded-2xl border border-border bg-white p-8 shadow-sm sm:p-10">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-gold/15 text-brand-gold">
-                <Target className="h-6 w-6" strokeWidth={2} aria-hidden />
-              </div>
-              <h3 className="font-heading text-xl italic text-brand-charcoal sm:text-2xl">
-                Our mission
-              </h3>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                {ABOUT.mission}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-white p-8 shadow-sm sm:p-10">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-gold/15 text-brand-gold">
-                <Compass className="h-6 w-6" strokeWidth={2} aria-hidden />
-              </div>
-              <h3 className="font-heading text-xl italic text-brand-charcoal sm:text-2xl">
-                Our vision
-              </h3>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                {ABOUT.vision}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4 — Stats strip */}
+      {/* 3 — Stats strip */}
       <section className="bg-brand-charcoal py-12 text-white sm:py-16">
         <div className={publicContentFrameClass}>
           <h2 className="sr-only">Company statistics</h2>
