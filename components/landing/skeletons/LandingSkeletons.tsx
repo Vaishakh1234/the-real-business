@@ -24,6 +24,76 @@ export function NavbarSkeleton() {
   );
 }
 
+/** Breadcrumbs bar skeleton — matches `<Breadcrumbs>` height and alignment */
+export function BreadcrumbsSkeleton({ items = 2 }: { items?: number }) {
+  return (
+    <nav
+      aria-hidden
+      className="border-b border-brand-gold/20 bg-white/55 shadow-[0_1px_0_rgba(26,26,26,0.04)] backdrop-blur-md"
+    >
+      <div className={publicContentFrameClass}>
+        <div className="flex items-center gap-x-1 py-2.5 sm:gap-x-1.5 sm:py-3">
+          <Skeleton className="h-3.5 w-3.5 rounded sm:h-4 sm:w-4" />
+          {Array.from({ length: items }).map((_, i) => (
+            <div key={i} className="flex items-center gap-x-1 sm:gap-x-1.5">
+              <Skeleton className="h-3.5 w-3.5 rounded sm:h-4 sm:w-4" />
+              <Skeleton className="h-3.5 w-14 rounded sm:h-4 sm:w-20" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+/** Dark hero skeleton for legal-style pages (privacy, terms, how-it-works) */
+export function LegalHeroSkeleton() {
+  return (
+    <section className="flex items-end overflow-hidden bg-black pb-24 pt-20 min-h-[280px] sm:min-h-[340px] lg:min-h-[400px]">
+      <div className={`${publicContentFrameClass} w-full`}>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="mb-6 flex items-center gap-3">
+              <Skeleton className="h-px w-8 bg-white/20" />
+              <Skeleton className="h-3 w-14 bg-white/20" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-12 w-72 bg-white/10 sm:h-14 sm:w-96 lg:h-20 lg:w-[32rem]" />
+              <Skeleton className="h-12 w-48 bg-white/10 sm:h-14 sm:w-60 lg:h-20 lg:w-80" />
+            </div>
+            <Skeleton className="mt-6 h-5 w-full max-w-xl bg-white/10" />
+            <Skeleton className="mt-2 h-5 w-2/3 max-w-xl bg-white/10" />
+            <Skeleton className="mt-4 h-4 w-40 bg-white/10" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Numbered items skeleton (for privacy/terms/how-it-works content sections) */
+export function NumberedItemsSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <section className="py-16 sm:py-24">
+      <div className={publicContentFrameClass}>
+        <div className="mx-auto max-w-5xl space-y-12 sm:space-y-16">
+          {Array.from({ length: count }).map((_, i) => (
+            <div key={i} className="flex gap-6 sm:gap-10">
+              <Skeleton className="h-8 w-8 shrink-0 sm:h-9 sm:w-9" />
+              <div className="flex-1 space-y-3">
+                <Skeleton className="h-7 w-48 sm:h-8 sm:w-64" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** Hero block (dark bg) for about/contact/services */
 export function HeroSkeleton() {
   return (
