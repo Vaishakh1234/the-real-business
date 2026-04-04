@@ -31,7 +31,11 @@ import {
 export function MobileNavDrawer() {
   const pathname = usePathname();
   const { mobileNavOpen, setMobileNavOpen } = useAppStore();
-  const { clearAuth } = useAuthStore();
+  const { email, clearAuth } = useAuthStore();
+
+  const displayName = email
+    ? email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : "Admin";
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -112,7 +116,22 @@ export function MobileNavDrawer() {
                 })}
               </ul>
             </nav>
-            <div className="border-t border-admin-sidebar-border px-3 py-4 space-y-1">
+            <div className="border-t border-admin-sidebar-border px-3 py-4 space-y-2">
+              {email && (
+                <div className="flex items-center gap-3 rounded-lg px-3 py-2.5">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-semibold">
+                    {displayName[0]?.toUpperCase() ?? "A"}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {displayName}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {email}
+                    </p>
+                  </div>
+                </div>
+              )}
               <button
                 onClick={() => {
                   setMobileNavOpen(false);
