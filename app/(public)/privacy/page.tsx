@@ -1,228 +1,416 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  Shield,
+  Database,
+  Target,
+  Handshake,
+  Users,
+  Lock,
+  Cookie,
+  UserCheck,
+  ExternalLink,
+  RefreshCw,
+  ArrowRight,
+  CheckCircle2,
+  ShieldCheck,
+} from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
+import { SITE_NAME, CONTACT } from "@/lib/constants/site";
+import { getSiteOrigin } from "@/lib/seo/site";
 
 const privacyTitle = "Privacy Policy — The Real Business";
 const privacyDescription =
-  "Privacy Policy for The Real Business. Learn how we collect, use, and protect your personal information.";
+  "Privacy Policy for The Real Business — learn how we collect, use, protect, and store your personal and business information through our real estate consultancy, property marketing, and transaction facilitation services in Palakkad.";
 
 export const metadata: Metadata = {
   title: privacyTitle,
   alternates: { canonical: "/privacy" },
   description: privacyDescription,
+  keywords: [
+    "The Real Business privacy policy",
+    "real estate data privacy",
+    "property consultancy privacy",
+    "client data protection",
+    "Palakkad real estate privacy",
+  ],
   ...defaultPageOgTwitter("/privacy", privacyTitle, privacyDescription),
 };
 
-const lastUpdated = "2026-03-15";
+const lastUpdated = "2026-04-05";
+
+const SECTIONS = [
+  {
+    id: "commitment",
+    number: "01",
+    title: "Our Commitment",
+    icon: Shield,
+    highlight:
+      "Your confidentiality and data security are fundamental to how we operate.",
+    paragraphs: [
+      `${SITE_NAME} is committed to maintaining the confidentiality and security of all personal and business information collected through its website, onboarding process, and communication channels.`,
+    ],
+  },
+  {
+    id: "information-collected",
+    number: "02",
+    title: "Information We Collect",
+    icon: Database,
+    highlight:
+      "We collect only what is necessary to serve you effectively and transparently.",
+    paragraphs: [
+      `Information may be collected via forms, calls, messages, or direct interactions. The types of data we may collect include:`,
+    ],
+    bullets: [
+      "Names and contact details",
+      "Property information and ownership details",
+      "Investment preferences and budget parameters",
+      "Transaction-related data and communication records",
+    ],
+  },
+  {
+    id: "purpose",
+    number: "03",
+    title: "Purpose of Collection",
+    icon: Target,
+    highlight:
+      "Every piece of information we collect serves a clear, defined purpose aligned with your goals.",
+    paragraphs: [
+      `Your information is collected and used for the following purposes:`,
+    ],
+    bullets: [
+      "Providing real estate consultancy and advisory services",
+      "Facilitating property transactions between buyers and sellers",
+      "Executing marketing activities for listed properties",
+      "Improving service efficiency and client experience",
+    ],
+  },
+  {
+    id: "consent",
+    number: "04",
+    title: "Consent & Data Processing",
+    icon: Handshake,
+    highlight:
+      "By engaging with our services, you consent to our responsible handling of your data.",
+    paragraphs: [
+      `By engaging with our services, users consent to the collection, use, storage, and processing of such information in accordance with this policy.`,
+      `Consent is established through our onboarding process and continued use of our services and communication channels.`,
+    ],
+  },
+  {
+    id: "sharing",
+    number: "05",
+    title: "Information Sharing",
+    icon: Users,
+    highlight:
+      "Your data is shared only when necessary — and only with relevant, authorized parties.",
+    paragraphs: [
+      `Information may be shared only with relevant parties when necessary for transaction completion or legal compliance. These parties may include:`,
+    ],
+    bullets: [
+      "Buyers and sellers involved in a transaction",
+      "Brokers and marketing platforms facilitating property promotion",
+      "Legal authorities when required by law or regulation",
+    ],
+    footnote: `${SITE_NAME} does not sell or misuse client information under any circumstances.`,
+  },
+  {
+    id: "data-protection",
+    number: "06",
+    title: "Data Protection",
+    icon: Lock,
+    highlight:
+      "We implement reasonable security measures to safeguard your information from unauthorized access.",
+    paragraphs: [
+      `${SITE_NAME} ensures reasonable measures to protect data from unauthorized access, alteration, disclosure, or destruction.`,
+    ],
+    bullets: [
+      "Access is limited strictly to authorized personnel",
+      "Client information is never sold or shared for unrelated purposes",
+      "Security protocols are regularly reviewed and updated",
+    ],
+  },
+  {
+    id: "cookies",
+    number: "07",
+    title: "Cookies & Technology",
+    icon: Cookie,
+    highlight:
+      "We use standard web technologies to enhance your browsing experience.",
+    paragraphs: [
+      `Our website may use cookies or similar technologies to enhance user experience and analyze site performance.`,
+      `You can manage cookie preferences through your browser settings. Disabling certain cookies may affect website functionality.`,
+    ],
+  },
+  {
+    id: "your-rights",
+    number: "08",
+    title: "Your Rights",
+    icon: UserCheck,
+    highlight:
+      "You retain control over your personal data and can exercise your rights at any time.",
+    paragraphs: [
+      `Users retain the right to request the following, subject to applicable legal obligations:`,
+    ],
+    bullets: [
+      "Access to their personal data held by us",
+      "Correction of inaccurate or incomplete information",
+      "Deletion of personal data when no longer required",
+    ],
+  },
+  {
+    id: "third-party",
+    number: "09",
+    title: "Third-Party Links",
+    icon: ExternalLink,
+    highlight:
+      "External platforms linked from our services operate under their own privacy policies.",
+    paragraphs: [
+      `Any third-party links or platforms associated with our services operate under their own privacy policies.`,
+      `${SITE_NAME} holds no responsibility for the privacy practices of external websites. We encourage you to review their policies before providing any personal information.`,
+    ],
+  },
+  {
+    id: "policy-updates",
+    number: "10",
+    title: "Policy Updates",
+    icon: RefreshCw,
+    highlight:
+      "This policy may evolve — continued use of our services implies acceptance of the latest version.",
+    paragraphs: [
+      `This privacy policy may be updated periodically without prior notice to reflect changes in our practices or legal requirements.`,
+      `Continued use of our services following any updates implies acceptance of the revised policy.`,
+    ],
+  },
+] as const;
 
 export default function PrivacyPage() {
+  const origin = getSiteOrigin();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Privacy Policy",
+    description: privacyDescription,
+    url: `${origin}/privacy`,
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: origin,
+    },
+    dateModified: lastUpdated,
+    inLanguage: "en",
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Breadcrumbs
-        items={[{ label: "Home", href: "/" }, { label: "Privacy policy" }]}
+        items={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]}
         currentPath="/privacy"
       />
-      {/* Hero */}
-      <section className="overflow-hidden bg-black pt-20 pb-24 min-h-[280px] sm:min-h-[340px] lg:min-h-[400px] flex items-end">
-        <div className={`${publicContentFrameClass} w-full`}>
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-brand-charcoal pt-20 pb-24 min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] flex items-end">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(183,147,84,0.15),transparent)]" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-gold/30 to-transparent" />
+
+        <div className={`${publicContentFrameClass} relative w-full`}>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
-            <div>
-              <p className="text-white/40 text-xs tracking-[0.2em] uppercase mb-6 flex items-center gap-3">
-                <span className="h-px w-8 bg-white/20 inline-block" />
+            <div className="max-w-3xl">
+              <p className="text-brand-gold/70 text-xs tracking-[0.25em] uppercase mb-6 flex items-center gap-3 font-medium">
+                <span className="h-px w-10 bg-brand-gold/40 inline-block" />
                 Legal
               </p>
-              <h1 className="text-5xl sm:text-6xl lg:text-[80px] font-bold text-white leading-[0.95] tracking-tight max-w-3xl">
-                Privacy <span className="italic font-light">Policy</span>
+              <h1 className="font-heading text-5xl sm:text-6xl lg:text-[80px] font-bold text-white leading-[0.95] tracking-tight">
+                Privacy{" "}
+                <span className="italic font-light text-brand-gold/90">
+                  Policy
+                </span>
               </h1>
-              <p className="text-white/50 text-base leading-relaxed mt-6 max-w-xl">
+              <p className="text-white/55 text-base sm:text-lg leading-relaxed mt-6 max-w-xl">
                 Your privacy matters to us. This policy explains how we collect,
-                use, and safeguard your personal information when you interact
-                with our website and services.
+                use, protect, and store your information when you engage with{" "}
+                {SITE_NAME}.
               </p>
-              <p className="mt-4 text-sm text-white/45">
-                Last updated: <time dateTime={lastUpdated}>15 March 2026</time>
+              <p className="mt-5 text-sm text-white/40 flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4" aria-hidden />
+                Last updated: <time dateTime={lastUpdated}>5 April 2026</time>
               </p>
             </div>
+
+            {/* Quick-nav sidebar */}
+            <nav
+              aria-label="Privacy policy sections"
+              className="hidden lg:block shrink-0"
+            >
+              <p className="text-xs text-white/30 uppercase tracking-widest mb-3">
+                In this page
+              </p>
+              <ol className="space-y-1.5 max-h-[240px] overflow-y-auto pr-2 [scrollbar-width:thin] [scrollbar-color:rgba(183,147,84,0.3)_transparent]">
+                {SECTIONS.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={`#${s.id}`}
+                      className="group flex items-center gap-2.5 text-sm text-white/50 hover:text-brand-gold transition-colors"
+                    >
+                      <span className="font-bold text-brand-gold/60 group-hover:text-brand-gold text-xs tabular-nums">
+                        {s.number}
+                      </span>
+                      <span>{s.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
           </div>
         </div>
       </section>
 
-      {/* Content */}
+      {/* ── Trust Strip ── */}
+      <section className="border-b border-brand-gold/10 bg-white">
+        <div
+          className={`${publicContentFrameClass} py-8 sm:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8`}
+        >
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="h-10 w-10 rounded-full bg-brand-gold/10 flex items-center justify-center">
+              <Lock className="h-5 w-5 text-brand-gold" aria-hidden />
+            </div>
+            <p className="font-heading text-lg font-semibold text-brand-charcoal">
+              Your Data, Protected
+            </p>
+          </div>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            We never sell your personal information. All data is handled with
+            strict confidentiality and shared only when necessary for completing
+            your real estate transaction or meeting legal requirements.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Policy Content ── */}
       <section className="py-16 sm:py-24">
         <div className={publicContentFrameClass}>
-          <ol className="mx-auto max-w-5xl list-none space-y-12 sm:space-y-16">
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                01
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Information We Collect
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  We may collect information you provide directly, such as your
-                  name, email address, phone number, and message content when
-                  you fill out our contact form, request a valuation, or express
-                  interest in a property. We may also collect usage data, such
-                  as IP address, browser type, and pages visited, to improve our
-                  website and services.
-                </p>
-              </div>
-            </li>
+          <div className="mx-auto max-w-5xl space-y-16 sm:space-y-20">
+            {SECTIONS.map((section, idx) => {
+              const Icon = section.icon;
+              return (
+                <article
+                  key={section.id}
+                  id={section.id}
+                  className="group scroll-mt-24"
+                >
+                  {/* Section header */}
+                  <div className="flex items-start gap-5 sm:gap-8 mb-6">
+                    <div className="shrink-0 relative">
+                      <span className="block text-4xl sm:text-5xl font-bold text-brand-gold/15 leading-none tabular-nums select-none">
+                        {section.number}
+                      </span>
+                      <div className="absolute -bottom-1 -right-1 h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-brand-gold/10 flex items-center justify-center">
+                        <Icon
+                          className="h-4 w-4 sm:h-5 sm:w-5 text-brand-gold"
+                          aria-hidden
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <h2 className="font-heading text-2xl sm:text-3xl font-bold text-brand-charcoal leading-tight">
+                        {section.title}
+                      </h2>
+                      <p className="mt-2 text-brand-gold/80 text-sm sm:text-base font-medium italic">
+                        {section.highlight}
+                      </p>
+                    </div>
+                  </div>
 
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                02
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  How We Use Your Information
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  We use the information we collect to respond to your
-                  inquiries, provide real estate services, send relevant
-                  property updates (with your consent), improve our website, and
-                  comply with legal obligations. We do not sell your personal
-                  information to third parties.
-                </p>
-              </div>
-            </li>
+                  {/* Body */}
+                  <div className="ml-0 sm:ml-[4.5rem] lg:ml-[5.5rem] space-y-4">
+                    {section.paragraphs.map((p, pi) => (
+                      <p
+                        key={pi}
+                        className="text-muted-foreground text-base leading-relaxed"
+                      >
+                        {p}
+                      </p>
+                    ))}
 
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                03
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Cookies and Similar Technologies
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  Our website may use cookies and similar technologies to
-                  enhance your experience, remember your preferences, and
-                  analyze traffic. You can control cookie settings through your
-                  browser. Disabling certain cookies may affect the
-                  functionality of our website.
-                </p>
-              </div>
-            </li>
+                    {"bullets" in section && section.bullets && (
+                      <ul className="mt-3 space-y-2.5 pl-1">
+                        {section.bullets.map((b, bi) => (
+                          <li
+                            key={bi}
+                            className="flex items-start gap-3 text-brand-charcoal"
+                          >
+                            <CheckCircle2
+                              className="h-5 w-5 shrink-0 text-brand-gold/70 mt-0.5"
+                              aria-hidden
+                            />
+                            <span className="text-base">{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                04
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Data Retention
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  We retain your personal information only for as long as
-                  necessary to fulfill the purposes described in this policy or
-                  as required by law. When data is no longer needed, we will
-                  securely delete or anonymize it.
-                </p>
-              </div>
-            </li>
+                    {"footnote" in section && section.footnote && (
+                      <p className="mt-4 text-sm font-medium text-brand-charcoal/80 bg-brand-gold/5 border-l-2 border-brand-gold/30 pl-4 py-2 rounded-r-md">
+                        {section.footnote}
+                      </p>
+                    )}
+                  </div>
 
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                05
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Security
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  We implement appropriate technical and organizational measures
-                  to protect your personal information against unauthorized
-                  access, alteration, disclosure, or destruction. However, no
-                  method of transmission over the Internet is completely secure,
-                  and we cannot guarantee absolute security.
-                </p>
-              </div>
-            </li>
+                  {/* Divider */}
+                  {idx < SECTIONS.length - 1 && (
+                    <div className="mt-14 sm:mt-16 flex items-center gap-4">
+                      <div className="h-px flex-1 bg-gradient-to-r from-brand-gold/20 to-transparent" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-brand-gold/30" />
+                      <div className="h-px flex-1 bg-gradient-to-l from-brand-gold/20 to-transparent" />
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                06
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Your Rights
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  Depending on your location, you may have the right to access,
-                  correct, or delete your personal information, object to or
-                  restrict processing, and data portability. To exercise these
-                  rights or ask questions about your data, please contact us
-                  using the details below.
-                </p>
-              </div>
-            </li>
-
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                07
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Third-Party Links
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  Our website may contain links to third-party websites. We are
-                  not responsible for the privacy practices of those sites. We
-                  encourage you to read their privacy policies before providing
-                  any personal information.
-                </p>
-              </div>
-            </li>
-
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                08
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Changes to This Policy
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  We may update this Privacy Policy from time to time. We will
-                  post the updated policy on this page and update the &quot;Last
-                  updated&quot; date. We encourage you to review this policy
-                  periodically.
-                </p>
-              </div>
-            </li>
-
-            <li className="flex gap-6 sm:gap-10">
-              <span className="shrink-0 text-2xl sm:text-3xl font-bold text-brand-gold/80">
-                09
-              </span>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-brand-charcoal mb-3">
-                  Contact Us
-                </h2>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  For questions about this Privacy Policy or your personal data,
-                  please contact us at{" "}
-                  <a
-                    href="mailto:contact@therealbusiness.com"
-                    className="text-brand-gold hover:underline"
-                  >
-                    contact@therealbusiness.com
-                  </a>{" "}
-                  or through our{" "}
-                  <a
-                    href="/contact"
-                    className="text-brand-gold hover:underline"
-                  >
-                    Contact page
-                  </a>
-                  .
-                </p>
-              </div>
-            </li>
-          </ol>
+      {/* ── Contact CTA ── */}
+      <section className="border-t border-brand-gold/15">
+        <div className={`${publicContentFrameClass} py-16 sm:py-20`}>
+          <div className="mx-auto max-w-2xl rounded-2xl border border-brand-gold/15 bg-white/60 backdrop-blur-sm px-8 py-12 sm:px-12 sm:py-14 text-center shadow-sm">
+            <p className="text-brand-gold text-xs tracking-[0.2em] uppercase mb-4 font-medium">
+              Privacy concerns?
+            </p>
+            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal mb-4">
+              Get in touch with us
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto text-base leading-relaxed mb-8">
+              For any privacy-related concerns, data requests, or questions
+              about this policy, please contact {SITE_NAME} through our official
+              communication channels.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-lg bg-brand-charcoal px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-charcoal/10 transition-all hover:bg-brand-charcoal/90 focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+              >
+                Contact Us
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+              {CONTACT.email && (
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-brand-gold/25 px-6 py-3 text-sm font-medium text-brand-charcoal/70 transition-colors hover:border-brand-gold/50 hover:text-brand-charcoal focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                >
+                  {CONTACT.email}
+                </a>
+              )}
+            </div>
+          </div>
         </div>
       </section>
     </>
