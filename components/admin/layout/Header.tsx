@@ -43,7 +43,9 @@ export function Header() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const displayName = "Admin User";
+  const displayName = email
+    ? email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : "Admin";
 
   async function handleLogout() {
     setIsLoggingOut(true);
@@ -110,12 +112,12 @@ export function Header() {
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-admin-header-bg" />
               </div>
-              <div className="text-left hidden lg:flex flex-col">
-                <span className="text-sm font-medium text-foreground leading-none">
+              <div className="text-left hidden lg:flex flex-col min-w-0">
+                <span className="text-sm font-medium text-foreground leading-none truncate">
                   {displayName}
                 </span>
-                <span className="text-xs text-muted-foreground mt-0.5 leading-none">
-                  Super Admin
+                <span className="text-xs text-muted-foreground mt-0.5 leading-none truncate max-w-[140px]">
+                  {email ?? "Super Admin"}
                 </span>
               </div>
             </button>
