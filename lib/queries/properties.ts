@@ -416,6 +416,28 @@ export async function getFeaturedProperties(limit = 6): Promise<PropertyWithRela
   return getLatestActiveProperties(limit);
 }
 
+/** Sitemap: active listings only. Returns empty if Supabase is not configured. */
+export async function getActivePropertySlugsForSitemap(): Promise<
+  { slug: string; updated_at: string }[]
+> {
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from("properties")
+      .select("slug, updated_at")
+      .eq("status", "active");
+    if (error || !data) return [];
+    return data
+      .filter((row) => typeof row.slug === "string" && row.slug.length > 0)
+      .map((row) => ({
+        slug: row.slug as string,
+        updated_at: (row.updated_at as string) ?? new Date().toISOString(),
+      }));
+  } catch {
+    return [];
+  }
+}
+
 /** Admin: other listings that share at least one tag (any status). */
 export async function getAdminRelatedPropertiesByTags(
   propertyId: string,

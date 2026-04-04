@@ -136,6 +136,12 @@ const navMenus: NavMenu[] = [
         thumbSrc: "/images/home-modal/home-modal-3.png",
       },
       {
+        title: "Areas in Palakkad",
+        description: "Town-by-town listing hubs",
+        href: "/areas",
+        icon: MapPin,
+      },
+      {
         title: "How it works",
         description: "Steps from search to keys",
         href: "/how-it-works",
@@ -228,6 +234,18 @@ const navMenus: NavMenu[] = [
       ctaLabel: "About us",
     },
     items: [
+      {
+        title: "Areas we serve",
+        description: "Palakkad localities & listings",
+        href: "/areas",
+        icon: MapPin,
+      },
+      {
+        title: "Guides & insights",
+        description: "Buying, NRI, documents, registration",
+        href: "/guides",
+        icon: FileText,
+      },
       {
         title: "About us",
         description: "Our story and standards",

@@ -14,7 +14,6 @@ import {
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  ABOUT_PAGE_BACKGROUND,
   ABOUT_WHY_CHOOSE_US,
   CONTACT,
   SERVICES,
@@ -24,12 +23,18 @@ import {
   type AboutWhyChooseUsIconKey,
   type ServiceIconKey,
 } from "@/lib/constants/site";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
+
+const servicesTitle =
+  "Our Services — Real Estate Marketing, Property Consultancy & Buying/Selling Support";
+const servicesDescription = `${SERVICES_HERO_TAGLINE} Property buying and selling support across Palakkad district, Kerala.`;
 
 export const metadata: Metadata = {
-  title:
-    "Our Services — Real Estate Marketing, Property Consultancy & Buying/Selling Support",
-  description: `${SERVICES_HERO_TAGLINE} Property buying and selling support across Palakkad district, Kerala.`,
+  title: servicesTitle,
+  alternates: { canonical: "/services" },
+  description: servicesDescription,
   keywords: [
     "real estate marketing Palakkad",
     "property consultancy Kerala",
@@ -39,6 +44,7 @@ export const metadata: Metadata = {
     "buy property Palakkad",
     SITE_NAME,
   ],
+  ...defaultPageOgTwitter("/services", servicesTitle, servicesDescription),
 };
 
 const SERVICE_ICONS: Record<ServiceIconKey, LucideIcon> = {
@@ -56,10 +62,11 @@ const WHY_US_ICONS: Record<AboutWhyChooseUsIconKey, LucideIcon> = {
 
 export default function ServicesPage() {
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: ABOUT_PAGE_BACKGROUND }}
-    >
+    <>
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "Services" }]}
+        currentPath="/services"
+      />
       <div className={publicContentFrameClass}>
         {/* ── Services hero (matches About editorial spacing) ── */}
         <section className="pb-10 pt-6 sm:pb-12 sm:pt-8 md:pt-10 lg:pb-14 lg:pt-12">
@@ -80,8 +87,55 @@ export default function ServicesPage() {
           <div className="mt-10 grid grid-cols-1 gap-8 lg:mt-12 lg:grid-cols-3 lg:gap-10">
             {SERVICES.map((service) => {
               const Icon = SERVICE_ICONS[service.iconKey];
+              const cta =
+                service.iconKey === "Megaphone" ? (
+                  <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    <Link
+                      href="/post-property"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-brand-gold px-4 py-2 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white"
+                    >
+                      Post your property
+                    </Link>
+                    <Link
+                      href="/properties"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90"
+                    >
+                      Browse live listings
+                    </Link>
+                  </div>
+                ) : service.iconKey === "Briefcase" ? (
+                  <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    <Link
+                      href="/contact"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90"
+                    >
+                      Book a consultancy call
+                    </Link>
+                    <Link
+                      href="/guides/property-buying-guide-palakkad"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-brand-gold px-4 py-2 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white"
+                    >
+                      Read the buying guide
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    <Link
+                      href="/properties?type=sale"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90"
+                    >
+                      Properties for sale
+                    </Link>
+                    <Link
+                      href="/properties?type=rent"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-brand-gold px-4 py-2 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white"
+                    >
+                      Properties for rent
+                    </Link>
+                  </div>
+                );
               return (
-                <div
+                <article
                   key={service.title}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-gold/30 bg-white/60 shadow-sm transition-all duration-300 hover:border-brand-gold/50 hover:shadow-md"
                 >
@@ -106,8 +160,9 @@ export default function ServicesPage() {
                         </li>
                       ))}
                     </ul>
+                    {cta}
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>
@@ -230,6 +285,6 @@ export default function ServicesPage() {
           </div>
         </section>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+import { ABOUT_PAGE_BACKGROUND } from "@/lib/constants/site";
+
 /**
  * Single content frame for the public site: navbar, hero inner, portal sections, footer, and major pages.
  * Keeps max width and horizontal gutters aligned (1680px cap; responsive padding).
@@ -6,6 +8,12 @@ export const PUBLIC_CONTENT_MAX_WIDTH_PX = 1680 as const;
 
 export const publicContentFrameClass =
   "mx-auto w-full max-w-[1680px] px-4 xs:px-5 sm:px-6 lg:px-16 xl:px-24";
+
+/**
+ * Unified background for all public pages (matches `ABOUT_PAGE_BACKGROUND` in site constants).
+ * Applied on the public layout shell; inner sections should not re-apply a competing page bg.
+ */
+export const publicShellBackgroundColor = ABOUT_PAGE_BACKGROUND;
 
 /**
  * Public routes whose first section is a full-bleed **dark** hero under the fixed navbar

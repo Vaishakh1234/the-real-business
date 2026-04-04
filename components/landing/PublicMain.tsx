@@ -17,7 +17,7 @@ export function PublicMain({ children }: { children: ReactNode }) {
       className={cn(
         // `overflow-x-clip` avoids horizontal bleed without breaking `position: sticky`
         // (unlike `overflow-x-hidden`, which can trap sticky descendants in main).
-        "flex-1 min-w-0 overflow-x-clip bg-muted/50 md:pb-0",
+        "flex-1 min-w-0 overflow-x-clip md:pb-0",
         isPropertyDetailPage
           ? "pb-[max(1rem,env(safe-area-inset-bottom))]"
           : "pb-[max(5rem,env(safe-area-inset-bottom))]",

@@ -1,16 +1,35 @@
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ListingResultsHeaderSkeleton } from "@/components/properties/ListingResultsHeaderSkeleton";
 import { PropertiesFilterSidebarStatic } from "@/components/properties/PropertiesFilterSidebarStatic";
+import { PropertiesIndexSeo } from "@/components/properties/PropertiesIndexSeo";
 import { PropertyListingCardSkeleton } from "@/components/properties/PropertyListingCard";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
-import { PUBLIC_PROPERTIES_PAGE_SIZE } from "@/lib/constants/site";
+import { PUBLIC_PROPERTIES_PAGE_SIZE, SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
+
+const propertiesTitle = "Properties for Sale & Rent in Palakkad, Kerala";
+const propertiesDescription = `Browse plots, land, houses, villas, and commercial property for sale and rent in Palakkad district, Kerala. Curated listings and local brokerage support with ${SITE_NAME}.`;
 
 export const metadata: Metadata = {
-  title: "Properties — The Real Business",
-  description:
-    "Browse our curated collection of premium properties for sale and rent.",
+  title: propertiesTitle,
+  alternates: { canonical: "/properties" },
+  description: propertiesDescription,
+  keywords: [
+    "property for sale Palakkad",
+    "plots for sale Palakkad",
+    "land for sale Kerala",
+    "house for rent Palakkad",
+    "real estate listings Palakkad",
+    SITE_NAME,
+  ],
+  ...defaultPageOgTwitter(
+    "/properties",
+    `${propertiesTitle} | ${SITE_NAME}`,
+    propertiesDescription,
+  ),
 };
 
 function PropertiesLoading() {
@@ -18,7 +37,7 @@ function PropertiesLoading() {
     <div
       className={cn(
         publicContentFrameClass,
-        "min-h-dvh bg-muted/40 py-8 sm:py-10 md:bg-muted/50 md:py-12",
+        "min-h-dvh py-8 sm:py-10 md:py-12",
       )}
     >
       <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(260px,300px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">
@@ -52,5 +71,14 @@ const PropertiesClient = dynamic(
 );
 
 export default function PropertiesPage() {
-  return <PropertiesClient />;
+  return (
+    <>
+      <PropertiesIndexSeo />
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "Properties" }]}
+        currentPath="/properties"
+      />
+      <PropertiesClient />
+    </>
+  );
 }

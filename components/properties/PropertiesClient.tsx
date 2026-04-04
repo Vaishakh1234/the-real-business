@@ -165,6 +165,12 @@ export function PropertiesClient() {
   const featuredOnly =
     searchParams.get("featured") === "1" ||
     searchParams.get("featured") === "true";
+  const cityParam = searchParams.get("city")?.trim() ?? "";
+  const typeParamRaw = searchParams.get("type") ?? "";
+  const typeParam =
+    typeParamRaw === "sale" || typeParamRaw === "rent"
+      ? typeParamRaw
+      : undefined;
   const [searchInput, setSearchInput] = useState(search);
   const [minCentInput, setMinCentInput] = useState(min_total_cent_str);
   const [maxCentInput, setMaxCentInput] = useState(max_total_cent_str);
@@ -206,6 +212,8 @@ export function PropertiesClient() {
     sort,
     structure_type,
     category_id: category_id || undefined,
+    city: cityParam || undefined,
+    type: typeParam,
     min_price,
     max_price,
     search: search.trim() || undefined,
@@ -295,7 +303,9 @@ export function PropertiesClient() {
     price_type_filter ||
     min_total_cent_str ||
     max_total_cent_str ||
-    featuredOnly;
+    featuredOnly ||
+    cityParam ||
+    typeParam;
   const filterCount = [
     category_id,
     priceRange,
@@ -305,6 +315,8 @@ export function PropertiesClient() {
     min_total_cent_str,
     max_total_cent_str,
     featuredOnly,
+    cityParam,
+    typeParam,
   ].filter(Boolean).length;
 
   const clearFilters = useCallback(() => {
@@ -408,6 +420,26 @@ export function PropertiesClient() {
               >
                 Featured only
                 <X className="h-3 w-3" aria-hidden />
+              </button>
+            ) : null}
+            {cityParam ? (
+              <button
+                type="button"
+                onClick={() => updateParams({ city: undefined })}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-2.5 py-1 text-xs font-medium text-brand-charcoal hover:bg-muted max-w-full"
+              >
+                <span className="truncate">Area: {cityParam}</span>
+                <X className="h-3 w-3 shrink-0" aria-hidden />
+              </button>
+            ) : null}
+            {typeParam ? (
+              <button
+                type="button"
+                onClick={() => updateParams({ type: undefined })}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted/50 px-2.5 py-1 text-xs font-medium text-brand-charcoal hover:bg-muted"
+              >
+                {typeParam === "sale" ? "For sale" : "For rent"}
+                <X className="h-3 w-3 shrink-0" aria-hidden />
               </button>
             ) : null}
             {priceRange ? (
@@ -1152,8 +1184,28 @@ export function PropertiesClient() {
         </SheetContent>
       </Sheet>
 
-      <section className="min-h-dvh bg-muted/40 pb-12 pt-4 sm:pb-16 sm:pt-6 md:bg-muted/50 md:pb-20 md:pt-8 lg:pb-24 lg:pt-10">
+      <section
+        className="min-h-dvh pb-12 pt-4 sm:pb-16 sm:pt-6 md:pb-20 md:pt-8 lg:pb-24 lg:pt-10"
+        aria-labelledby="properties-directory-heading"
+      >
         <div className={publicContentFrameClass}>
+          <h1
+            id="properties-directory-heading"
+            className="mb-4 font-heading text-2xl font-bold tracking-tight text-brand-charcoal md:mb-6 md:text-3xl"
+          >
+            {(() => {
+              const typeSuffix =
+                typeParam === "sale"
+                  ? " — for sale"
+                  : typeParam === "rent"
+                    ? " — for rent"
+                    : "";
+              if (cityParam) {
+                return `Properties in ${cityParam}${typeSuffix}`;
+              }
+              return `Properties for sale & rent in Palakkad, Kerala${typeSuffix}`;
+            })()}
+          </h1>
           {isLoading && (
             <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] xl:gap-10 2xl:gap-12">
               <aside className="hidden xl:block xl:self-start">

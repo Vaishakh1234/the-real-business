@@ -99,14 +99,14 @@ export function PropertyDetailGallery({
       onMouseEnter={() => setGalleryHovered(true)}
       onMouseLeave={() => setGalleryHovered(false)}
     >
-      <div
-        className="relative aspect-[16/10] min-h-[220px] max-h-[min(52vh,520px)] w-full overflow-hidden rounded-xl border border-neutral-200/90 bg-white p-2 shadow-[0_4px_20px_rgba(15,23,42,0.06)] sm:min-h-[240px] sm:rounded-2xl sm:p-3 md:p-4 sm:shadow-[0_2px_12px_rgba(15,23,42,0.05)]"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Property photos"
-        tabIndex={0}
-      >
-        <div className="relative h-full min-h-[168px] w-full overflow-hidden rounded-lg sm:min-h-[180px] sm:rounded-xl">
+      <figure className="relative aspect-[16/10] min-h-[220px] max-h-[min(52vh,520px)] w-full overflow-hidden rounded-xl border border-neutral-200/90 bg-white p-2 shadow-[0_4px_20px_rgba(15,23,42,0.06)] sm:min-h-[240px] sm:rounded-2xl sm:p-3 md:p-4 sm:shadow-[0_2px_12px_rgba(15,23,42,0.05)]">
+        <div
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Property photos"
+          tabIndex={0}
+          className="relative h-full min-h-[168px] w-full overflow-hidden rounded-lg sm:min-h-[180px] sm:rounded-xl"
+        >
           {current ? (
             <PropertyImage
               src={current}
@@ -150,13 +150,13 @@ export function PropertyDetailGallery({
                   strokeWidth={2.25}
                 />
               </button>
-              <div className="pointer-events-none absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-white sm:bottom-3 sm:right-3 sm:px-2.5 sm:py-1 sm:text-xs">
+              <figcaption className="pointer-events-none absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-white sm:bottom-3 sm:right-3 sm:px-2.5 sm:py-1 sm:text-xs">
                 {safeIndex + 1} / {images.length}
-              </div>
+              </figcaption>
             </>
           ) : null}
         </div>
-      </div>
+      </figure>
 
       {images.length > 1 ? (
         <div

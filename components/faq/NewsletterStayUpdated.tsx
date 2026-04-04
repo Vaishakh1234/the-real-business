@@ -52,7 +52,7 @@ export function NewsletterStayUpdated() {
   }
 
   return (
-    <section className="bg-[#FEFBF3] pb-16 pt-4 sm:pb-24 lg:pb-28">
+    <section className="pb-16 pt-4 sm:pb-24 lg:pb-28">
       <div className={publicContentFrameClass}>
         <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] sm:rounded-[2.25rem]">
           <div className="relative aspect-[16/9] min-h-[280px] w-full sm:aspect-[21/9] sm:min-h-[320px]">

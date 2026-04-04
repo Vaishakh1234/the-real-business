@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { FaqMarketingSection } from "@/components/faq/FaqMarketingSection";
 import { NewsletterStayUpdated } from "@/components/faq/NewsletterStayUpdated";
 import { FAQ_PAGE_ITEMS, SITE_NAME } from "@/lib/constants/site";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
 
+const faqTitle = `FAQ — ${SITE_NAME}`;
 const description = `Answers about ${SITE_NAME} — services, search, fees, listings, visits, and legal support in Palakkad real estate. Subscribe for updates.`;
 
 export const metadata: Metadata = {
-  title: `FAQ — ${SITE_NAME}`,
+  title: faqTitle,
+  alternates: { canonical: "/faq" },
   description,
-  openGraph: {
-    title: `FAQ — ${SITE_NAME}`,
-    description,
-    type: "website",
-    locale: "en_IN",
-    siteName: SITE_NAME,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `FAQ — ${SITE_NAME}`,
-    description,
-  },
+  ...defaultPageOgTwitter("/faq", faqTitle, description),
 };
 
 function FaqJsonLd() {
@@ -47,6 +40,10 @@ export default function FaqPage() {
   return (
     <>
       <FaqJsonLd />
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "FAQ" }]}
+        currentPath="/faq"
+      />
       <FaqMarketingSection />
       <NewsletterStayUpdated />
     </>

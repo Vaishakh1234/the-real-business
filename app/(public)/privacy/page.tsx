@@ -1,15 +1,28 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
+
+const privacyTitle = "Privacy Policy — The Real Business";
+const privacyDescription =
+  "Privacy Policy for The Real Business. Learn how we collect, use, and protect your personal information.";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — The Real Business",
-  description:
-    "Privacy Policy for The Real Business. Learn how we collect, use, and protect your personal information.",
+  title: privacyTitle,
+  alternates: { canonical: "/privacy" },
+  description: privacyDescription,
+  ...defaultPageOgTwitter("/privacy", privacyTitle, privacyDescription),
 };
+
+const lastUpdated = "2026-03-15";
 
 export default function PrivacyPage() {
   return (
     <>
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "Privacy policy" }]}
+        currentPath="/privacy"
+      />
       {/* Hero */}
       <section className="overflow-hidden bg-black pt-20 pb-24 min-h-[280px] sm:min-h-[340px] lg:min-h-[400px] flex items-end">
         <div className={`${publicContentFrameClass} w-full`}>
@@ -27,13 +40,16 @@ export default function PrivacyPage() {
                 use, and safeguard your personal information when you interact
                 with our website and services.
               </p>
+              <p className="mt-4 text-sm text-white/45">
+                Last updated: <time dateTime={lastUpdated}>15 March 2026</time>
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Content */}
-      <section className="bg-white py-16 sm:py-24">
+      <section className="py-16 sm:py-24">
         <div className={publicContentFrameClass}>
           <ol className="mx-auto max-w-5xl list-none space-y-12 sm:space-y-16">
             <li className="flex gap-6 sm:gap-10">

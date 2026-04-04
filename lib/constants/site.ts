@@ -18,13 +18,13 @@ export function postPropertyHrefWithCta(_ctaSource: string | undefined): string 
 
 /** Home hero — Palakkad-first marketing, consultancy & transaction support */
 export const HOME_HERO = {
-  titleLine1: "Marketing, consultancy",
-  titleLine2: "& property in Palakkad.",
+  titleLine1: "Plots, land & homes",
+  titleLine2: "in Palakkad.",
 } as const;
 
 /** Line above the hero search fields (hover shows preview image). */
 export const HOME_HERO_SEARCH_PROMPT =
-  "Looking to buy, sell, or market property in Palakkad?" as const;
+  "Are you looking for a property to invest in Palakkad?" as const;
 
 /** Hero search card — hover preview (`public/images/…`). */
 export const HOME_HERO_MODAL_IMAGE = "/images/home-modal-1.png" as const;

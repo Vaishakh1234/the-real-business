@@ -404,12 +404,14 @@ function DirectoryListingCardMobile({
   property,
   href,
   priceWithInr,
+  priceDataValue,
   subtitleMobile,
   typeLabel,
 }: {
   property: PropertyWithRelations;
   href: string;
   priceWithInr: string;
+  priceDataValue: string;
   subtitleMobile: string;
   typeLabel: string;
 }) {
@@ -583,12 +585,12 @@ function DirectoryListingCardMobile({
             href={href}
             className="min-w-0 flex-1 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1a2b4b] focus-visible:ring-offset-2"
           >
-            <h3
+            <h2
               className="text-[15px] font-bold uppercase leading-snug tracking-wide"
               style={{ color: LISTING_CARD.navy }}
             >
               {property.title}
-            </h3>
+            </h2>
             <p
               className="mt-1 line-clamp-2 text-[13px] leading-snug"
               style={{ color: LISTING_CARD.meta }}
@@ -603,12 +605,13 @@ function DirectoryListingCardMobile({
 
         <div className="flex min-h-[4.75rem] divide-x divide-neutral-200 rounded-lg border border-neutral-200 bg-neutral-50/80 px-2 py-2.5">
           <div className="flex min-w-0 flex-1 flex-col justify-center pr-2">
-            <p
+            <data
+              value={priceDataValue}
               className="text-xl font-bold tabular-nums leading-tight"
               style={{ color: LISTING_CARD.navy }}
             >
               {priceWithInr}
-            </p>
+            </data>
             <p className="mt-0.5 text-[12px] font-semibold uppercase tracking-wide text-neutral-500">
               {property.price_type === "percent" ? "Per cent" : "Total amount"}
             </p>
@@ -756,6 +759,7 @@ export function DirectoryPropertyListingCard({
     priceFigure === "—" || priceFigure.startsWith("₹")
       ? priceFigure
       : `₹${priceFigure}`;
+  const priceDataValue = String(property.price ?? 0);
   const subtitle = listingSubtitle(property);
   const subtitleMobile = listingSubtitleMobile(property);
   const typeLabel = property.type === "sale" ? "For sale" : "For rent";
@@ -795,6 +799,7 @@ export function DirectoryPropertyListingCard({
         property={property}
         href={href}
         priceWithInr={priceWithInr}
+        priceDataValue={priceDataValue}
         subtitleMobile={subtitleMobile}
         typeLabel={typeLabel}
       />
@@ -877,12 +882,12 @@ export function DirectoryPropertyListingCard({
               href={href}
               className="block rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1a2b4b] focus-visible:ring-offset-2"
             >
-              <h3
+              <h2
                 className="line-clamp-2 text-[15px] font-bold leading-tight sm:text-base md:text-lg"
                 style={{ color: LISTING_CARD.navy }}
               >
                 {property.title}
-              </h3>
+              </h2>
             </Link>
             <p
               className="line-clamp-2 text-[12px] leading-snug sm:text-[13px]"
@@ -890,8 +895,8 @@ export function DirectoryPropertyListingCard({
             >
               {subtitle}
             </p>
-            <div
-              className="flex w-full min-w-0 items-start gap-2 text-sm sm:text-base"
+            <address
+              className="not-italic flex w-full min-w-0 items-start gap-2 text-sm sm:text-base"
               style={{ color: LISTING_CARD.meta }}
             >
               <MapPin
@@ -909,7 +914,7 @@ export function DirectoryPropertyListingCard({
                   </p>
                 ) : null}
               </div>
-            </div>
+            </address>
           </div>
 
           <div
@@ -918,12 +923,13 @@ export function DirectoryPropertyListingCard({
             <div className={statCardClass}>
               <p className={statLabelClass}>Price</p>
               <div className="mt-1 space-y-0 sm:mt-1.5">
-                <p
-                  className="text-[0.9375rem] font-bold tabular-nums leading-tight sm:text-base"
+                <data
+                  value={priceDataValue}
+                  className="block text-[0.9375rem] font-bold tabular-nums leading-tight sm:text-base"
                   style={{ color: LISTING_CARD.navy }}
                 >
                   {priceWithInr}
-                </p>
+                </data>
                 <p className="text-xs font-semibold text-neutral-600">
                   {priceBasisLabel}
                 </p>

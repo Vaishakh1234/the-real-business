@@ -9,11 +9,17 @@ import { HomeFAQ } from "@/components/landing/FAQ";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { SITE_NAME } from "@/lib/constants/site";
 import type { Metadata } from "next";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
+
+const homeTitle = `${SITE_NAME} — Real Estate Marketing & Property Consultancy, Palakkad`;
+const homeDescription =
+  "Browse curated listings in Palakkad, Kerala. Real estate marketing, property consultancy, and buying & selling support — we meet owners and walk properties before we recommend or market.";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} — Real Estate Marketing & Property Consultancy, Palakkad`,
-  description:
-    "Browse curated listings in Palakkad, Kerala. Real estate marketing, property consultancy, and buying & selling support — we meet owners and walk properties before we recommend or market.",
+  title: homeTitle,
+  description: homeDescription,
+  alternates: { canonical: "/" },
+  ...defaultPageOgTwitter("/", homeTitle, homeDescription),
 };
 
 export default function LandingPage() {

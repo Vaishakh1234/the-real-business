@@ -13,6 +13,9 @@ export interface PublicPropertyFilters {
   sort?: "newest" | "oldest" | "price_asc" | "price_desc";
   structure_type?: "house" | "plot";
   category_id?: string;
+  /** Substring match on `properties.city` (server ILIKE). */
+  city?: string;
+  type?: "sale" | "rent";
   min_price?: number;
   max_price?: number;
   search?: string;

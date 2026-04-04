@@ -5,7 +5,7 @@ export default function PropertiesLoading() {
   return (
     <>
       {/* Filter skeleton – matches PropertiesClient filter layout */}
-      <section className="py-12 sm:py-16 bg-white border-b border-border">
+      <section className="border-b border-border py-12 sm:py-16">
         <div className={publicContentFrameClass}>
           <div className="bg-muted rounded-2xl p-4 sm:p-6 border border-border">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
@@ -28,7 +28,7 @@ export default function PropertiesLoading() {
       </section>
 
       {/* Results skeleton – matches grid and card design */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-muted/50">
+      <section className="py-16 sm:py-20 lg:py-24">
         <div className={publicContentFrameClass}>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
             <Skeleton className="h-5 w-48" />

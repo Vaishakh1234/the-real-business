@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
 import { siteWordmarkFont } from "@/lib/fonts";
+import { getMetadataBase } from "@/lib/seo/site";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
@@ -20,6 +21,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
   title: {
     default:
       "The Real Business — Real Estate Marketing, Property Consultancy & Palakkad Deals",
@@ -54,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en-IN" suppressHydrationWarning>
       <body
         className={`${inter.className} ${lora.variable} ${siteWordmarkFont.variable}`}
       >

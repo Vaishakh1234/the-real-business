@@ -33,8 +33,10 @@ import {
 import { PropertyAmenitiesSection } from "@/components/properties/PropertyAmenitiesSection";
 import { PropertyDetailGallery } from "@/components/properties/PropertyDetailGallery";
 import { PropertyEnquirySidebar } from "@/components/properties/PropertyEnquirySidebar";
+import { RelatedGuidesSection } from "@/components/properties/RelatedGuidesSection";
 import { RelatedPropertiesSection } from "@/components/properties/RelatedPropertiesSection";
 import { LISTING_CARD } from "@/components/properties/PropertyListingCard";
+import { getAreaSlugForCity } from "@/lib/constants/areas";
 
 interface PropertyDetailPublicClientProps {
   identifier: string;
@@ -53,7 +55,7 @@ const detailSkeletonPulse = "bg-neutral-200/80";
 function DetailSkeleton() {
   return (
     <div
-      className="min-h-screen bg-neutral-50 pb-16 lg:bg-muted/30"
+      className="min-h-screen pb-16"
       aria-busy="true"
       aria-label="Loading property"
     >
@@ -215,7 +217,7 @@ function DetailSkeleton() {
 
 function DetailEmpty() {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center bg-neutral-50 px-3 py-16 sm:px-4 sm:py-24 lg:bg-muted/30">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-3 py-16 sm:px-4 sm:py-24">
       <div className="max-w-md rounded-2xl border border-border bg-white p-8 text-center shadow-sm sm:p-10">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-muted">
           <Building2 className="h-7 w-7 text-muted-foreground" />
@@ -248,22 +250,19 @@ function SpecChip({
   value: string;
 }) {
   return (
-    <div
-      role="listitem"
-      className="flex min-w-[6.5rem] max-w-[min(100%,19rem)] shrink-0 items-center gap-2 rounded-xl border border-neutral-200/90 bg-white px-2.5 py-2 shadow-[0_1px_3px_rgba(15,23,42,0.05)] sm:min-w-[9rem] sm:max-w-[min(100%,20rem)] sm:gap-2.5 sm:px-3 sm:py-2.5 sm:shadow-[0_1px_3px_rgba(15,23,42,0.04)]"
-    >
+    <div className="flex min-w-[6.5rem] max-w-[min(100%,19rem)] shrink-0 items-center gap-2 rounded-xl border border-neutral-200/90 bg-white px-2.5 py-2 shadow-[0_1px_3px_rgba(15,23,42,0.05)] sm:min-w-[9rem] sm:max-w-[min(100%,20rem)] sm:gap-2.5 sm:px-3 sm:py-2.5 sm:shadow-[0_1px_3px_rgba(15,23,42,0.04)]">
       <Icon
         className="h-3.5 w-3.5 shrink-0 text-[#3b82f6] sm:h-4 sm:w-4"
         aria-hidden
       />
-      <div className="min-w-0">
-        <p className="text-[9px] font-bold uppercase leading-tight tracking-[0.05em] text-neutral-500 sm:text-[10px] sm:tracking-wide">
+      <dl className="m-0 min-w-0">
+        <dt className="text-[9px] font-bold uppercase leading-tight tracking-[0.05em] text-neutral-500 sm:text-[10px] sm:tracking-wide">
           {label}
-        </p>
-        <p className="break-words text-[12px] font-bold leading-snug text-neutral-900 sm:text-sm sm:leading-normal">
+        </dt>
+        <dd className="m-0 break-words text-[12px] font-bold leading-snug text-neutral-900 sm:text-sm sm:leading-normal">
           {value}
-        </p>
-      </div>
+        </dd>
+      </dl>
     </div>
   );
 }
@@ -351,7 +350,8 @@ function SpecChipsSlider({ children }: { children: React.ReactNode }) {
         <div
           ref={trackRef}
           className="flex w-max flex-nowrap items-center gap-1 sm:gap-3"
-          role="list"
+          role="group"
+          aria-label="Property specifications"
         >
           {children}
         </div>
@@ -569,8 +569,12 @@ export function PropertyDetailPublicClient({
     property.longitude,
   );
 
+  const areaSlug = property.city?.trim()
+    ? getAreaSlugForCity(property.city)
+    : null;
+
   return (
-    <div className="min-h-screen overflow-x-clip bg-neutral-50 pb-16 lg:bg-muted/30">
+    <div className="min-h-screen overflow-x-clip pb-16">
       <div className={DETAIL_OUTER_FRAME}>
         <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-6 sm:gap-3">
           <button
@@ -623,23 +627,47 @@ export function PropertyDetailPublicClient({
               </div>
 
               {locationDisplay ? (
-                <p className="flex items-start gap-2 text-[13px] leading-relaxed text-neutral-500 sm:text-base sm:text-neutral-600">
-                  <MapPin
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4"
-                    style={{ color: LISTING_CARD.metaIcon }}
-                    aria-hidden
-                  />
-                  <span>{locationDisplay}</span>
-                </p>
+                <address className="not-italic">
+                  <p className="flex items-start gap-2 text-[13px] leading-relaxed text-neutral-500 sm:text-base sm:text-neutral-600">
+                    <MapPin
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4"
+                      style={{ color: LISTING_CARD.metaIcon }}
+                      aria-hidden
+                    />
+                    <span>{locationDisplay}</span>
+                  </p>
+                  {property.city?.trim() ? (
+                    <p className="mt-2 text-sm">
+                      <Link
+                        href={
+                          areaSlug
+                            ? `/areas/${areaSlug}`
+                            : `/properties?city=${encodeURIComponent(property.city.trim())}`
+                        }
+                        className="font-semibold text-brand-gold hover:underline"
+                      >
+                        More listings in {property.city.trim()}
+                      </Link>
+                      {" · "}
+                      <Link
+                        href="/services"
+                        className="font-semibold text-brand-gold hover:underline"
+                      >
+                        Our services
+                      </Link>
+                    </p>
+                  ) : null}
+                </address>
               ) : null}
 
               <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span
+                <data
+                  value={String(property.price ?? 0)}
                   className="text-[1.625rem] font-extrabold tabular-nums leading-none sm:text-4xl md:text-[2.5rem]"
                   style={{ color: LISTING_CARD.ctaRed }}
                 >
                   {priceFigure}
-                </span>
+                </data>
                 <span className="text-base font-bold text-neutral-600 sm:text-xl">
                   {priceSuffix}
                 </span>
@@ -748,6 +776,8 @@ export function PropertyDetailPublicClient({
             </div>
           </aside>
         </div>
+
+        <RelatedGuidesSection />
 
         <RelatedPropertiesSection
           excludePropertyId={property.id}

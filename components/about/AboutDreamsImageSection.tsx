@@ -90,8 +90,8 @@ export function AboutDreamsImageSection() {
           priority
         />
         <div className="absolute inset-0 bg-black/20" aria-hidden />
-        <div className="relative z-10 ml-auto flex w-full max-w-[26rem] items-center px-8 py-14 xl:max-w-[28rem] xl:px-12">
-          <div className="w-full rounded-[2.5rem] bg-[#FCFAF2] p-10 shadow-sm xl:p-12">
+        <div className="relative z-10 ml-auto flex w-full max-w-[32rem] items-center px-8 py-14 xl:max-w-[36rem] xl:px-12 2xl:max-w-[40rem]">
+          <div className="w-full rounded-[2.5rem] bg-[#FCFAF2] p-10 shadow-sm xl:p-12 2xl:p-14">
             <h2
               className="text-[1.75rem] font-bold leading-[1.15] tracking-tight text-black"
               aria-hidden

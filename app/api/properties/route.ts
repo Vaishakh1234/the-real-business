@@ -83,11 +83,18 @@ export async function GET(request: NextRequest) {
   const featuredRaw = searchParams.get("featured");
   const featured =
     featuredRaw === "1" || featuredRaw === "true" ? true : undefined;
+  const cityParam = searchParams.get("city")?.trim();
+  const city = cityParam ? cityParam : undefined;
+  const typeRaw = searchParams.get("type");
+  const type =
+    typeRaw === "sale" || typeRaw === "rent" ? typeRaw : undefined;
   try {
     const { data, total } = await withConnectionRetry(() =>
       getProperties({
         structure_type,
         category_id,
+        city,
+        type,
         min_price: min_price ? Number(min_price) : undefined,
         max_price: max_price ? Number(max_price) : undefined,
         status: "active",

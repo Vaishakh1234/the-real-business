@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { SEO_AREAS } from "@/lib/constants/areas";
 import { SITE_NAME, SOCIAL_LINKS, CONTACT } from "@/lib/constants/site";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 import { SocialIcon } from "@/components/ui/SocialIcon";
-import type { SocialPlatform } from "@/lib/constants/site";
 
 const pages = [
   { label: "Home", href: "/" },
@@ -14,10 +14,17 @@ const pages = [
 
 const explore = [
   { label: "Post Property", href: "/post-property" },
+  { label: "Areas in Palakkad", href: "/areas" },
+  { label: "Guides", href: "/guides" },
   { label: "How It Works", href: "/how-it-works" },
   { label: "FAQ", href: "/faq" },
   { label: "Wishlist", href: "/wishlist" },
 ];
+
+const areaLinks = SEO_AREAS.map((a) => ({
+  label: `Properties in ${a.name}`,
+  href: `/areas/${a.slug}`,
+}));
 
 const legal = [
   { label: "Privacy Policy", href: "/privacy" },
@@ -56,7 +63,7 @@ export function Footer() {
   return (
     <footer className="bg-brand-charcoal text-white pt-16 sm:pt-20 pb-24 md:pb-10">
       <div className={publicContentFrameClass}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 sm:gap-12 pb-12 sm:pb-14 border-b border-white/15">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 sm:gap-12 pb-12 sm:pb-14 border-b border-white/15">
           <div className="sm:col-span-2">
             <Link
               href="/"
@@ -68,10 +75,11 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-white/60 text-base leading-relaxed max-w-sm mb-5 sm:mb-6">
-              We provide exceptional real estate services, helping you find the
-              perfect property that fits your lifestyle and budget.
+              Real estate marketing, property consultancy, and buying &amp;
+              selling support in Palakkad, Kerala — curated listings and local
+              expertise from first conversation to registration.
             </p>
-            <div className="text-white/60 text-sm leading-relaxed space-y-1 mb-6 sm:mb-7">
+            <address className="not-italic text-white/60 text-sm leading-relaxed space-y-1 mb-6 sm:mb-7">
               <p>
                 {CONTACT.address.line1}, {CONTACT.address.city}
               </p>
@@ -93,7 +101,7 @@ export function Footer() {
                   </a>
                 </p>
               )}
-            </div>
+            </address>
             <div className="flex items-center gap-3">
               {SOCIAL_LINKS.map((social) => (
                 <a
@@ -112,6 +120,7 @@ export function Footer() {
 
           <FooterLinkColumn title="Pages" links={pages} />
           <FooterLinkColumn title="Explore" links={explore} />
+          <FooterLinkColumn title="Local areas" links={areaLinks} />
           <FooterLinkColumn title="Legal" links={legal} />
         </div>
 

@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import { SITE_NAME } from "@/lib/constants/site";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
+
+const howTitle = `How It Works — ${SITE_NAME}`;
+const howDescription =
+  "How we support buyers and sellers in Palakkad — from market research and shortlisting to financing context, negotiation, and closing with advocate coordination.";
 
 export const metadata: Metadata = {
-  title: "How It Works — The Real Business",
-  description:
-    "Learn how we help you find and secure your perfect property — from research to closing the deal.",
+  title: howTitle,
+  alternates: { canonical: "/how-it-works" },
+  description: howDescription,
+  ...defaultPageOgTwitter("/how-it-works", howTitle, howDescription),
 };
 
 export default function HowItWorksPage() {
   return (
     <>
+      <Breadcrumbs
+        items={[{ label: "Home", href: "/" }, { label: "How it works" }]}
+        currentPath="/how-it-works"
+      />
       {/* Hero */}
       <section className="overflow-hidden bg-black pt-20 pb-24 min-h-[280px] sm:min-h-[340px] lg:min-h-[400px] flex items-end">
         <div className={`${publicContentFrameClass} w-full`}>
@@ -32,7 +44,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Content */}
-      <section className="bg-white py-16 sm:py-24">
+      <section className="py-16 sm:py-24">
         <div className={publicContentFrameClass}>
           <ol className="mx-auto max-w-5xl list-none space-y-12 sm:space-y-16">
             <li className="flex gap-6 sm:gap-10">

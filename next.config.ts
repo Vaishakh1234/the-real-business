@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: imageRemotePatterns,
   },
+  async redirects() {
+    return [
+      {
+        source: "/postproperty",
+        destination: "/post-property",
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     serverActions: {
       allowedOrigins: ["localhost:3000"],

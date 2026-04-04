@@ -54,8 +54,10 @@ export function WishlistPageClient() {
   const [clearAllOpen, setClearAllOpen] = useState(false);
 
   return (
-    <div className="min-h-[50vh] bg-muted/40 pb-[max(4rem,calc(4rem+env(safe-area-inset-bottom)))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pb-16 md:bg-muted/50 md:pb-20 md:pt-8">
-      <div className={cn(publicContentFrameClass, "flex flex-col gap-6 sm:gap-8")}>
+    <div className="min-h-[50vh] pb-[max(4rem,calc(4rem+env(safe-area-inset-bottom)))] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pb-16 md:pb-20 md:pt-8">
+      <div
+        className={cn(publicContentFrameClass, "flex flex-col gap-6 sm:gap-8")}
+      >
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="flex w-full items-center gap-3 md:items-start">
             <button

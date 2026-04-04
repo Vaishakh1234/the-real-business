@@ -9,7 +9,7 @@ const detailFrameClass =
 
 export default function PropertyDetailLoading() {
   return (
-    <div className="min-h-screen bg-neutral-50 pb-16 lg:bg-muted/30">
+    <div className="min-h-screen pb-16">
       <div
         className={cn(detailFrameClass)}
         aria-busy="true"
