@@ -216,30 +216,30 @@ export default function PrivacyPage() {
       />
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-brand-charcoal pt-20 pb-24 min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] flex items-end">
+      <section className="relative overflow-hidden bg-brand-charcoal pt-14 pb-16 sm:pt-20 sm:pb-24 min-h-[240px] sm:min-h-[360px] lg:min-h-[420px] flex items-end">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(183,147,84,0.15),transparent)]" />
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-gold/30 to-transparent" />
 
         <div className={`${publicContentFrameClass} relative w-full`}>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 lg:gap-10">
             <div className="max-w-3xl">
-              <p className="text-brand-gold/70 text-xs tracking-[0.25em] uppercase mb-6 flex items-center gap-3 font-medium">
-                <span className="h-px w-10 bg-brand-gold/40 inline-block" />
+              <p className="text-brand-gold/70 text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-4 sm:mb-6 flex items-center gap-2.5 sm:gap-3 font-medium">
+                <span className="h-px w-6 sm:w-10 bg-brand-gold/40 inline-block" />
                 Legal
               </p>
-              <h1 className="font-heading text-5xl sm:text-6xl lg:text-[80px] font-bold text-white leading-[0.95] tracking-tight">
+              <h1 className="font-heading text-[2rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-[80px] font-bold text-white leading-[0.95] tracking-tight">
                 Privacy{" "}
                 <span className="italic font-light text-brand-gold/90">
                   Policy
                 </span>
               </h1>
-              <p className="text-white/55 text-base sm:text-lg leading-relaxed mt-6 max-w-xl">
+              <p className="text-white/55 text-sm sm:text-base md:text-lg leading-relaxed mt-4 sm:mt-6 max-w-xl">
                 Your privacy matters to us. This policy explains how we collect,
                 use, protect, and store your information when you engage with{" "}
                 {SITE_NAME}.
               </p>
-              <p className="mt-5 text-sm text-white/40 flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4" aria-hidden />
+              <p className="mt-4 sm:mt-5 text-xs sm:text-sm text-white/40 flex items-center gap-2">
+                <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden />
                 Last updated: <time dateTime={lastUpdated}>5 April 2026</time>
               </p>
             </div>
@@ -275,13 +275,13 @@ export default function PrivacyPage() {
       {/* ── Trust Strip ── */}
       <section className="border-b border-brand-gold/10 bg-white">
         <div
-          className={`${publicContentFrameClass} py-8 sm:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8`}
+          className={`${publicContentFrameClass} py-6 sm:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8`}
         >
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="h-10 w-10 rounded-full bg-brand-gold/10 flex items-center justify-center">
-              <Lock className="h-5 w-5 text-brand-gold" aria-hidden />
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-brand-gold/10 flex items-center justify-center">
+              <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-brand-gold" aria-hidden />
             </div>
-            <p className="font-heading text-lg font-semibold text-brand-charcoal">
+            <p className="font-heading text-base sm:text-lg font-semibold text-brand-charcoal">
               Your Data, Protected
             </p>
           </div>
@@ -294,70 +294,70 @@ export default function PrivacyPage() {
       </section>
 
       {/* ── Policy Content ── */}
-      <section className="py-16 sm:py-24">
+      <section className="py-10 sm:py-16 md:py-24">
         <div className={publicContentFrameClass}>
-          <div className="mx-auto max-w-5xl space-y-16 sm:space-y-20">
+          <div className="mx-auto max-w-5xl space-y-12 sm:space-y-16 md:space-y-20">
             {SECTIONS.map((section, idx) => {
               const Icon = section.icon;
               return (
                 <article
                   key={section.id}
                   id={section.id}
-                  className="group scroll-mt-24"
+                  className="group scroll-mt-20 sm:scroll-mt-24"
                 >
                   {/* Section header */}
-                  <div className="flex items-start gap-5 sm:gap-8 mb-6">
+                  <div className="flex items-start gap-4 sm:gap-5 md:gap-8 mb-4 sm:mb-6">
                     <div className="shrink-0 relative">
-                      <span className="block text-4xl sm:text-5xl font-bold text-brand-gold/15 leading-none tabular-nums select-none">
+                      <span className="block text-3xl sm:text-4xl md:text-5xl font-bold text-brand-gold/15 leading-none tabular-nums select-none">
                         {section.number}
                       </span>
-                      <div className="absolute -bottom-1 -right-1 h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-brand-gold/10 flex items-center justify-center">
+                      <div className="absolute -bottom-1 -right-1 h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 rounded-lg bg-brand-gold/10 flex items-center justify-center">
                         <Icon
-                          className="h-4 w-4 sm:h-5 sm:w-5 text-brand-gold"
+                          className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-brand-gold"
                           aria-hidden
                         />
                       </div>
                     </div>
-                    <div>
-                      <h2 className="font-heading text-2xl sm:text-3xl font-bold text-brand-charcoal leading-tight">
+                    <div className="min-w-0">
+                      <h2 className="font-heading text-xl sm:text-2xl md:text-3xl font-bold text-brand-charcoal leading-tight">
                         {section.title}
                       </h2>
-                      <p className="mt-2 text-brand-gold/80 text-sm sm:text-base font-medium italic">
+                      <p className="mt-1.5 sm:mt-2 text-brand-gold/80 text-xs sm:text-sm md:text-base font-medium italic leading-relaxed">
                         {section.highlight}
                       </p>
                     </div>
                   </div>
 
                   {/* Body */}
-                  <div className="ml-0 sm:ml-[4.5rem] lg:ml-[5.5rem] space-y-4">
+                  <div className="ml-0 sm:ml-[4rem] md:ml-[4.5rem] lg:ml-[5.5rem] space-y-3 sm:space-y-4">
                     {section.paragraphs.map((p, pi) => (
                       <p
                         key={pi}
-                        className="text-muted-foreground text-base leading-relaxed"
+                        className="text-muted-foreground text-sm sm:text-base leading-relaxed"
                       >
                         {p}
                       </p>
                     ))}
 
                     {"bullets" in section && section.bullets && (
-                      <ul className="mt-3 space-y-2.5 pl-1">
+                      <ul className="mt-2.5 sm:mt-3 space-y-2 sm:space-y-2.5 pl-0.5 sm:pl-1">
                         {section.bullets.map((b, bi) => (
                           <li
                             key={bi}
-                            className="flex items-start gap-3 text-brand-charcoal"
+                            className="flex items-start gap-2.5 sm:gap-3 text-brand-charcoal"
                           >
                             <CheckCircle2
-                              className="h-5 w-5 shrink-0 text-brand-gold/70 mt-0.5"
+                              className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-brand-gold/70 mt-0.5"
                               aria-hidden
                             />
-                            <span className="text-base">{b}</span>
+                            <span className="text-sm sm:text-base">{b}</span>
                           </li>
                         ))}
                       </ul>
                     )}
 
                     {"footnote" in section && section.footnote && (
-                      <p className="mt-4 text-sm font-medium text-brand-charcoal/80 bg-brand-gold/5 border-l-2 border-brand-gold/30 pl-4 py-2 rounded-r-md">
+                      <p className="mt-3 sm:mt-4 text-xs sm:text-sm font-medium text-brand-charcoal/80 bg-brand-gold/5 border-l-2 border-brand-gold/30 pl-3 sm:pl-4 py-2 rounded-r-md">
                         {section.footnote}
                       </p>
                     )}
@@ -365,7 +365,7 @@ export default function PrivacyPage() {
 
                   {/* Divider */}
                   {idx < SECTIONS.length - 1 && (
-                    <div className="mt-14 sm:mt-16 flex items-center gap-4">
+                    <div className="mt-10 sm:mt-14 md:mt-16 flex items-center gap-3 sm:gap-4">
                       <div className="h-px flex-1 bg-gradient-to-r from-brand-gold/20 to-transparent" />
                       <div className="h-1.5 w-1.5 rounded-full bg-brand-gold/30" />
                       <div className="h-px flex-1 bg-gradient-to-l from-brand-gold/20 to-transparent" />
@@ -380,23 +380,23 @@ export default function PrivacyPage() {
 
       {/* ── Contact CTA ── */}
       <section className="border-t border-brand-gold/15">
-        <div className={`${publicContentFrameClass} py-16 sm:py-20`}>
-          <div className="mx-auto max-w-2xl rounded-2xl border border-brand-gold/15 bg-white/60 backdrop-blur-sm px-8 py-12 sm:px-12 sm:py-14 text-center shadow-sm">
-            <p className="text-brand-gold text-xs tracking-[0.2em] uppercase mb-4 font-medium">
+        <div className={`${publicContentFrameClass} py-10 sm:py-16 md:py-20`}>
+          <div className="mx-auto max-w-2xl rounded-xl sm:rounded-2xl border border-brand-gold/15 bg-white/60 backdrop-blur-sm px-5 py-8 sm:px-10 sm:py-12 md:px-12 md:py-14 text-center shadow-sm">
+            <p className="text-brand-gold text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-3 sm:mb-4 font-medium">
               Privacy concerns?
             </p>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-brand-charcoal mb-4">
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-brand-charcoal mb-3 sm:mb-4">
               Get in touch with us
             </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-base leading-relaxed mb-8">
+            <p className="text-muted-foreground max-w-lg mx-auto text-sm sm:text-base leading-relaxed mb-6 sm:mb-8">
               For any privacy-related concerns, data requests, or questions
               about this policy, please contact {SITE_NAME} through our official
               communication channels.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 rounded-lg bg-brand-charcoal px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-charcoal/10 transition-all hover:bg-brand-charcoal/90 focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-charcoal px-6 py-3 min-h-[44px] text-sm font-semibold text-white shadow-lg shadow-brand-charcoal/10 transition-all hover:bg-brand-charcoal/90 focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 touch-manipulation"
               >
                 Contact Us
                 <ArrowRight className="h-4 w-4" aria-hidden />
@@ -404,7 +404,7 @@ export default function PrivacyPage() {
               {CONTACT.email && (
                 <a
                   href={`mailto:${CONTACT.email}`}
-                  className="inline-flex items-center gap-2 rounded-lg border border-brand-gold/25 px-6 py-3 text-sm font-medium text-brand-charcoal/70 transition-colors hover:border-brand-gold/50 hover:text-brand-charcoal focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-brand-gold/25 px-5 sm:px-6 py-3 min-h-[44px] text-xs sm:text-sm font-medium text-brand-charcoal/70 transition-colors hover:border-brand-gold/50 hover:text-brand-charcoal focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 touch-manipulation truncate"
                 >
                   {CONTACT.email}
                 </a>

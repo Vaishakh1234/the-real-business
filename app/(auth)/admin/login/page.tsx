@@ -185,30 +185,29 @@ export default function AdminLoginPage() {
       <div className="flex-1 flex flex-col min-h-[100dvh] lg:min-h-screen relative overflow-hidden bg-white lg:bg-transparent">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/80 to-white hidden lg:block" />
         <div className="relative z-10 flex flex-col flex-1 min-h-0 pt-[env(safe-area-inset-top)] lg:pt-0 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:pb-0">
-          <main className="flex-1 flex flex-col justify-center px-5 lg:px-12 py-4 overflow-auto">
-            <div className="w-full max-w-[340px] lg:max-w-[500px] mx-auto">
+          <main className="flex-1 flex flex-col justify-center px-5 sm:px-8 lg:px-12 py-4 overflow-auto">
+            <div className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[500px] mx-auto">
               <Link
                 href="/"
-                className="hidden lg:inline-flex items-center gap-3 mb-10"
+                className="inline-flex items-center gap-2.5 sm:gap-3 mb-6 sm:mb-8 lg:mb-10"
               >
                 <Image
                   src="/logo-icon-bg.png"
                   alt=""
                   width={48}
                   height={48}
-                  className="shrink-0 object-contain"
-                  style={{ width: "auto", height: "auto" }}
+                  className="shrink-0 object-contain h-9 w-9 sm:h-10 sm:w-10 lg:h-12 lg:w-12"
                 />
-                <span className="mt-5 flex flex-col justify-center font-heading text-lg font-bold uppercase leading-[1.2] tracking-tight text-foreground">
+                <span className="flex flex-col justify-center font-heading text-sm sm:text-base lg:text-lg font-bold uppercase leading-[1.2] tracking-tight text-foreground">
                   <span>THE REAL</span>
                   <span>BUSINESS</span>
                 </span>
               </Link>
-              <div className="mb-8 lg:mb-10">
-                <h1 className="text-2xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-2 lg:mb-3">
+              <div className="mb-6 sm:mb-8 lg:mb-10">
+                <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-1.5 sm:mb-2 lg:mb-3">
                   Sign in
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500">
                   Use your admin email and password to continue.
                 </p>
               </div>

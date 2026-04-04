@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Award,
@@ -13,9 +14,11 @@ import {
 import {
   ABOUT,
   ABOUT_FAQ,
+  ABOUT_TEAM_SECTION,
   ABOUT_WHY_CHOOSE_US,
   PAGE_HERO_IMAGES,
   SITE_NAME,
+  TEAM,
   TEAM_TESTIMONIAL,
   type AboutTrustedPartnerIconKey,
   type AboutWhyChooseUsIconKey,
@@ -101,8 +104,6 @@ function AboutJsonLd() {
 }
 
 export default function AboutPage() {
-  const foundingYear = new Date().getFullYear() - ABOUT.yearsExperience;
-
   return (
     <>
       <AboutJsonLd />
@@ -115,24 +116,23 @@ export default function AboutPage() {
         {/* ── Hero ── */}
         <section className="pb-10 pt-6 sm:pb-12 sm:pt-8 md:pt-10 lg:pb-14 lg:pt-12">
           <h1 className="max-w-4xl font-heading text-[clamp(1.75rem,4vw+0.5rem,3.5rem)] leading-[1.12] tracking-tight text-brand-charcoal">
-            <span className="font-normal italic">Real estate marketing,</span>{" "}
+            <span className="font-normal italic">Modern real estate</span>{" "}
             <span className="font-bold">
-              consultancy &amp; deals in Palakkad.
-              <br className="hidden sm:block" />
-              Trusted since {foundingYear}.
+              marketing &amp; property consultancy.
             </span>
           </h1>
 
           <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 md:grid-cols-3 md:gap-10 lg:mt-12">
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[15px] md:max-w-none">
-              At {SITE_NAME}, we help you market properties to the right
-              audience, consult on price and strategy with Palakkad-grounded
-              insight, and support every step of buying or selling — with
-              transparency and a long-term view.
+              {SITE_NAME} is a modern real estate marketing and property
+              consultancy firm focused on transforming how properties are
+              bought, sold, and promoted. Whether you&apos;re a property owner,
+              buyer, or investor, we simplify the process with a professional,
+              data-driven approach.
             </p>
             <div>
               <h2 className="text-sm font-bold uppercase tracking-wide text-brand-charcoal sm:text-base">
-                Mission
+                Our Goal
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {ABOUT.mission}
@@ -140,7 +140,7 @@ export default function AboutPage() {
             </div>
             <div>
               <h2 className="text-sm font-bold uppercase tracking-wide text-brand-charcoal sm:text-base">
-                Vision
+                Our Vision
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {ABOUT.vision}
@@ -160,12 +160,12 @@ export default function AboutPage() {
           <div className="grid items-start gap-10 lg:grid-cols-5 lg:gap-14 xl:gap-16">
             <div className="lg:col-span-3">
               <span className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-gold">
-                Know more about us
+                About our brand
               </span>
               <h2 className="font-heading mt-3 text-2xl font-bold tracking-tight text-brand-charcoal sm:text-3xl lg:text-4xl">
-                Rooted in Palakkad,{" "}
+                Strategy meets{" "}
                 <span className="font-normal text-muted-foreground">
-                  built on trust
+                  execution
                 </span>
               </h2>
               <p className="mt-5 text-[15px] leading-relaxed text-muted-foreground sm:mt-6">
@@ -189,12 +189,11 @@ export default function AboutPage() {
                   {ABOUT.yearsExperience}+
                 </p>
                 <p className="mt-1.5 text-base font-medium text-brand-charcoal sm:text-lg">
-                  Years serving buyers &amp; sellers
+                  Years of real estate expertise
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Real estate marketing, property consultancy, and transaction
-                  support across Palakkad district — transparent fees and clear
-                  advice.
+                  Combining market expertise, strategic consulting, and digital
+                  marketing for faster, smarter real estate transactions.
                 </p>
                 <blockquote className="mt-6 border-l-2 border-brand-gold/50 pl-4 text-sm italic leading-relaxed text-brand-charcoal/90">
                   &ldquo;{TEAM_TESTIMONIAL.quote}&rdquo;
@@ -278,6 +277,49 @@ export default function AboutPage() {
                 </article>
               );
             })}
+          </div>
+        </section>
+
+        {/* ── Meet the Team ── */}
+        <section className="py-10 sm:py-14 md:py-20 lg:py-24 border-t border-neutral-200/90">
+          <div className="flex flex-col items-center text-center mb-8 sm:mb-10 md:mb-14">
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-brand-gold">
+              Our leadership
+            </span>
+            <h2 className="font-heading mt-2.5 sm:mt-3 max-w-xl text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] lg:leading-[1.15] font-bold text-brand-charcoal">
+              {ABOUT_TEAM_SECTION.title}
+            </h2>
+            <p className="mt-2.5 sm:mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+              {ABOUT_TEAM_SECTION.description}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-6 md:gap-8 lg:grid-cols-4">
+            {TEAM.map((member) => (
+              <article
+                key={member.name}
+                className="group flex flex-col items-center text-center"
+              >
+                <div className="relative aspect-square w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] overflow-hidden rounded-xl sm:rounded-2xl bg-neutral-100 shadow-md transition-shadow duration-300 group-hover:shadow-lg">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 200px, 220px"
+                  />
+                </div>
+                <h3 className="mt-3 sm:mt-5 text-sm sm:text-base md:text-lg font-bold text-brand-charcoal">
+                  {member.name}
+                </h3>
+                <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-brand-gold leading-snug">
+                  {member.role}
+                </p>
+                <p className="mt-1.5 sm:mt-2 max-w-[240px] text-xs sm:text-sm leading-relaxed text-muted-foreground hidden sm:block">
+                  {member.description}
+                </p>
+              </article>
+            ))}
           </div>
         </section>
 

@@ -60,23 +60,23 @@ export const PUBLIC_SEARCH_TYPEWRITER_HINTS = [
 
 /** About page and company story — single source of truth for mission, vision, stats, etc. */
 export const ABOUT = {
-  tagline: "Your trusted partner in premium real estate.",
+  tagline: "Modern real estate marketing & property consultancy.",
   shortStory:
-    "Founded on integrity and a passion for exceptional properties, we have been the cornerstone of premium real estate consulting for over two decades. We specialize in curating experiences that go beyond simple transactions.",
+    "The Real Business is a modern real estate marketing and property consultancy firm focused on transforming how properties are bought, sold, and promoted.",
   storyParagraphs: [
-    "Our journey began with a single vision: to redefine what it means to live well. Today we stand as a trusted leader, connecting discerning clients with exceptional homes and investments.",
-    "We combine local market expertise with the highest standards of service—whether you are buying, selling, renting, or investing. Your goals and peace of mind are at the centre of everything we do.",
+    "We combine market expertise, strategic consulting, and digital marketing to deliver faster, smarter, and more transparent real estate transactions.",
+    "Whether you're a property owner, buyer, or investor, we simplify the process with a professional, data-driven approach.",
   ],
   mission:
-    "To provide unparalleled real estate services that empower our clients to achieve their lifestyle and investment goals through expertise, transparency, and personalized care.",
+    "To turn property opportunities into successful transactions through strategy and execution.",
   vision:
-    "To be the benchmark for excellence in real estate in our markets, continuously innovating and building long-term relationships built on trust and results.",
+    "To become a digitally driven real estate ecosystem that bridges the gap between property owners and buyers through innovation, trust, and transparency.",
   yearsExperience: 25,
   /** About page second section — headline + intro above the stat grid. */
   experienceSection: {
-    headline: "From visibility to clarity — and all the way to closing.",
+    headline: "Strategy, marketing, and execution — end to end.",
     intro:
-      "We combine marketing that reaches serious buyers, consultancy that explains trade-offs and pricing, and hands-on support through negotiation, paperwork, and handover. Palakkad-first expertise in every conversation.",
+      "We combine market expertise, strategic consulting, and digital marketing to deliver faster, smarter, and more transparent real estate transactions.",
   },
   /** Shown on About (with descriptions), Services strip (value + label only), and marketing. */
   stats: [
@@ -142,37 +142,37 @@ export const ABOUT = {
   /** Home + about — values section header (SEO-aware, Palakkad-focused) */
   coreValuesIntro: {
     eyebrow: "How we work",
-    title: "Integrity across marketing, consultancy & deals",
+    title: "Strategy, transparency & results in every deal",
     subtitle:
-      "Palakkad-focused real estate marketing, property consultancy, and buying & selling support—with transparent communication and local expertise.",
+      "Modern real estate marketing, property consultancy, and buying & selling support — with a data-driven, professional approach.",
   },
   /** About page — dark band with cream trust cards (icon, title, body). */
   trustedPartnerSection: {
-    title: "Your partner for marketing, advice & every deal",
+    title: "What we specialize in at The Real Business",
     cards: [
       {
         iconKey: "UserSearch" as const,
-        title: "Strategic marketing",
+        title: "Property buying & selling",
         description:
-          "Listings and outreach built to reach serious buyers and tenants — not generic noise — across Palakkad and nearby towns.",
+          "End-to-end assistance for buyers and sellers — from search and shortlisting to negotiation, paperwork, and handover.",
       },
       {
         iconKey: "Users" as const,
-        title: "Expert consultancy",
+        title: "Real estate marketing",
         description:
-          "Pricing, investment angles, and documentation context so you decide with confidence before you sign or list.",
+          "Strategic property promotion and digital campaigns designed to reach serious buyers and generate quality leads.",
       },
       {
         iconKey: "Clock" as const,
-        title: "Transaction support",
+        title: "Consultation & guidance",
         description:
-          "From shortlists and viewings to offers, advocate coordination, and handover — steady communication at every step.",
+          "Property consultation and investment guidance — pricing, market analysis, and data-driven advice for confident decisions.",
       },
       {
         iconKey: "UserCircle" as const,
-        title: "Client-first",
+        title: "End-to-end deal support",
         description:
-          "Your timeline, budget, and goals drive the plan — we adapt marketing, advice, and support to match.",
+          "Lead generation, digital property campaigns, and complete deal support from first inquiry to successful closing.",
       },
     ],
   },
@@ -402,26 +402,26 @@ export const PAGE_HERO_IMAGES = {
 export const ABOUT_DREAMS_BANNER = {
   image:
     "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80",
-  headline: "Marketing, advice, and deals — one Palakkad partner",
+  headline: "Transforming how properties are bought, sold & promoted",
   subtitle:
-    "From promoting your property to consulting on price and closing the sale, we align visibility, clarity, and execution.",
-  ctaLabel: "Get a quote",
+    "We combine market expertise, strategic consulting, and digital marketing to deliver faster, smarter real estate transactions.",
+  ctaLabel: "Get started",
   ctaHref: "/contact" as const,
   steps: [
     {
       n: "01",
-      title: "Real estate marketing",
-      body: "Reach serious buyers with positioning, channels, and presentation built for Palakkad’s market.",
+      title: "Marketing & promotion",
+      body: "Strategic property promotion and digital campaigns that reach serious buyers and generate quality leads.",
     },
     {
       n: "02",
-      title: "Property consultancy",
-      body: "Pricing, investment fit, and documentation context before you commit — in plain language.",
+      title: "Consultation & guidance",
+      body: "Investment guidance, pricing analysis, and market insights for confident property decisions.",
     },
     {
       n: "03",
-      title: "Buying & selling support",
-      body: "Shortlists to registration: viewings, negotiation, advocate coordination, and handover.",
+      title: "End-to-end deal support",
+      body: "From lead generation through negotiation to closing — complete support at every stage of the transaction.",
     },
   ],
 } as const;
@@ -433,43 +433,51 @@ export const SERVICES_HERO_TAGLINE =
 /** `/team` — centered hero and philosophy (Palakkad-first brokerage). */
 export const TEAM_PAGE_INTRO = {
   eyebrow: "Our Team",
-  title: "We are the people behind The Real Business",
+  title: "Meet the leadership behind The Real Business",
   subtitle:
-    "Marketing, consultancy, and transaction support — one team that knows Palakkad and stays with you after the deal is done.",
+    "A focused team driving strategy, business growth, operations, and marketing — committed to transforming real estate transactions.",
 } as const;
 
 /** About page — team grid headline (centered, matches editorial reference). */
 export const ABOUT_TEAM_SECTION = {
   title: "Meet Our Team",
   description:
-    "Local professionals for real estate marketing, property consultancy, and buying & selling support — honest advice at every step.",
+    "The leadership team behind The Real Business — driving vision, growth, operations, and marketing for smarter real estate transactions.",
 } as const;
 
-/** Team members for `/team` — core leadership (three); roles aligned with SERVICES. */
+/** Team members — core leadership (four); roles aligned with company operations. */
 export const TEAM = [
   {
-    name: "Arjun Menon",
-    role: "Founder and Lead Broker",
+    name: "Mohamed Ansari",
+    role: "Chief Executive Officer (CEO)",
     description:
-      "Leads strategy across marketing, consultancy, and transactions for Palakkad plots, land, and homes.",
+      "Leads the company vision, client relationships, and high-value deal execution.",
     image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
   },
   {
-    name: "Priya Nair",
-    role: "Head of Real Estate Marketing",
+    name: "Abdul Saleem",
+    role: "Chief Business Development Officer (CBDO)",
     description:
-      "Listings, campaigns, and buyer outreach — positioning properties so the right audience sees them.",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    name: "Vishnu Krishnan",
-    role: "Property Consultancy Lead",
-    description:
-      "Pricing, comparables, and district micro-markets — advisory grounded in taluks and on-ground checks.",
+      "Responsible for property sourcing, partnerships, and expanding the network.",
     image:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "Mohamed Sihabudeen",
+    role: "Chief Operating Officer (COO)",
+    description:
+      "Manages operations, lead systems, and ensures smooth execution of deals.",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    name: "Asfal Ansari",
+    role: "Chief Marketing Officer (CMO)",
+    description:
+      "Handles brand growth, digital marketing, and property promotion strategies.",
+    image:
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
   },
 ] as const;
 
@@ -481,14 +489,14 @@ export const TEAM_CONTACT_STRIP = {
     "Marketing a listing, needing consultancy, or buying or selling — we will map the right service and next step.",
 } as const;
 
-/** Spotlight quote on `/team` — culture and on-the-ground approach. */
+/** Spotlight quote on `/team` and about page — leadership quote. */
 export const TEAM_TESTIMONIAL = {
   quote:
-    "We only market and recommend what we have seen and understood on the ground. That discipline — plus clear consultancy and transaction support — is how we earn trust in Palakkad.",
-  name: "Arjun Menon",
-  role: "Founder and Lead Broker",
+    "We believe in turning property opportunities into successful transactions through strategy, transparency, and execution. That commitment is what sets The Real Business apart.",
+  name: "Mohamed Ansari",
+  role: "Chief Executive Officer",
   image:
-    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=256&q=80",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
 } as const;
 
 export const CONTACT = {
