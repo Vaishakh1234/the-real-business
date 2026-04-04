@@ -21,12 +21,22 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "The Real Business — Premier Real Estate",
+    default:
+      "The Real Business — Real Estate Marketing, Property Consultancy & Palakkad Deals",
     template: "%s | The Real Business",
   },
   description:
-    "Discover premium properties for sale and rent. Find your dream home with The Real Business.",
-  keywords: ["real estate", "properties", "buy", "sell", "rent", "India"],
+    "Real estate marketing, property consultancy, and buying & selling support in Palakkad, Kerala. Listings, advice, and end-to-end help with The Real Business.",
+  keywords: [
+    "real estate marketing Palakkad",
+    "property consultancy Kerala",
+    "property buying selling support Palakkad",
+    "Palakkad real estate",
+    "property consultant Kerala",
+    "buy property Palakkad",
+    "sell property Palakkad",
+    "The Real Business",
+  ],
   icons: {
     icon: "/logo-icon-bg.png",
     apple: "/logo-icon-bg.png",

@@ -40,22 +40,23 @@ const TRUSTED_PARTNER_ICONS: Record<AboutTrustedPartnerIconKey, LucideIcon> = {
   UserCircle,
 };
 
-const aboutDescription = `${SITE_NAME} is a Palakkad real estate brokerage for plots, land, homes, and rentals. Learn our mission, values, team, and how we help buyers and sellers with transparent, local expertise.`;
+const aboutDescription = `${SITE_NAME} — real estate marketing, property consultancy, and buying & selling support in Palakkad, Kerala. Learn our mission, local expertise, and how we help owners, buyers, and investors.`;
 
 export const metadata: Metadata = {
-  title: `About Us — ${SITE_NAME}`,
+  title: "About Us — Real Estate Marketing & Property Consultancy in Palakkad",
   description: aboutDescription,
   keywords: [
     "The Real Business",
+    "real estate marketing Palakkad",
+    "property consultancy Kerala",
+    "property buying selling support Palakkad",
     "Palakkad real estate",
-    "real estate broker Kerala",
-    "plots Palakkad",
-    "land for sale Palakkad",
     "property consultant Palakkad",
     "about us",
   ],
   openGraph: {
-    title: `About Us — ${SITE_NAME}`,
+    title:
+      "About Us — Real Estate Marketing & Property Consultancy in Palakkad",
     description: aboutDescription,
     type: "website",
     locale: "en_IN",
@@ -71,7 +72,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `About Us — ${SITE_NAME}`,
+    title:
+      "About Us — Real Estate Marketing & Property Consultancy in Palakkad",
     description: aboutDescription,
     images: [PAGE_HERO_IMAGES.about],
   },
@@ -146,96 +148,94 @@ export default function AboutPage() {
         style={{ backgroundColor: ABOUT_PAGE_BACKGROUND }}
       >
         <div className={publicContentFrameClass}>
-          {/* 1 — Editorial hero: cream panel, headline, mission/vision */}
-          <section className="pb-12 pt-28 sm:pb-14 sm:pt-32 md:pt-36 lg:pb-16 lg:pt-40">
-            <h1 className="font-heading text-[clamp(2.25rem,5vw+0.5rem,4.5rem)] leading-[1.08] tracking-tight text-brand-charcoal">
-              <span className="font-normal italic">
-                Explore your real estate
-              </span>{" "}
+          {/* ── Hero ── */}
+          <section className="pb-10 pt-6 sm:pb-12 sm:pt-8 md:pt-10 lg:pb-14 lg:pt-12">
+            <h1 className="max-w-4xl font-heading text-[clamp(1.75rem,4vw+0.5rem,3.5rem)] leading-[1.12] tracking-tight text-brand-charcoal">
+              <span className="font-normal italic">Real estate marketing,</span>{" "}
               <span className="font-bold">
-                dream into reality.
-                <br />
-                Sharing home since {foundingYear}.
+                consultancy &amp; deals in Palakkad.
+                <br className="hidden sm:block" />
+                Trusted since {foundingYear}.
               </span>
             </h1>
 
-            <div className="mt-10 grid gap-8 sm:mt-12 md:grid-cols-3 md:gap-10 lg:mt-16 lg:gap-14">
+            <div className="mt-8 grid gap-6 sm:mt-10 sm:gap-8 md:grid-cols-3 md:gap-10 lg:mt-12">
               <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[15px] md:max-w-none">
-                At {SITE_NAME}, we&apos;re redefining how people find homes by
-                blending smart technology with human expertise. Our mission is
-                to make real estate simple, transparent, and personalized for
-                every client.
+                At {SITE_NAME}, we help you market properties to the right
+                audience, consult on price and strategy with Palakkad-grounded
+                insight, and support every step of buying or selling — with
+                transparency and a long-term view.
               </p>
               <div>
-                <h2 className="text-base font-bold text-brand-charcoal sm:text-lg">
+                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-charcoal sm:text-base">
                   Mission
                 </h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {ABOUT.mission}
                 </p>
               </div>
               <div>
-                <h2 className="text-base font-bold text-brand-charcoal sm:text-lg">
+                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-charcoal sm:text-base">
                   Vision
                 </h2>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {ABOUT.vision}
                 </p>
               </div>
             </div>
           </section>
 
-          {/* 1b — Full-bleed image + cream card (reference layout) */}
+          {/* ── Dreams banner (image + card) ── */}
           <AboutDreamsImageSection />
 
-          {/* 2 — Story + at a glance */}
+          {/* ── Our Story + At a Glance ── */}
           <section
             id="our-story"
-            className="scroll-mt-24 py-16 sm:py-24 lg:py-28"
+            className="scroll-mt-24 py-10 sm:py-14 lg:py-16"
           >
-            <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-              <div>
+            <div className="grid items-start gap-10 lg:grid-cols-5 lg:gap-14 xl:gap-16">
+              <div className="lg:col-span-3">
                 <span className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-gold">
                   Know more about us
                 </span>
-                <h2 className="font-heading mt-3 text-2xl font-bold tracking-tight text-brand-charcoal sm:text-3xl md:text-4xl">
+                <h2 className="font-heading mt-3 text-2xl font-bold tracking-tight text-brand-charcoal sm:text-3xl lg:text-4xl">
                   Rooted in Palakkad,{" "}
                   <span className="font-normal text-muted-foreground">
                     built on trust
                   </span>
                 </h2>
-                <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+                <p className="mt-5 text-[15px] leading-relaxed text-muted-foreground sm:mt-6">
                   {ABOUT.shortStory}
                 </p>
                 {ABOUT.storyParagraphs.map((p, i) => (
                   <p
                     key={i}
-                    className="mt-4 text-base leading-relaxed text-muted-foreground"
+                    className="mt-3 text-[15px] leading-relaxed text-muted-foreground sm:mt-4"
                   >
                     {p}
                   </p>
                 ))}
               </div>
-              <div className="relative">
-                <div className="rounded-2xl border-2 border-brand-gold/40 bg-muted/40 p-8 shadow-sm sm:p-10">
+              <div className="lg:col-span-2">
+                <div className="rounded-2xl border border-brand-gold/30 bg-white/60 p-6 shadow-sm sm:p-8">
                   <p className="text-xs font-semibold uppercase tracking-widest text-brand-gold">
                     At a glance
                   </p>
-                  <p className="mt-4 font-heading text-5xl font-bold text-brand-charcoal sm:text-6xl">
+                  <p className="mt-3 font-heading text-4xl font-bold text-brand-charcoal sm:text-5xl">
                     {ABOUT.yearsExperience}+
                   </p>
-                  <p className="mt-2 text-lg font-medium text-brand-charcoal">
+                  <p className="mt-1.5 text-base font-medium text-brand-charcoal sm:text-lg">
                     Years serving buyers &amp; sellers
                   </p>
-                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                    Local expertise across plots, land, and residential property
-                    in Palakkad district — with transparent fees and clear
-                    advice.
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    Real estate marketing, property consultancy, and transaction
+                    support across Palakkad district — transparent fees and
+                    clear advice.
                   </p>
-                  <blockquote className="mt-8 border-l-2 border-brand-gold/50 pl-4 text-sm italic leading-relaxed text-brand-charcoal/90">
+                  <blockquote className="mt-6 border-l-2 border-brand-gold/50 pl-4 text-sm italic leading-relaxed text-brand-charcoal/90">
                     &ldquo;{TEAM_TESTIMONIAL.quote}&rdquo;
                   </blockquote>
-                  <p className="mt-3 text-xs font-semibold text-brand-gold">
+                  <p className="mt-2 text-xs font-semibold text-brand-gold">
                     — {TEAM_TESTIMONIAL.name}, {TEAM_TESTIMONIAL.role}
                   </p>
                 </div>
@@ -243,28 +243,28 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* 4 — Trusted partner: dark band + cream cards */}
-          <section className="rounded-2xl bg-[#1e1b1b] px-6 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-            <h2 className="mx-auto max-w-3xl text-center text-2xl font-medium leading-tight tracking-tight text-white sm:text-3xl md:text-[2rem]">
+          {/* ── Trusted Partner (dark section) ── */}
+          <section className="rounded-2xl bg-[#1e1b1b] px-5 py-12 xs:px-6 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
+            <h2 className="mx-auto max-w-2xl text-center text-xl font-medium leading-snug tracking-tight text-white sm:text-2xl lg:text-[1.75rem]">
               {ABOUT.trustedPartnerSection.title}
             </h2>
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 xl:grid-cols-4 xl:gap-6">
+            <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:mt-14 xl:grid-cols-4">
               {ABOUT.trustedPartnerSection.cards.map((card) => {
                 const Icon = TRUSTED_PARTNER_ICONS[card.iconKey];
                 return (
                   <article
                     key={card.title}
-                    className="flex min-h-[260px] flex-col rounded-2xl bg-[#fdfaf3] p-8 text-brand-charcoal shadow-sm sm:min-h-[280px]"
+                    className="flex flex-col rounded-xl bg-[#fdfaf3] p-6 text-brand-charcoal sm:rounded-2xl sm:p-7"
                   >
                     <Icon
-                      className="h-7 w-7 shrink-0 text-brand-charcoal"
+                      className="h-6 w-6 shrink-0 text-brand-charcoal"
                       strokeWidth={1.5}
                       aria-hidden
                     />
-                    <h3 className="mt-6 text-lg font-bold leading-snug">
+                    <h3 className="mt-4 text-base font-bold leading-snug sm:mt-5 sm:text-lg">
                       {card.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-relaxed text-brand-charcoal/75">
+                    <p className="mt-2 text-sm leading-relaxed text-brand-charcoal/70">
                       {card.description}
                     </p>
                   </article>
@@ -273,56 +273,59 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* 6 — Why choose us bento */}
-          <section className="py-16 sm:py-24 lg:py-28">
-            <div className="mb-10 sm:mb-14">
+          {/* ── Why Choose Us (bento grid) ── */}
+          <section className="py-14 sm:py-20 lg:py-24">
+            <div className="mb-8 sm:mb-10 lg:mb-12">
               <span className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-gold">
                 Why choose us
               </span>
-              <h2 className="font-heading mt-3 text-2xl font-bold text-brand-charcoal sm:text-3xl md:text-4xl">
+              <h2 className="font-heading mt-3 text-2xl font-bold text-brand-charcoal sm:text-3xl lg:text-4xl">
                 The Palakkad difference
               </h2>
-              <p className="mt-3 max-w-2xl text-muted-foreground">
+              <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-[15px]">
                 Real relationships and local knowledge — not a call centre. Here
                 is what guides every recommendation we make.
               </p>
             </div>
-            <div className="grid gap-4 lg:grid-cols-12 lg:items-stretch lg:gap-5">
-              <div className="relative min-h-[280px] overflow-hidden rounded-2xl border border-border shadow-sm lg:col-span-5 lg:min-h-0">
+
+            {/* Mobile: single column. Tablet: 2-col cards only. Desktop: image + 2×2 cards */}
+            <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 lg:items-stretch">
+              <div className="relative hidden min-h-[320px] overflow-hidden rounded-2xl lg:col-span-5 lg:block">
                 <Image
                   src={PAGE_HERO_IMAGES.about}
                   alt="Professional real estate and property advisory in Palakkad"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  sizes="(max-width: 1024px) 0px, 40vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/88 via-brand-charcoal/40 to-brand-charcoal/20" />
-                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/85 via-brand-charcoal/35 to-brand-charcoal/15" />
+                <div className="absolute inset-x-0 bottom-0 p-6 lg:p-8">
                   <p className="text-xs font-semibold uppercase tracking-widest text-brand-gold">
                     Charting our course
                   </p>
-                  <h3 className="font-heading mt-3 text-xl font-bold text-white sm:text-2xl">
-                    Trusted brokerage for every kind of property
+                  <h3 className="font-heading mt-2 text-xl font-bold text-white lg:text-2xl">
+                    Your partner for marketing, advice &amp; every transaction
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/85">
-                    From first conversation to registration and beyond — we stay
-                    close so you always know the next step.
+                  <p className="mt-2 text-sm leading-relaxed text-white/80">
+                    Visibility when you list, clarity when you decide, support
+                    when you close — we stay close so you always know the next
+                    step.
                   </p>
                 </div>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7 lg:gap-5">
+              <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:col-span-7">
                 {ABOUT_WHY_CHOOSE_US.map((item, index) => {
                   const Icon = WHY_US_ICONS[item.iconKey];
                   const tinted = index % 2 === 1;
                   return (
                     <div
                       key={item.title}
-                      className={`rounded-2xl border border-border p-6 shadow-sm transition-colors hover:border-brand-gold/30 sm:p-8 ${
+                      className={`rounded-xl border border-border p-5 shadow-sm transition-colors hover:border-brand-gold/30 sm:rounded-2xl sm:p-7 ${
                         tinted ? "bg-brand-gold/10" : "bg-white"
                       }`}
                     >
                       <div
-                        className={`mb-4 flex h-11 w-11 items-center justify-center rounded-full ${
+                        className={`mb-3 flex h-10 w-10 items-center justify-center rounded-full sm:mb-4 sm:h-11 sm:w-11 ${
                           tinted
                             ? "bg-brand-charcoal text-white"
                             : "bg-muted text-brand-gold"
@@ -330,10 +333,10 @@ export default function AboutPage() {
                       >
                         <Icon className="h-5 w-5" strokeWidth={2} aria-hidden />
                       </div>
-                      <h3 className="font-heading text-lg font-bold text-brand-charcoal">
+                      <h3 className="font-heading text-base font-bold text-brand-charcoal sm:text-lg">
                         {item.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                         {item.description}
                       </p>
                     </div>
@@ -343,7 +346,7 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* 8 — FAQ */}
+          {/* ── FAQ ── */}
           <AboutFaqSection />
         </div>
       </div>

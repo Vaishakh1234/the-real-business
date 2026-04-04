@@ -446,7 +446,7 @@ export function Navbar() {
       }
 
       const pageHero = document.getElementById("page-hero");
-      if (pageHero) {
+      if (pageHero && PUBLIC_ROUTES_WITH_TOP_HERO.has(pathname)) {
         const threshold = pageHero.offsetHeight * 0.45;
         setHeaderSolid(window.scrollY > threshold);
         setHeaderOverlaysHero(true);

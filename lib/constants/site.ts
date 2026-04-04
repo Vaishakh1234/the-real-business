@@ -16,15 +16,15 @@ export function postPropertyHrefWithCta(_ctaSource: string | undefined): string 
   return POST_PROPERTY_HREF;
 }
 
-/** Home hero — Palakkad-first brokerage positioning */
+/** Home hero — Palakkad-first marketing, consultancy & transaction support */
 export const HOME_HERO = {
-  titleLine1: "Plots, land & homes",
-  titleLine2: "in Palakkad.",
+  titleLine1: "Marketing, consultancy",
+  titleLine2: "& property in Palakkad.",
 } as const;
 
 /** Line above the hero search fields (hover shows preview image). */
 export const HOME_HERO_SEARCH_PROMPT =
-  "Are you looking for a property to invest in Palakkad?" as const;
+  "Looking to buy, sell, or market property in Palakkad?" as const;
 
 /** Hero search card — hover preview (`public/images/…`). */
 export const HOME_HERO_MODAL_IMAGE = "/images/home-modal-1.png" as const;
@@ -36,7 +36,7 @@ export const HOME_EXPLORE = {
   titlePrefix: "Top picks in Palakkad",
   focusCityLabel: "for you",
   subtitle:
-    "Our newest active listings across the market — Palakkad-first brokerage, always.",
+    "Our newest active listings — real estate marketing, consultancy, and buying & selling support across Palakkad.",
   /** Max cards shown (2 columns × 3 rows). */
   listingGridLimit: 6,
   /** Prefix for generated listing reference codes (The Real Business). */
@@ -74,35 +74,35 @@ export const ABOUT = {
   yearsExperience: 25,
   /** About page second section — headline + intro above the stat grid. */
   experienceSection: {
-    headline: "Don't just buy real estate — experience it.",
+    headline: "From visibility to clarity — and all the way to closing.",
     intro:
-      "Don't just look to buy real estate — discover a smoother, smarter journey with us. Our team brings years of market knowledge, client success stories, and Palakkad-first expertise to every conversation.",
+      "We combine marketing that reaches serious buyers, consultancy that explains trade-offs and pricing, and hands-on support through negotiation, paperwork, and handover. Palakkad-first expertise in every conversation.",
   },
   /** Shown on About (with descriptions), Services strip (value + label only), and marketing. */
   stats: [
     {
       value: "150+",
-      label: "Properties & listings guided",
+      label: "Marketing & listing projects",
       description:
-        "Every listing reflects honest value, location insight, and condition you can verify on the ground.",
+        "Campaigns and listings shaped for serious buyers — with honest positioning and local context.",
     },
     {
       value: "500+",
-      label: "Happy clients served",
+      label: "Clients advised & supported",
       description:
-        "Families and investors trust us for clear advice, steady communication, and seamless experiences.",
+        "Owners, buyers, and investors who rely on our consultancy and transaction support across the district.",
     },
     {
       value: "25+",
-      label: "Years of local expertise",
+      label: "Years in Palakkad real estate",
       description:
-        "Seasoned brokers who know Palakkad micro-markets, documentation norms, and how to protect your interests.",
+        "Deep knowledge of towns, roads, documentation norms, and how deals actually close here.",
     },
     {
       value: "99%",
       label: "Client satisfaction",
       description:
-        "A high satisfaction rate built on transparency, follow-through, and relationships that outlast the deal.",
+        "Built on clear fees, steady updates, and relationships that continue after registration.",
     },
   ],
   values: [
@@ -141,38 +141,38 @@ export const ABOUT = {
   ],
   /** Home + about — values section header (SEO-aware, Palakkad-focused) */
   coreValuesIntro: {
-    eyebrow: "Brokerage principles",
-    title: "Integrity and care in Palakkad real estate",
+    eyebrow: "How we work",
+    title: "Integrity across marketing, consultancy & deals",
     subtitle:
-      "Palakkad-focused brokerage for plots, land, and homes—with transparent communication and local expertise.",
+      "Palakkad-focused real estate marketing, property consultancy, and buying & selling support—with transparent communication and local expertise.",
   },
   /** About page — dark band with cream trust cards (icon, title, body). */
   trustedPartnerSection: {
-    title: "Your Trusted Real Estate Partner",
+    title: "Your partner for marketing, advice & every deal",
     cards: [
       {
         iconKey: "UserSearch" as const,
-        title: "Personalized search",
+        title: "Strategic marketing",
         description:
-          "Personalized search tailored to your unique needs — we shortlist plots, land, and homes that actually fit your goals.",
+          "Listings and outreach built to reach serious buyers and tenants — not generic noise — across Palakkad and nearby towns.",
       },
       {
         iconKey: "Users" as const,
-        title: "Experienced team",
+        title: "Expert consultancy",
         description:
-          "Experienced team delivering trust, results, and guidance from first conversation through registration and beyond.",
+          "Pricing, investment angles, and documentation context so you decide with confidence before you sign or list.",
       },
       {
         iconKey: "Clock" as const,
-        title: "Track record",
+        title: "Transaction support",
         description:
-          "Proven track record across Palakkad — years of successful deals and clients who come back for their next move.",
+          "From shortlists and viewings to offers, advocate coordination, and handover — steady communication at every step.",
       },
       {
         iconKey: "UserCircle" as const,
-        title: "Client-centric",
+        title: "Client-first",
         description:
-          "Client-centric approach focused on your timeline, budget, and peace of mind — not ours.",
+          "Your timeline, budget, and goals drive the plan — we adapt marketing, advice, and support to match.",
       },
     ],
   },
@@ -190,119 +190,118 @@ export type AboutWhyChooseUsIconKey =
 
 export const ABOUT_WHY_CHOOSE_US = [
   {
-    title: "Transparency",
+    title: "Marketing-first reach",
     description:
-      "Clear expectations on fees, timelines, and next steps — no jargon, no surprises.",
+      "We position your property where serious buyers look — with messaging and presentation that reflect real value in Palakkad.",
     iconKey: "Shield" as const,
   },
   {
-    title: "Local expertise",
+    title: "Local market intelligence",
     description:
-      "We know Palakkad towns, roads, and micro-markets — not generic national averages.",
+      "Taluks, access roads, and comparable deals — advice grounded in what is happening on the ground, not generic estimates.",
     iconKey: "MapPin" as const,
   },
   {
-    title: "Client-first",
+    title: "End-to-end support",
     description:
-      "Your budget and goals drive every recommendation; we are in it for the long term.",
+      "Consultancy when you need clarity, marketing when you need visibility, and hands-on help through buying or selling.",
     iconKey: "Users" as const,
   },
   {
-    title: "Track record",
+    title: "Proven results",
     description:
-      "Years of successful deals and repeat clients who trust us with their next move.",
+      "Repeat clients and referrals from owners and investors who trust us for the next listing or purchase.",
     iconKey: "Award" as const,
   },
 ] as const;
 
 export const ABOUT_FAQ = [
   {
-    question: `How long has ${SITE_NAME} been operating in Palakkad?`,
-    answer: `We bring over ${ABOUT.yearsExperience} years of experience in Palakkad real estate, helping families and investors with plots, land, homes, and rentals across the district.`,
+    question: `What real estate marketing services do you offer in Palakkad?`,
+    answer: `We help owners and developers market residential plots, land, houses, villas, and commercial space across Palakkad — including listing strategy, digital and channel promotion, presentation guidance, and outreach to serious buyers. Tell us your asset and timeline and we will propose a practical marketing plan.`,
   },
   {
-    question: "Which areas do you cover?",
+    question: "How does property consultancy help buyers and sellers?",
     answer:
-      "We focus on Palakkad district and surrounding towns — from Palakkad town to Ottapalam, Chittur, Mannarkkad, and nearby localities. Tell us your preferred area and we will shortlist options that fit.",
+      "Consultancy covers pricing bands, investment fit, comparables in your locality, and documentation context before you list or offer. We explain trade-offs in plain language and align advice with your budget and goals — we are advisors and brokers, not a substitute for your advocate on legal opinion.",
   },
   {
-    question: "Do buyers pay a brokerage fee?",
+    question: "Do you help with property buying and selling in Kerala?",
     answer:
-      "Fee structures depend on the engagement and property type. We explain costs clearly before you commit so there are no surprises. Contact us for a straightforward breakdown for your situation.",
+      "Yes. We support buyers and sellers in Palakkad district with search and shortlisting, viewings, negotiation, agreement coordination, and handover — working alongside your advocate for title checks and registration. We also help with rental placement when that fits your plan.",
+  },
+  {
+    question: "Which areas in Palakkad do you cover?",
+    answer:
+      "We focus on Palakkad district — Palakkad town, Ottapalam, Chittur, Mannarkkad, and surrounding localities. Share your preferred area and we will tailor marketing, consultancy, or buyer support to match.",
+  },
+  {
+    question: "How long has The Real Business been operating in Palakkad?",
+    answer: `We bring over ${ABOUT.yearsExperience} years of experience in Palakkad real estate across marketing, consultancy, and transaction support for families, owners, and investors.`,
+  },
+  {
+    question: "Do buyers or sellers pay fees — and when are they explained?",
+    answer:
+      "Fees depend on whether you are marketing a property, taking consultancy-only input, or engaging us for a full buy or sell mandate. We explain costs upfront before you commit so there are no surprises.",
   },
   {
     question: "Can you help with documentation and legal steps?",
     answer:
-      "We coordinate with your advocate on title checks, encumbrance, and registration timelines. We are brokers, not lawyers — we make sure paperwork aligns with the deal you agreed.",
-  },
-  {
-    question: "Do you list rental properties as well as sales?",
-    answer:
-      "Yes. We assist landlords and tenants with listings, viewings, and lease basics so rentals stay straightforward.",
-  },
-  {
-    question: "How do I get started?",
-    answer:
-      "Browse our properties online, use the contact form, or reach out by email. We will listen to your goals and suggest a clear next step — whether that is a site visit, a valuation conversation, or a shortlist of listings.",
-  },
-  {
-    question: "What types of properties do you handle?",
-    answer:
-      "We work across Palakkad district with residential plots and land, houses and villas, apartments where available, commercial spaces, and agricultural or conversion-bound parcels when appropriate. Tell us what you are looking for and we will focus on listings that match.",
-  },
-  {
-    question: "Can you help me understand local market prices?",
-    answer:
-      "Yes. We share context on recent transactions, location premiums, access and infrastructure, and how similar properties are priced — so you can decide offers or listing prices with confidence, not guesswork.",
+      "We coordinate with your advocate on title checks, encumbrance certificates, sale deeds, and registration timelines. We are brokers and consultants, not lawyers — we keep paperwork aligned with the deal you agreed.",
   },
   {
     question: "Do you work with NRI buyers and sellers?",
     answer:
-      "We regularly support clients who are abroad: virtual walkthroughs where possible, clear written updates, and coordination with your advocate and family on the ground. Share your timeline and we will map a practical path for viewings, negotiation, and registration.",
+      "Yes. We support NRIs with clear written updates, virtual walkthroughs where possible, and coordination with family or advocates on the ground in Palakkad for viewings, marketing decisions, and closing.",
   },
   {
-    question: "What should I prepare before listing my property?",
+    question: "What should I prepare before listing or marketing my property?",
     answer:
-      "Gather title documents, tax receipts, and any prior sale or partition records your advocate may need. We will review basics with you, suggest photography or details buyers expect, and align on a realistic price range before your listing goes live.",
+      "Gather title documents, tax receipts, and prior sale or partition records your advocate may need. We align on realistic pricing, presentation, and channels before your property is promoted so buyers see consistent, accurate information.",
+  },
+  {
+    question: "How do I get started with The Real Business?",
+    answer:
+      "Use the contact form, browse our listings, or email us. We will clarify whether you need marketing, consultancy, buying or selling support — or a combination — and give you a clear next step.",
   },
 ] as const;
 
 /** Dedicated FAQ page (`/faq`) — two-column marketing layout + newsletter CTA. */
 export const FAQ_PAGE_ITEMS = [
   {
-    question: `What services does ${SITE_NAME} provide for buyers and sellers?`,
+    question: `What services does ${SITE_NAME} provide in Palakkad?`,
     answer:
-      "We help buyers and sellers across Palakkad with plots, land, homes, and rentals — from shortlisting and site visits to pricing advice, negotiation support, and coordination with advocates for registration. Landlords and tenants can also come to us for rental listings and viewings.",
+      "We offer real estate marketing for owners and developers, property consultancy for pricing and investment decisions, and full buying and selling support — shortlisting, viewings, negotiation, and coordination with advocates through registration. We also assist with rentals when that fits your goals.",
   },
   {
     question: `How can I search for properties on ${SITE_NAME}?`,
     answer:
-      "Use the search bar on our home page and properties page to filter by area, type, and budget. Browse the latest active listings online, save favourites to your wishlist, and contact us when you want a curated shortlist or a site visit. We are your local real estate partner — turning listings into options that fit your goals, with honest context on value, access, and documentation.",
+      "Use the search bar on our home and properties pages to filter by area, type, and budget. Save favourites to your wishlist and contact us for a curated shortlist or site visit. We add local context on value, access, and documentation so listings translate into confident decisions.",
   },
   {
-    question: `Does ${SITE_NAME} charge any fees for its services?`,
+    question: `Does ${SITE_NAME} charge any fees for marketing or consultancy?`,
     answer:
-      "Fee structures depend on whether you are buying, selling, or renting, and on the property type. We explain costs clearly before you commit so there are no surprises. Contact us for a straightforward breakdown for your situation.",
+      "Fees depend on the scope — marketing campaigns, consultancy-only engagements, or a full buy or sell mandate. We explain costs clearly before you commit. Contact us for a breakdown tailored to your property and goals.",
   },
   {
-    question: `Can I list my property on ${SITE_NAME} as an owner?`,
+    question: `Can I list or market my property with ${SITE_NAME} as an owner?`,
     answer:
-      "Yes. Owners can reach out through our post-property flow or contact page. We will discuss your listing, arrange photography or details as needed, and match serious buyers or tenants — always with transparent communication.",
+      "Yes. Reach out via our post-property flow or contact page. We discuss positioning, presentation, channels, and pricing, then promote your property to serious buyers with transparent updates throughout.",
   },
   {
     question: "Do you help with legal papers?",
     answer:
-      "We coordinate with your advocate on title checks, encumbrance certificates, sale deeds, and registration timelines. We are brokers, not lawyers — we make sure the paperwork aligns with the deal you agreed and keep everyone on the same page.",
+      "We coordinate with your advocate on title checks, encumbrance certificates, sale deeds, and registration. We are brokers and consultants, not lawyers — we keep paperwork aligned with the deal you agreed.",
   },
   {
     question: `How can I schedule a property visit through ${SITE_NAME}?`,
     answer:
-      "Tell us which listing you are interested in via the contact form, email, or phone. We will confirm with the owner and propose times for a site visit, then accompany you or connect you so you see the property with clarity on boundaries and access.",
+      "Tell us which listing interests you via the contact form, email, or phone. We confirm with the owner, propose visit times, and join you so boundaries, access, and condition are clear before you offer.",
   },
   {
     question: "How do I find a property that fits my budget and area?",
     answer:
-      "Start with your budget, preferred towns or localities in Palakkad district, and property type (plot, house, flat, commercial). Share that with us — we shortlist options that match, explain trade-offs, and help you compare before you decide.",
+      "Share your budget, preferred localities in Palakkad district, and property type. We shortlist matches, explain trade-offs with consultancy-style clarity, and support you through offer and closing if you choose.",
   },
 ] as const;
 
@@ -317,84 +316,48 @@ export const ABOUT_NEWSLETTER_BG_IMAGE =
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" as const;
 
 /** Lucide icon keys — mapped in `app/(public)/services/page.tsx` */
-export type ServiceIconKey =
-  | "LandPlot"
-  | "Home"
-  | "Key"
-  | "LineChart"
-  | "Scale"
-  | "Handshake";
+export type ServiceIconKey = "Megaphone" | "Briefcase" | "Handshake";
 
 export const SERVICES = [
   {
-    title: "Plot & Land Brokerage",
+    title: "Real Estate Marketing",
     description:
-      "Residential plots, agricultural land, and development parcels across Palakkad district — with honest guidance on location, access, and fair market value.",
+      "Get your Palakkad property in front of serious buyers and investors — with clear positioning, professional presentation, and promotion that matches how people actually search and decide.",
     details: [
-      "Shortlisting plots by budget and locality",
-      "Site visits and boundary checks with owners",
-      "Comparable sales insight for pricing",
-      "Support through negotiation and handover",
+      "Digital property promotion and listing optimization",
+      "Messaging and channel strategy for plots, homes, and commercial space",
+      "Professional presentation guidance (details, media, USPs buyers expect)",
+      "Targeted buyer and investor outreach",
+      "Competitive positioning against similar stock in the district",
+      "Developer and landowner branding support where it fits the mandate",
     ],
-    iconKey: "LandPlot" as const,
+    iconKey: "Megaphone" as const,
   },
   {
-    title: "Residential Sales & Purchases",
+    title: "Property Consultancy",
     description:
-      "Homes, villas, and flats in Palakkad — from first viewing to registration, with clear communication at every step.",
+      "Independent, Palakkad-grounded advice before you list, offer, or allocate capital — so decisions reflect local demand, documentation reality, and your personal goals.",
     details: [
-      "Buyer and seller representation",
-      "Listing prep and serious buyer matching",
-      "Offer and agreement coordination",
-      "Coordination with advocates when needed",
+      "Market analysis and investment advisory for residential and land assets",
+      "Property valuation guidance using comparables and on-site context",
+      "Documentation and process consultation (with your advocate for legal opinion)",
+      "Land-use, access, and development considerations explained plainly",
+      "NRI advisory: remote updates, timelines, and coordination with family on the ground",
+      "Portfolio review: hold, sell, or reposition with realistic scenarios",
     ],
-    iconKey: "Home" as const,
+    iconKey: "Briefcase" as const,
   },
   {
-    title: "Rental Assistance",
+    title: "Property Buying & Selling Support",
     description:
-      "Help for landlords and tenants: listings, viewings, and lease basics so rentals stay straightforward.",
+      "End-to-end help from shortlist to registration — negotiation, agreements, and handover with steady communication and advocate coordination.",
     details: [
-      "Tenant and landlord introductions",
-      "Viewing schedules and follow-up",
-      "Guidance on rent and deposit norms",
-      "Renewal and handover support",
-    ],
-    iconKey: "Key" as const,
-  },
-  {
-    title: "Property Valuation Guidance",
-    description:
-      "Market-aware pricing advice using local demand, recent deals, and property condition — not generic online estimates.",
-    details: [
-      "Sale and rental price bands",
-      "Investment and hold vs sell perspective",
-      "Updates when the market shifts",
-      "Documentation you can share with family or lenders",
-    ],
-    iconKey: "LineChart" as const,
-  },
-  {
-    title: "Legal & Documentation Support",
-    description:
-      "We work with your advocate on title checks, encumbrance, and registration steps so paperwork matches the deal you agreed.",
-    details: [
-      "Title and history review coordination",
-      "Sale deed and registration timelines",
-      "Encumbrance and tax receipt pointers",
-      "Clarity on roles: broker vs legal counsel",
-    ],
-    iconKey: "Scale" as const,
-  },
-  {
-    title: "Post-Sale Support",
-    description:
-      "After the keys — help with handover, utility transfers, and pointing you to the right people for maintenance or resale later.",
-    details: [
-      "Possession and handover checklist",
-      "Utility and society introductions where applicable",
-      "Ongoing relationship for your next move",
-      "Referrals to trusted partners when needed",
+      "Buyer search, shortlisting, and seller listing management",
+      "Viewings, owner meetings, and boundary or access clarity",
+      "Offer strategy, negotiation, and deal structuring",
+      "Agreement milestones and advocate coordination through registration",
+      "Post-transaction handover and possession checklist",
+      "Rental placement for landlords and tenants when required",
     ],
     iconKey: "Handshake" as const,
   },
@@ -403,27 +366,27 @@ export const SERVICES = [
 export const SERVICES_PROCESS = [
   {
     step: "01",
-    title: "Consult",
+    title: "Discover",
     description:
-      "We listen to your goals, budget, and timeline — whether you are buying, selling, or renting in Palakkad.",
+      "We capture your goals — marketing a listing, getting consultancy before a decision, or buying or selling in Palakkad — plus budget, timeline, and constraints.",
   },
   {
     step: "02",
-    title: "Evaluate",
+    title: "Strategize",
     description:
-      "Site visits, owner meetings, and market checks so decisions are grounded in what is on the ground.",
+      "A tailored plan: how to market, what price band fits, or which steps to close — always aligned with local market reality.",
   },
   {
     step: "03",
     title: "Execute",
     description:
-      "Offers, agreements, and coordination with advocates and banks — we stay close until terms are clear.",
+      "We run the campaign, deliver the advice, or drive the transaction — viewings, outreach, negotiation, and paperwork alignment with your advocate.",
   },
   {
     step: "04",
-    title: "Support",
+    title: "Deliver",
     description:
-      "Through registration, handover, and beyond — your long-term partner for property in the district.",
+      "Results you can measure — visibility, clarity, or a registered deal — plus ongoing support for your next move in the district.",
   },
 ] as const;
 
@@ -439,47 +402,47 @@ export const PAGE_HERO_IMAGES = {
 export const ABOUT_DREAMS_BANNER = {
   image:
     "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80",
-  headline: "Turning your real estate dreams into reality!",
+  headline: "Marketing, advice, and deals — one Palakkad partner",
   subtitle:
-    "We help you find more than just a property — we help you find your dream lifestyle.",
+    "From promoting your property to consulting on price and closing the sale, we align visibility, clarity, and execution.",
   ctaLabel: "Get a quote",
   ctaHref: "/contact" as const,
   steps: [
     {
       n: "01",
-      title: "Expert local knowledge",
-      body: "Personalized service and expert guidance across Palakkad plots, land, and homes.",
+      title: "Real estate marketing",
+      body: "Reach serious buyers with positioning, channels, and presentation built for Palakkad’s market.",
     },
     {
       n: "02",
-      title: "Hassle-free transactions",
-      body: "Clear timelines, transparent fees, and steady communication from offer to registration.",
+      title: "Property consultancy",
+      body: "Pricing, investment fit, and documentation context before you commit — in plain language.",
     },
     {
       n: "03",
-      title: "Comprehensive support",
-      body: "We stay with you on viewings, negotiation, and coordination with advocates when you need it.",
+      title: "Buying & selling support",
+      body: "Shortlists to registration: viewings, negotiation, advocate coordination, and handover.",
     },
   ],
 } as const;
 
 /** Services page — hero subtitle under “Our Services” */
 export const SERVICES_HERO_TAGLINE =
-  "Plots, land, and homes in Palakkad — buying, selling, leasing, and guidance from a brokerage that meets owners and buyers in person." as const;
+  "Real estate marketing, property consultancy, and buying & selling support in Palakkad — local expertise from first conversation to closing." as const;
 
 /** `/team` — centered hero and philosophy (Palakkad-first brokerage). */
 export const TEAM_PAGE_INTRO = {
   eyebrow: "Our Team",
   title: "We are the people behind The Real Business",
   subtitle:
-    "Our approach is straightforward — work with people who know Palakkad, care about getting it right, and stay with you long after the deal is done.",
+    "Marketing, consultancy, and transaction support — one team that knows Palakkad and stays with you after the deal is done.",
 } as const;
 
 /** About page — team grid headline (centered, matches editorial reference). */
 export const ABOUT_TEAM_SECTION = {
   title: "Meet Our Team",
   description:
-    "Experienced local professionals dedicated to finding you the right property in Palakkad — with honest advice at every step.",
+    "Local professionals for real estate marketing, property consultancy, and buying & selling support — honest advice at every step.",
 } as const;
 
 /** Team members for `/team` — core leadership (three); roles aligned with SERVICES. */
@@ -488,23 +451,23 @@ export const TEAM = [
     name: "Arjun Menon",
     role: "Founder and Lead Broker",
     description:
-      "Two decades of hands-on experience in Palakkad plots, land, and residential property.",
+      "Leads strategy across marketing, consultancy, and transactions for Palakkad plots, land, and homes.",
     image:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Priya Nair",
-    role: "Head of Residential Sales",
+    role: "Head of Real Estate Marketing",
     description:
-      "Guides buyers and sellers through every step, from viewings to registration.",
+      "Listings, campaigns, and buyer outreach — positioning properties so the right audience sees them.",
     image:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Vishnu Krishnan",
-    role: "Plot and Land Specialist",
+    role: "Property Consultancy Lead",
     description:
-      "Deep knowledge of taluks, survey boundaries, and fair pricing across the district.",
+      "Pricing, comparables, and district micro-markets — advisory grounded in taluks and on-ground checks.",
     image:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80",
   },
@@ -515,13 +478,13 @@ export const TEAM_CONTACT_STRIP = {
   eyebrow: "Get in touch",
   title: "Talk to our team in Palakkad",
   subtitle:
-    "Buying, selling, or renting — tell us what you need and we will point you to the right next step.",
+    "Marketing a listing, needing consultancy, or buying or selling — we will map the right service and next step.",
 } as const;
 
 /** Spotlight quote on `/team` — culture and on-the-ground approach. */
 export const TEAM_TESTIMONIAL = {
   quote:
-    "What sets us apart is that we meet every owner and walk every property before we ever recommend it. In Palakkad, that personal touch is everything.",
+    "We only market and recommend what we have seen and understood on the ground. That discipline — plus clear consultancy and transaction support — is how we earn trust in Palakkad.",
   name: "Arjun Menon",
   role: "Founder and Lead Broker",
   image:

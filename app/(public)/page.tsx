@@ -11,9 +11,9 @@ import { SITE_NAME } from "@/lib/constants/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} — Palakkad plots, land & homes`,
+  title: `${SITE_NAME} — Real Estate Marketing & Property Consultancy, Palakkad`,
   description:
-    "Browse curated sale and rental listings in Palakkad district, Kerala. Local real estate brokerage — we work with owners in person before marketing.",
+    "Browse curated listings in Palakkad, Kerala. Real estate marketing, property consultancy, and buying & selling support — we meet owners and walk properties before we recommend or market.",
 };
 
 export default function LandingPage() {
