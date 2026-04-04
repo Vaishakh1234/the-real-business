@@ -15,6 +15,7 @@ const pages = [
 const explore = [
   { label: "Post Property", href: "/post-property" },
   { label: "How It Works", href: "/how-it-works" },
+  { label: "FAQ", href: "/faq" },
   { label: "Wishlist", href: "/wishlist" },
 ];
 

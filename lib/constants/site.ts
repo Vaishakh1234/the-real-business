@@ -5,6 +5,9 @@
 
 export const SITE_NAME = "The Real Business";
 
+/** Full-page canvas for `/about` — warm cream (editorial reference). */
+export const ABOUT_PAGE_BACKGROUND = "#F8F3ED" as const;
+
 /** Public “post property” page (WhatsApp-led contact). */
 export const POST_PROPERTY_HREF = "/post-property" as const;
 
@@ -69,12 +72,38 @@ export const ABOUT = {
   vision:
     "To be the benchmark for excellence in real estate in our markets, continuously innovating and building long-term relationships built on trust and results.",
   yearsExperience: 25,
-  /** Shown on About, Services, and marketing strips — aligned with `yearsExperience`. */
+  /** About page second section — headline + intro above the stat grid. */
+  experienceSection: {
+    headline: "Don't just buy real estate — experience it.",
+    intro:
+      "Don't just look to buy real estate — discover a smoother, smarter journey with us. Our team brings years of market knowledge, client success stories, and Palakkad-first expertise to every conversation.",
+  },
+  /** Shown on About (with descriptions), Services strip (value + label only), and marketing. */
   stats: [
-    { value: "25+", label: "Years in Palakkad real estate" },
-    { value: "500+", label: "Clients & families served" },
-    { value: "150+", label: "Successful transactions" },
-    { value: "99%", label: "Client satisfaction" },
+    {
+      value: "150+",
+      label: "Properties & listings guided",
+      description:
+        "Every listing reflects honest value, location insight, and condition you can verify on the ground.",
+    },
+    {
+      value: "500+",
+      label: "Happy clients served",
+      description:
+        "Families and investors trust us for clear advice, steady communication, and seamless experiences.",
+    },
+    {
+      value: "25+",
+      label: "Years of local expertise",
+      description:
+        "Seasoned brokers who know Palakkad micro-markets, documentation norms, and how to protect your interests.",
+    },
+    {
+      value: "99%",
+      label: "Client satisfaction",
+      description:
+        "A high satisfaction rate built on transparency, follow-through, and relationships that outlast the deal.",
+    },
   ],
   values: [
     {
@@ -117,7 +146,40 @@ export const ABOUT = {
     subtitle:
       "Palakkad-focused brokerage for plots, land, and homes—with transparent communication and local expertise.",
   },
+  /** About page — dark band with cream trust cards (icon, title, body). */
+  trustedPartnerSection: {
+    title: "Your Trusted Real Estate Partner",
+    cards: [
+      {
+        iconKey: "UserSearch" as const,
+        title: "Personalized search",
+        description:
+          "Personalized search tailored to your unique needs — we shortlist plots, land, and homes that actually fit your goals.",
+      },
+      {
+        iconKey: "Users" as const,
+        title: "Experienced team",
+        description:
+          "Experienced team delivering trust, results, and guidance from first conversation through registration and beyond.",
+      },
+      {
+        iconKey: "Clock" as const,
+        title: "Track record",
+        description:
+          "Proven track record across Palakkad — years of successful deals and clients who come back for their next move.",
+      },
+      {
+        iconKey: "UserCircle" as const,
+        title: "Client-centric",
+        description:
+          "Client-centric approach focused on your timeline, budget, and peace of mind — not ours.",
+      },
+    ],
+  },
 } as const;
+
+export type AboutTrustedPartnerIconKey =
+  (typeof ABOUT.trustedPartnerSection.cards)[number]["iconKey"];
 
 /** Lucide icon keys — mapped on About + Services for “Why choose us”. */
 export type AboutWhyChooseUsIconKey =
@@ -183,7 +245,76 @@ export const ABOUT_FAQ = [
     answer:
       "Browse our properties online, use the contact form, or reach out by email. We will listen to your goals and suggest a clear next step — whether that is a site visit, a valuation conversation, or a shortlist of listings.",
   },
+  {
+    question: "What types of properties do you handle?",
+    answer:
+      "We work across Palakkad district with residential plots and land, houses and villas, apartments where available, commercial spaces, and agricultural or conversion-bound parcels when appropriate. Tell us what you are looking for and we will focus on listings that match.",
+  },
+  {
+    question: "Can you help me understand local market prices?",
+    answer:
+      "Yes. We share context on recent transactions, location premiums, access and infrastructure, and how similar properties are priced — so you can decide offers or listing prices with confidence, not guesswork.",
+  },
+  {
+    question: "Do you work with NRI buyers and sellers?",
+    answer:
+      "We regularly support clients who are abroad: virtual walkthroughs where possible, clear written updates, and coordination with your advocate and family on the ground. Share your timeline and we will map a practical path for viewings, negotiation, and registration.",
+  },
+  {
+    question: "What should I prepare before listing my property?",
+    answer:
+      "Gather title documents, tax receipts, and any prior sale or partition records your advocate may need. We will review basics with you, suggest photography or details buyers expect, and align on a realistic price range before your listing goes live.",
+  },
 ] as const;
+
+/** Dedicated FAQ page (`/faq`) — two-column marketing layout + newsletter CTA. */
+export const FAQ_PAGE_ITEMS = [
+  {
+    question: `What services does ${SITE_NAME} provide for buyers and sellers?`,
+    answer:
+      "We help buyers and sellers across Palakkad with plots, land, homes, and rentals — from shortlisting and site visits to pricing advice, negotiation support, and coordination with advocates for registration. Landlords and tenants can also come to us for rental listings and viewings.",
+  },
+  {
+    question: `How can I search for properties on ${SITE_NAME}?`,
+    answer:
+      "Use the search bar on our home page and properties page to filter by area, type, and budget. Browse the latest active listings online, save favourites to your wishlist, and contact us when you want a curated shortlist or a site visit. We are your local real estate partner — turning listings into options that fit your goals, with honest context on value, access, and documentation.",
+  },
+  {
+    question: `Does ${SITE_NAME} charge any fees for its services?`,
+    answer:
+      "Fee structures depend on whether you are buying, selling, or renting, and on the property type. We explain costs clearly before you commit so there are no surprises. Contact us for a straightforward breakdown for your situation.",
+  },
+  {
+    question: `Can I list my property on ${SITE_NAME} as an owner?`,
+    answer:
+      "Yes. Owners can reach out through our post-property flow or contact page. We will discuss your listing, arrange photography or details as needed, and match serious buyers or tenants — always with transparent communication.",
+  },
+  {
+    question: "Do you help with legal papers?",
+    answer:
+      "We coordinate with your advocate on title checks, encumbrance certificates, sale deeds, and registration timelines. We are brokers, not lawyers — we make sure the paperwork aligns with the deal you agreed and keep everyone on the same page.",
+  },
+  {
+    question: `How can I schedule a property visit through ${SITE_NAME}?`,
+    answer:
+      "Tell us which listing you are interested in via the contact form, email, or phone. We will confirm with the owner and propose times for a site visit, then accompany you or connect you so you see the property with clarity on boundaries and access.",
+  },
+  {
+    question: "How do I find a property that fits my budget and area?",
+    answer:
+      "Start with your budget, preferred towns or localities in Palakkad district, and property type (plot, house, flat, commercial). Share that with us — we shortlist options that match, explain trade-offs, and help you compare before you decide.",
+  },
+] as const;
+
+/** Newsletter strip on `/faq` — headline and supporting line. */
+export const FAQ_NEWSLETTER = {
+  title: "Stay Updated on Latest Property",
+  subtitle: "Never miss a beat — stay updated on new listings and market insight.",
+} as const;
+
+/** About page newsletter CTA — glass / modern home accent (bottom-right, dusk). */
+export const ABOUT_NEWSLETTER_BG_IMAGE =
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" as const;
 
 /** Lucide icon keys — mapped in `app/(public)/services/page.tsx` */
 export type ServiceIconKey =
@@ -304,6 +435,34 @@ export const PAGE_HERO_IMAGES = {
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80",
 } as const;
 
+/** About page — full-bleed image + cream overlay card (team / planning context). */
+export const ABOUT_DREAMS_BANNER = {
+  image:
+    "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1920&q=80",
+  headline: "Turning your real estate dreams into reality!",
+  subtitle:
+    "We help you find more than just a property — we help you find your dream lifestyle.",
+  ctaLabel: "Get a quote",
+  ctaHref: "/contact" as const,
+  steps: [
+    {
+      n: "01",
+      title: "Expert local knowledge",
+      body: "Personalized service and expert guidance across Palakkad plots, land, and homes.",
+    },
+    {
+      n: "02",
+      title: "Hassle-free transactions",
+      body: "Clear timelines, transparent fees, and steady communication from offer to registration.",
+    },
+    {
+      n: "03",
+      title: "Comprehensive support",
+      body: "We stay with you on viewings, negotiation, and coordination with advocates when you need it.",
+    },
+  ],
+} as const;
+
 /** Services page — hero subtitle under “Our Services” */
 export const SERVICES_HERO_TAGLINE =
   "Plots, land, and homes in Palakkad — buying, selling, leasing, and guidance from a brokerage that meets owners and buyers in person." as const;
@@ -314,6 +473,13 @@ export const TEAM_PAGE_INTRO = {
   title: "We are the people behind The Real Business",
   subtitle:
     "Our approach is straightforward — work with people who know Palakkad, care about getting it right, and stay with you long after the deal is done.",
+} as const;
+
+/** About page — team grid headline (centered, matches editorial reference). */
+export const ABOUT_TEAM_SECTION = {
+  title: "Meet Our Team",
+  description:
+    "Experienced local professionals dedicated to finding you the right property in Palakkad — with honest advice at every step.",
 } as const;
 
 /** Team members for `/team` — core leadership (three); roles aligned with SERVICES. */

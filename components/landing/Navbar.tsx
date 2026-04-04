@@ -534,7 +534,7 @@ export function Navbar() {
           aria-label="Primary"
           className={cn(
             publicContentFrameClass,
-            "flex w-full min-w-0 items-center gap-2 md:gap-3",
+            "flex w-full min-w-0 items-center gap-3 md:gap-4 lg:gap-5",
             HEADER_CLASS,
           )}
         >
@@ -542,7 +542,7 @@ export function Navbar() {
             <Link
               href="/"
               className={cn(
-                "font-site-wordmark min-w-0 max-w-[min(100%,11rem)] truncate text-2xl font-semibold leading-tight tracking-tight xs:max-w-none xs:text-3xl sm:text-3xl sm:whitespace-nowrap md:text-4xl",
+                "font-site-wordmark text-lg font-semibold leading-tight tracking-tight xs:text-2xl sm:text-3xl sm:whitespace-nowrap md:text-4xl",
                 overlayNav ? "text-white drop-shadow-sm" : "text-brand-gold",
               )}
             >
@@ -700,7 +700,7 @@ export function Navbar() {
               </form>
             ) : (
               <div
-                className="hidden min-w-0 flex-1 items-center justify-center gap-0 2xl:flex"
+                className="hidden min-w-0 flex-1 items-center justify-center gap-3 2xl:flex 2xl:gap-5"
                 onMouseLeave={closeMenus}
               >
                 <details className="group relative">
