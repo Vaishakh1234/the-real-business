@@ -12,6 +12,7 @@ import {
   Building2,
   Hash,
   Ruler,
+  Layers,
   ChevronDown,
   Compass,
   ChevronLeft,
@@ -689,11 +690,20 @@ export function PropertyDetailPublicClient({
                   value={String(property.bathrooms)}
                 />
               ) : null}
-              {property.area_sqft != null ? (
+              {structureKind !== "plot" &&
+              property.area_sqft != null &&
+              Number(property.area_sqft) > 0 ? (
                 <SpecChip
                   icon={Square}
                   label="Area"
                   value={`${property.area_sqft} sqft`}
+                />
+              ) : null}
+              {structureKind !== "plot" && property.floors != null ? (
+                <SpecChip
+                  icon={Layers}
+                  label="Floors"
+                  value={String(property.floors)}
                 />
               ) : null}
               {property.total_cent != null ? (

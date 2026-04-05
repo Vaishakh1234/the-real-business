@@ -268,12 +268,24 @@ export function PropertyDetailClient({
   const specItems = [
     {
       label: "Structure",
-      value: structureKind === "plot" ? "Plot" : "House",
+      value:
+        structureKind === "plot"
+          ? "Plot"
+          : property.structure_type === "building"
+            ? "Building"
+            : "House",
     },
-    {
-      label: "Area",
-      value: property.area_sqft != null ? `${property.area_sqft} sqft` : null,
-    },
+    ...(structureKind !== "plot"
+      ? [
+          {
+            label: "Area",
+            value:
+              property.area_sqft != null && Number(property.area_sqft) > 0
+                ? `${property.area_sqft} sqft`
+                : null,
+          },
+        ]
+      : []),
     {
       label: "Total cent",
       value:
@@ -288,10 +300,12 @@ export function PropertyDetailClient({
           { label: "Floors", value: property.floors },
           { label: "Furnished", value: property.furnished },
         ]
-      : [
-          { label: "Plot no.", value: property.plot_number },
-          { label: "Plot dims", value: property.plot_dimensions },
-        ]),
+      : structureKind === "plot"
+        ? [
+            { label: "Plot no.", value: property.plot_number },
+            { label: "Plot dims", value: property.plot_dimensions },
+          ]
+        : [{ label: "Floors", value: property.floors }]),
     { label: "Facing", value: property.facing },
   ];
 

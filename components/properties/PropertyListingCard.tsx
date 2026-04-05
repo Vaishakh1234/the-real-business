@@ -120,7 +120,11 @@ export function AddressLine2({
 function listingSubtitle(property: PropertyWithRelations): string {
   const cat = property.category?.name?.trim() || "Property";
   const structure =
-    property.structure_type === "plot" ? "Land / plot" : "House / villa";
+    property.structure_type === "plot"
+      ? "Land / plot"
+      : property.structure_type === "building"
+        ? "Building"
+        : "House / villa";
   const { line1, line2 } = addressTwoLines(property);
   const loc =
     [property.city?.trim(), property.state?.trim()]
@@ -648,7 +652,9 @@ function DirectoryListingCardMobile({
                   Total area (approx)
                 </p>
               </>
-            ) : areaSqft != null ? (
+            ) : property.structure_type !== "plot" &&
+              areaSqft != null &&
+              areaSqft > 0 ? (
               <>
                 <p
                   className="text-lg font-bold tabular-nums leading-tight"
@@ -768,7 +774,10 @@ export function DirectoryPropertyListingCard({
   const showTotalCentCol =
     property.total_cent != null || property.structure_type === "plot";
   const areaSqft = property.area_sqft;
-  const hasArea = areaSqft != null;
+  const hasArea =
+    property.structure_type !== "plot" &&
+    areaSqft != null &&
+    Number(areaSqft) > 0;
   const metricCount = 2 + (showTotalCentCol ? 1 : 0) + (hasArea ? 1 : 0);
   /** Keep 2 columns through `lg` when the directory sidebar shares the row — four tight columns overlap labels. */
   const metricsGridClass =

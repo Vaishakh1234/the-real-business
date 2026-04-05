@@ -76,18 +76,18 @@ const CATEGORIES = [
 ];
 
 const AMENITIES = [
-  { name: "Swimming Pool", slug: "swimming-pool", icon: "pool", sort_order: 1 },
-  { name: "Gym", slug: "gym", icon: "dumbbell", sort_order: 2 },
-  { name: "Parking", slug: "parking", icon: "car", sort_order: 3 },
-  { name: "Security", slug: "security", icon: "shield", sort_order: 4 },
-  { name: "Garden", slug: "garden", icon: "flower", sort_order: 5 },
-  { name: "Power Backup", slug: "power-backup", icon: "zap", sort_order: 6 },
-  { name: "Lift", slug: "lift", icon: "arrow-up-down", sort_order: 7 },
-  { name: "Clubhouse", slug: "clubhouse", icon: "users", sort_order: 8 },
-  { name: "Play Area", slug: "play-area", icon: "gamepad", sort_order: 9 },
-  { name: "Concierge", slug: "concierge", icon: "concierge-bell", sort_order: 10 },
-  { name: "WiFi", slug: "wifi", icon: "wifi", sort_order: 11 },
-  { name: "AC", slug: "ac", icon: "snowflake", sort_order: 12 },
+  { name: "Swimming Pool", slug: "swimming-pool", icon: "🏊", sort_order: 1 },
+  { name: "Gym", slug: "gym", icon: "🏋️", sort_order: 2 },
+  { name: "Parking", slug: "parking", icon: "🅿️", sort_order: 3 },
+  { name: "Security", slug: "security", icon: "🛡️", sort_order: 4 },
+  { name: "Garden", slug: "garden", icon: "🌳", sort_order: 5 },
+  { name: "Power Backup", slug: "power-backup", icon: "⚡", sort_order: 6 },
+  { name: "Lift", slug: "lift", icon: "🛗", sort_order: 7 },
+  { name: "Clubhouse", slug: "clubhouse", icon: "🏛️", sort_order: 8 },
+  { name: "Play Area", slug: "play-area", icon: "🎮", sort_order: 9 },
+  { name: "Concierge", slug: "concierge", icon: "🛎️", sort_order: 10 },
+  { name: "WiFi", slug: "wifi", icon: "📶", sort_order: 11 },
+  { name: "AC", slug: "ac", icon: "❄️", sort_order: 12 },
 ];
 
 // 12 properties with full fields: lat/lng, map_embed_url, cover_image_url, gallery_images, etc.

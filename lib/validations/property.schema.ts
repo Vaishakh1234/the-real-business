@@ -16,7 +16,7 @@ export const propertySchema = z.object({
     .optional(),
   type: z.enum(["sale", "rent"], { required_error: "Please select type (sale or rent)" }),
   /** Building vs land plot — controls which specification fields apply. */
-  structure_type: z.enum(["house", "plot"]).default("house"),
+  structure_type: z.enum(["house", "plot", "building"]).default("house"),
   status: z.enum(["active", "sold", "rented", "draft", "closed"]).default("active"),
   is_featured: z.boolean().default(false),
   category_id: z.string().uuid().nullable().optional(),

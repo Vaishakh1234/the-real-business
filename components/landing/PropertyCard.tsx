@@ -12,7 +12,7 @@ import {
   PropertyNativeImg,
   PROPERTY_PLACEHOLDER_SRC,
 } from "@/components/ui/PropertyImage";
-import type { PropertyWithRelations } from "@/types";
+import type { PropertyStructureType, PropertyWithRelations } from "@/types";
 import { formatPropertyPriceValue } from "@/lib/utils";
 
 interface PropertyCardProps {
@@ -20,7 +20,12 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
-  const structureKind = property.structure_type === "plot" ? "plot" : "house";
+  const structureKind: PropertyStructureType =
+    property.structure_type === "plot"
+      ? "plot"
+      : property.structure_type === "building"
+        ? "building"
+        : "house";
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-border hover:border-brand-gold/30">
@@ -102,10 +107,15 @@ export function PropertyCard({ property }: PropertyCardProps) {
         )}
         {/* Property specs */}
         {(structureKind === "house"
-          ? property.bedrooms || property.bathrooms || property.area_sqft
-          : property.area_sqft ||
-            property.plot_dimensions?.trim() ||
-            property.plot_number?.trim()) && (
+          ? property.bedrooms ||
+            property.bathrooms ||
+            (property.area_sqft != null && Number(property.area_sqft) > 0)
+          : structureKind === "building"
+            ? (property.area_sqft != null && Number(property.area_sqft) > 0) ||
+              property.floors
+            : property.plot_dimensions?.trim() ||
+              property.plot_number?.trim() ||
+              property.total_cent != null) && (
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4 pb-4 border-b border-border">
             {structureKind === "house" && property.bedrooms != null && (
               <div className="flex items-center gap-1.5">
@@ -119,10 +129,18 @@ export function PropertyCard({ property }: PropertyCardProps) {
                 <span>{property.bathrooms} Bath</span>
               </div>
             )}
-            {property.area_sqft != null && (
+            {structureKind !== "plot" &&
+              property.area_sqft != null &&
+              Number(property.area_sqft) > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <Maximize2 className="h-4 w-4 text-muted-foreground" />
+                  <span>{property.area_sqft} sqft</span>
+                </div>
+              )}
+            {structureKind !== "plot" && property.floors != null && (
               <div className="flex items-center gap-1.5">
                 <Maximize2 className="h-4 w-4 text-muted-foreground" />
-                <span>{property.area_sqft} sqft</span>
+                <span>{property.floors} Floors</span>
               </div>
             )}
             {structureKind === "plot" && property.plot_dimensions?.trim() && (

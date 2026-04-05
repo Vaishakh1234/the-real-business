@@ -183,12 +183,14 @@ function PropertyCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 pt-3 mt-auto border-t border-gray-100">
-          {property.area_sqft != null && (
-            <span className="flex items-center gap-1.5">
-              <Maximize2 className="h-3.5 w-3.5" aria-hidden />
-              {property.area_sqft} sqft
-            </span>
-          )}
+          {structureKind !== "plot" &&
+            property.area_sqft != null &&
+            Number(property.area_sqft) > 0 && (
+              <span className="flex items-center gap-1.5">
+                <Maximize2 className="h-3.5 w-3.5" aria-hidden />
+                {property.area_sqft} sqft
+              </span>
+            )}
           {structureKind === "house" && property.bedrooms != null && (
             <span className="flex items-center gap-1.5">
               <Bed className="h-3.5 w-3.5" aria-hidden />

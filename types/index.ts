@@ -48,7 +48,7 @@ export interface CategoryFilters {
 
 export type PropertyType = "sale" | "rent";
 /** House (built unit) vs plot (land). Distinct from PropertyType (sale/rent). */
-export type PropertyStructureType = "house" | "plot";
+export type PropertyStructureType = "house" | "plot" | "building";
 export type PropertyStatus = "active" | "sold" | "rented" | "draft" | "closed";
 export type PropertyFurnished = "furnished" | "semi-furnished" | "unfurnished";
 

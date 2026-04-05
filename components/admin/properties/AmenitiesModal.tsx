@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { EmojiPickerPopover } from "@/components/admin/EmojiPickerPopover";
 import {
   useAmenitiesForAdmin,
   useCreateAmenity,
@@ -76,12 +77,10 @@ export function AmenitiesModal({ open, onOpenChange }: AmenitiesModalProps) {
                   placeholder="e.g., Swimming Pool"
                   className="h-10 rounded-xl"
                 />
-                <Input
+                <EmojiPickerPopover
                   value={newIcon}
-                  onChange={(e) => setNewIcon(e.target.value)}
-                  placeholder="🏊"
-                  className="h-10 w-16 rounded-xl text-center text-lg"
-                  maxLength={4}
+                  onSelect={setNewIcon}
+                  aria-label="Amenity icon emoji"
                 />
               </div>
             </div>

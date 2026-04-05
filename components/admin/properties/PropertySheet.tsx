@@ -195,14 +195,21 @@ export function PropertySheet({
         description: property.description,
         short_description: property.short_description,
         type: "sale",
-        structure_type: property.structure_type === "plot" ? "plot" : "house",
+        structure_type:
+          property.structure_type === "plot"
+            ? "plot"
+            : property.structure_type === "building"
+              ? "building"
+              : "house",
         status: property.status,
         is_featured: property.is_featured ?? false,
         category_id: property.category_id,
         price: Number(property.price),
         price_type: property.price_type ?? "total",
         area_sqft:
-          property.area_sqft != null ? Number(property.area_sqft) : null,
+          property.area_sqft != null && Number(property.area_sqft) > 0
+            ? Number(property.area_sqft)
+            : null,
         total_cent:
           property.total_cent != null ? Number(property.total_cent) : null,
         bedrooms: property.bedrooms,
@@ -1303,7 +1310,10 @@ export function PropertySheet({
                     <Select
                       value={structureKind}
                       onValueChange={(v) =>
-                        setValue("structure_type", v as "house" | "plot")
+                        setValue(
+                          "structure_type",
+                          v as "house" | "plot" | "building",
+                        )
                       }
                     >
                       <SelectTrigger className="h-12 rounded-xl border-gray-200">
@@ -1316,6 +1326,9 @@ export function PropertySheet({
                         <SelectItem value="plot" className="rounded-lg">
                           Plot
                         </SelectItem>
+                        <SelectItem value="building" className="rounded-lg">
+                          Building
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1325,28 +1338,38 @@ export function PropertySheet({
                       "grid grid-cols-2 sm:grid-cols-3 gap-4 items-start",
                       structureKind === "house"
                         ? "lg:grid-cols-6"
-                        : "lg:grid-cols-3",
+                        : structureKind === "building"
+                          ? "lg:grid-cols-4"
+                          : "lg:grid-cols-3",
                     )}
                   >
-                    <div className="flex flex-col gap-2">
-                      <Label
-                        htmlFor="area_sqft"
-                        className="text-xs font-bold text-gray-700 ml-1 min-h-[1.25rem] text-left block"
-                      >
-                        Area (sqft)
-                      </Label>
-                      <Input
-                        id="area_sqft"
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*\.?[0-9]*"
-                        {...register("area_sqft", {
-                          setValueAs: (v) => (v === "" ? undefined : Number(v)),
-                        })}
-                        placeholder="0"
-                        className="h-12 w-full rounded-xl text-left font-bold pl-3"
-                      />
-                    </div>
+                    {/* Area (sqft) — house & building only */}
+                    {structureKind !== "plot" && (
+                      <div className="flex flex-col gap-2">
+                        <Label
+                          htmlFor="area_sqft"
+                          className="text-xs font-bold text-gray-700 ml-1 min-h-[1.25rem] text-left block"
+                        >
+                          Area (sqft)
+                        </Label>
+                        <Input
+                          id="area_sqft"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*\.?[0-9]*"
+                          {...register("area_sqft", {
+                            setValueAs: (v) => {
+                              if (v === "" || v == null) return undefined;
+                              const n = Number(v);
+                              return n === 0 ? undefined : n;
+                            },
+                          })}
+                          placeholder=""
+                          className="h-12 w-full rounded-xl text-left font-bold pl-3"
+                        />
+                      </div>
+                    )}
+                    {/* Total cent — all types */}
                     <div className="flex flex-col gap-2">
                       <Label
                         htmlFor="total_cent"
@@ -1366,7 +1389,8 @@ export function PropertySheet({
                         className="h-12 w-full rounded-xl text-left font-bold pl-3"
                       />
                     </div>
-                    {structureKind === "house" ? (
+                    {/* Beds & Baths — house only */}
+                    {structureKind === "house" && (
                       <>
                         <div className="flex flex-col gap-2">
                           <Label
@@ -1384,7 +1408,7 @@ export function PropertySheet({
                               setValueAs: (v) =>
                                 v === "" ? undefined : Number(v),
                             })}
-                            placeholder="0"
+                            placeholder=""
                             className="h-12 w-full rounded-xl text-left font-bold pl-3"
                           />
                         </div>
@@ -1404,32 +1428,36 @@ export function PropertySheet({
                               setValueAs: (v) =>
                                 v === "" ? undefined : Number(v),
                             })}
-                            placeholder="0"
-                            className="h-12 w-full rounded-xl text-left font-bold pl-3"
-                          />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <Label
-                            htmlFor="floors"
-                            className="text-xs font-bold text-gray-700 ml-1 min-h-[1.25rem] text-left block"
-                          >
-                            Floors
-                          </Label>
-                          <Input
-                            id="floors"
-                            type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            {...register("floors", {
-                              setValueAs: (v) =>
-                                v === "" ? undefined : Number(v),
-                            })}
-                            placeholder="0"
+                            placeholder=""
                             className="h-12 w-full rounded-xl text-left font-bold pl-3"
                           />
                         </div>
                       </>
-                    ) : null}
+                    )}
+                    {/* Floors — house & building */}
+                    {structureKind !== "plot" && (
+                      <div className="flex flex-col gap-2">
+                        <Label
+                          htmlFor="floors"
+                          className="text-xs font-bold text-gray-700 ml-1 min-h-[1.25rem] text-left block"
+                        >
+                          Floors
+                        </Label>
+                        <Input
+                          id="floors"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          {...register("floors", {
+                            setValueAs: (v) =>
+                              v === "" ? undefined : Number(v),
+                          })}
+                          placeholder=""
+                          className="h-12 w-full rounded-xl text-left font-bold pl-3"
+                        />
+                      </div>
+                    )}
+                    {/* Facing — all types */}
                     <div className="flex flex-col gap-2">
                       <Label
                         htmlFor="facing"
@@ -1482,7 +1510,8 @@ export function PropertySheet({
                     </div>
                   </div>
 
-                  {structureKind === "plot" ? (
+                  {/* Plot-specific fields */}
+                  {structureKind === "plot" && (
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label
@@ -1513,8 +1542,9 @@ export function PropertySheet({
                         />
                       </div>
                     </div>
-                  ) : null}
+                  )}
 
+                  {/* Furnished — house only */}
                   {structureKind === "house" ? (
                     <div className="space-y-2">
                       <Label
@@ -1653,7 +1683,7 @@ export function PropertySheet({
                         Add Amenities
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-3xl bg-gray-50 border border-gray-100">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-3 p-4 rounded-3xl bg-gray-50 border border-gray-100">
                       {amenitiesList.length > 0 ? (
                         amenitiesList.map((a) => {
                           const selected = (watch("amenities") ?? []).includes(
@@ -1662,7 +1692,7 @@ export function PropertySheet({
                           return (
                             <div
                               key={a.id}
-                              className="flex items-center gap-3 mb-3"
+                              className="flex min-w-0 items-start gap-2 sm:gap-2.5"
                             >
                               <Checkbox
                                 id={`amenity-${a.id}`}
@@ -1678,14 +1708,21 @@ export function PropertySheet({
                                     );
                                   }
                                 }}
-                                className="h-5 w-5 rounded-md border-gray-300 text-indigo-600"
+                                className="mt-0.5 h-5 w-5 shrink-0 rounded-md border-gray-300 text-indigo-600"
                               />
                               <Label
                                 htmlFor={`amenity-${a.id}`}
-                                className="text-sm font-bold text-gray-700 cursor-pointer flex items-center gap-2"
+                                className="flex min-w-0 flex-1 cursor-pointer items-start gap-2 font-bold leading-snug text-gray-700"
                               >
-                                {a.icon && <span>{a.icon}</span>}
-                                {a.name}
+                                <span
+                                  className="flex min-h-5 w-8 shrink-0 select-none items-center justify-center text-lg leading-none sm:w-9"
+                                  aria-hidden={!a.icon}
+                                >
+                                  {a.icon ?? null}
+                                </span>
+                                <span className="min-w-0 flex-1 break-words text-sm">
+                                  {a.name}
+                                </span>
                               </Label>
                             </div>
                           );

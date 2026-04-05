@@ -47,7 +47,11 @@ export function PropertyProductJsonLd({
       value: String(property.bathrooms),
     });
   }
-  if (property.area_sqft != null) {
+  if (
+    property.structure_type !== "plot" &&
+    property.area_sqft != null &&
+    Number(property.area_sqft) > 0
+  ) {
     additional.push({
       "@type": "PropertyValue",
       name: "Area (sq ft)",

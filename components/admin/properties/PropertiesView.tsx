@@ -84,7 +84,9 @@ const STATUS_COLORS: Record<
 function structureLabel(
   structureType: PropertyWithRelations["structure_type"],
 ): string {
-  return structureType === "plot" ? "Plot" : "House";
+  if (structureType === "plot") return "Plot";
+  if (structureType === "building") return "Building";
+  return "House";
 }
 
 export interface PropertiesViewHeaderConfig {
@@ -672,14 +674,12 @@ export function PropertiesView({
                               <Badge variant="outline" className="text-xs">
                                 {structureLabel(property.structure_type)}
                               </Badge>
-                              {property.area_sqft != null && (
-                                <span className="text-xs text-muted-foreground tabular-nums">
-                                  {Number(property.area_sqft).toLocaleString(
-                                    "en-IN",
-                                  )}{" "}
-                                  sq ft
-                                </span>
-                              )}
+                              <span className="text-xs text-muted-foreground tabular-nums">
+                                {property.area_sqft != null &&
+                                Number(property.area_sqft) > 0
+                                  ? `${Number(property.area_sqft).toLocaleString("en-IN")} sq ft`
+                                  : "_"}
+                              </span>
                               {property.is_featured && (
                                 <Badge variant="secondary" className="text-xs">
                                   Featured

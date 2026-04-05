@@ -125,7 +125,9 @@ const CATEGORY_NONE = "__none__";
 function structureLabel(
   structureType: PropertyWithRelations["structure_type"],
 ): string {
-  return structureType === "plot" ? "Plot" : "House";
+  if (structureType === "plot") return "Plot";
+  if (structureType === "building") return "Building";
+  return "House";
 }
 
 interface PropertiesTableProps {
