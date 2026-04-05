@@ -37,7 +37,6 @@ export function PropertyDetailGallery({
   }, []);
 
   const safeIndex = Math.min(selected, Math.max(0, images.length - 1));
-  const current = images[safeIndex] ?? "";
 
   const touchUser = useCallback(() => {
     setAutoplayEpoch((e) => e + 1);
@@ -107,17 +106,27 @@ export function PropertyDetailGallery({
           tabIndex={0}
           className="relative h-full min-h-[168px] w-full overflow-hidden rounded-lg sm:min-h-[180px] sm:rounded-xl"
         >
-          {current ? (
-            <PropertyImage
-              src={current}
-              alt={`${title} — photo ${safeIndex + 1} of ${images.length}`}
-              fill
-              className="object-contain"
-              sizes="(max-width: 1024px) 100vw, 66vw"
-              priority
-              unoptimized={!isRemoteImageOptimizedUrl(current)}
-            />
-          ) : null}
+          <div
+            className="flex h-full transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${safeIndex * 100}%)` }}
+          >
+            {images.map((url, i) => (
+              <div
+                key={`${url}-${i}`}
+                className="relative h-full min-w-full shrink-0"
+              >
+                <PropertyImage
+                  src={url}
+                  alt={`${title} — photo ${i + 1} of ${images.length}`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  priority={i === 0}
+                  unoptimized={!isRemoteImageOptimizedUrl(url)}
+                />
+              </div>
+            ))}
+          </div>
           {images.length > 1 ? (
             <>
               <button
