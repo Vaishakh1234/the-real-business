@@ -58,7 +58,7 @@ export function Breadcrumbs({
       <nav
         aria-label="Breadcrumb"
         className={cn(
-          "border-b border-brand-gold/20 bg-white/55 shadow-[0_1px_0_rgba(26,26,26,0.04)] backdrop-blur-md",
+          "hidden border-b border-brand-gold/20 bg-white/55 shadow-[0_1px_0_rgba(26,26,26,0.04)] backdrop-blur-md sm:block",
           className,
         )}
       >

@@ -195,34 +195,42 @@ export function PropertyDetailClient({
   const viewOnSiteHref = property.slug ? `/properties/${property.slug}` : null;
 
   const headerActions = (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-3">
       {viewOnSiteHref && (
         <Button
           variant="outline"
-          className="min-h-[44px] min-w-[44px] gap-2 rounded-xl px-5 py-2.5 text-sm font-medium"
+          size="icon"
+          className="size-10 rounded-xl sm:size-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5"
           asChild
+          title="View on site"
         >
           <Link href={viewOnSiteHref} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="h-4 w-4 shrink-0" />
-            View on site
+            <span className="hidden text-sm font-medium sm:inline">
+              View on site
+            </span>
           </Link>
         </Button>
       )}
       <Button
         variant="outline"
-        className="min-h-[44px] min-w-[44px] gap-2 rounded-xl px-5 py-2.5 text-sm font-medium"
+        size="icon"
+        className="size-10 rounded-xl sm:size-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5"
         onClick={() => setEditSheetOpen(true)}
+        title="Edit"
       >
         <Pencil className="h-4 w-4 shrink-0" />
-        Edit
+        <span className="hidden text-sm font-medium sm:inline">Edit</span>
       </Button>
       <Button
         variant="destructive"
-        className="min-h-[44px] min-w-[44px] gap-2 rounded-xl px-5 py-2.5 text-sm font-medium"
+        size="icon"
+        className="size-10 rounded-xl sm:size-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5"
         onClick={() => setDeleteDialogOpen(true)}
+        title="Delete"
       >
         <Trash2 className="h-4 w-4 shrink-0" />
-        Delete
+        <span className="hidden text-sm font-medium sm:inline">Delete</span>
       </Button>
     </div>
   );

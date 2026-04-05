@@ -644,7 +644,7 @@ export function PropertiesView({
                             <h3 className="truncate text-sm font-semibold text-foreground">
                               {property.title}
                             </h3>
-                            <p className="mt-0.5 text-xs text-muted-foreground">
+                            <p className="mt-0.5 text-sm font-semibold text-foreground/90 sm:text-xs sm:font-normal sm:text-muted-foreground">
                               {property.price ? (
                                 <>
                                   ₹
