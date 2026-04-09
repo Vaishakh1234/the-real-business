@@ -445,39 +445,28 @@ export const ABOUT_TEAM_SECTION = {
     "The leadership team behind The Real Business — driving vision, growth, operations, and marketing for smarter real estate transactions.",
 } as const;
 
-/** Team members — core leadership (four); roles aligned with company operations. */
+/** Team members — core leadership; roles aligned with company operations. */
 export const TEAM = [
   {
     name: "Mohamed Ansari",
     role: "Chief Executive Officer (CEO)",
     description:
       "Leads the company vision, client relationships, and high-value deal execution.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+    image: "/images/out-teams/person-1.png",
   },
   {
     name: "Abdul Saleem",
     role: "Chief Business Development Officer (CBDO)",
     description:
       "Responsible for property sourcing, partnerships, and expanding the network.",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80",
+    image: "/images/out-teams/person-2.jpeg",
   },
   {
     name: "Mohamed Sihabudeen",
     role: "Chief Operating Officer (COO)",
     description:
       "Manages operations, lead systems, and ensures smooth execution of deals.",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    name: "Asfal Ansari",
-    role: "Chief Marketing Officer (CMO)",
-    description:
-      "Handles brand growth, digital marketing, and property promotion strategies.",
-    image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
+    image: "/images/out-teams/person-3.jpeg",
   },
 ] as const;
 
@@ -495,8 +484,7 @@ export const TEAM_TESTIMONIAL = {
     "We believe in turning property opportunities into successful transactions through strategy, transparency, and execution. That commitment is what sets The Real Business apart.",
   name: "Mohamed Ansari",
   role: "Chief Executive Officer",
-  image:
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80",
+  image: "/images/out-teams/person-1.png",
 } as const;
 
 export const CONTACT = {

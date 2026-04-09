@@ -294,13 +294,17 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-6 md:gap-8 lg:grid-cols-4">
-            {TEAM.map((member) => (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-6 md:gap-8 lg:grid-cols-3">
+            {TEAM.map((member, index) => (
               <article
                 key={member.name}
                 className="group flex flex-col items-center text-center"
               >
-                <div className="relative aspect-square w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] overflow-hidden rounded-xl sm:rounded-2xl bg-neutral-100 shadow-md transition-shadow duration-300 group-hover:shadow-lg">
+                <div
+                  className={`relative aspect-square w-full max-w-[180px] sm:max-w-[200px] md:max-w-[220px] overflow-hidden rounded-xl sm:rounded-2xl shadow-md transition-shadow duration-300 group-hover:shadow-lg ${
+                    index === 0 ? "bg-white" : "bg-gray-400"
+                  }`}
+                >
                   <Image
                     src={member.image}
                     alt={member.name}
