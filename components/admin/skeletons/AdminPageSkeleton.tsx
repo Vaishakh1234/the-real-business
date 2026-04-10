@@ -224,8 +224,8 @@ export function ReportsSkeleton() {
           <Skeleton className="h-9 w-full rounded-md sm:w-[160px]" />
         </div>
         <div className="flex w-full flex-row items-center gap-2 sm:ml-auto sm:w-auto">
-          <Skeleton className="h-9 min-h-[44px] w-1/2 rounded-lg sm:w-24" />
-          <Skeleton className="h-9 min-h-[44px] w-1/2 rounded-lg sm:w-20" />
+          <Skeleton className="h-8 w-1/2 rounded-lg sm:w-24" />
+          <Skeleton className="h-8 w-1/2 rounded-lg sm:w-20" />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

@@ -141,7 +141,7 @@ export function AdminNotificationsView() {
             <Button
               variant="outline"
               size="icon"
-              className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-xl border-brand-gold/35 bg-white/90 shadow-sm backdrop-blur-sm hover:border-brand-gold/55 hover:bg-brand-gold-muted sm:min-h-0 sm:min-w-0"
+              className="h-8 w-8 rounded-lg border-brand-gold/35 bg-white/90 shadow-sm backdrop-blur-sm hover:border-brand-gold/55 hover:bg-brand-gold-muted"
               asChild
             >
               <Link
@@ -149,22 +149,22 @@ export function AdminNotificationsView() {
                 aria-label="Notification settings"
                 title="Notification settings"
               >
-                <Settings className="h-4 w-4" aria-hidden />
+                <Settings className="h-3.5 w-3.5" aria-hidden />
               </Link>
             </Button>
             <Button
               type="button"
               size="icon"
-              className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-xl bg-brand-blue text-brand-blue-foreground shadow-md shadow-brand-blue/25 hover:bg-brand-blue-hover sm:min-h-0 sm:min-w-0"
+              className="h-8 w-8 rounded-lg bg-brand-blue text-brand-blue-foreground shadow-md shadow-brand-blue/25 hover:bg-brand-blue-hover"
               disabled={markAll.isPending || total === 0}
               aria-label="Mark all notifications as read"
               title="Mark all read"
               onClick={() => void markAll.mutate()}
             >
               {markAll.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
               ) : (
-                <Check className="h-4 w-4" strokeWidth={2.25} aria-hidden />
+                <Check className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden />
               )}
             </Button>
           </div>
@@ -209,7 +209,7 @@ export function AdminNotificationsView() {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl border-brand-gold/40 bg-white/90 hover:bg-brand-gold-muted"
+                className="h-9 w-9 rounded-lg border-brand-gold/40 bg-white/90 hover:bg-brand-gold-muted"
                 asChild
               >
                 <Link
@@ -217,7 +217,7 @@ export function AdminNotificationsView() {
                   aria-label="Notification settings"
                   title="Notification settings"
                 >
-                  <Settings className="h-5 w-5" aria-hidden />
+                  <Settings className="h-4 w-4" aria-hidden />
                 </Link>
               </Button>
             </div>

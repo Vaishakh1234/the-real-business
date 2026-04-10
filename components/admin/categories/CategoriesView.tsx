@@ -302,9 +302,10 @@ export function CategoriesView({
           actions={
             <Button
               onClick={handleAdd}
-              className="min-h-[44px] gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              size="sm"
+              className="h-8 gap-1.5 rounded-lg bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3.5 w-3.5" />
               Add category
             </Button>
           }
@@ -313,9 +314,10 @@ export function CategoriesView({
         <div className="flex justify-end">
           <Button
             onClick={handleAdd}
-            className="min-h-[44px] gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            size="sm"
+            className="h-8 gap-1.5 rounded-lg bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3.5 w-3.5" />
             Add category
           </Button>
         </div>
@@ -335,16 +337,16 @@ export function CategoriesView({
                       setRawSearch(e.target.value);
                       setPage(1);
                     }}
-                    className="h-10 rounded-xl pl-9"
+                    className="h-8 rounded-lg pl-9 text-sm"
                   />
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-10 shrink-0 gap-1.5 rounded-xl"
+                  className="h-8 shrink-0 gap-1.5 rounded-lg"
                   onClick={() => setFilterSheetOpen(true)}
                 >
-                  <Filter className="h-4 w-4" />
+                  <Filter className="h-3.5 w-3.5" />
                   Filters
                   {hasFilters && (
                     <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
@@ -378,7 +380,7 @@ export function CategoriesView({
                           setPage(1);
                         }}
                       >
-                        <SelectTrigger className="h-10 w-full rounded-xl">
+                        <SelectTrigger className="h-8 w-full rounded-lg text-sm">
                           <SelectValue placeholder="Status" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
@@ -401,7 +403,7 @@ export function CategoriesView({
                           setPage(1);
                         }}
                       >
-                        <SelectTrigger className="h-10 w-full rounded-xl">
+                        <SelectTrigger className="h-8 w-full rounded-lg text-sm">
                           <SelectValue placeholder="Sort" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
@@ -420,14 +422,14 @@ export function CategoriesView({
                       <Button
                         variant="outline"
                         onClick={clearFilters}
-                        className="min-h-[44px] flex-1 rounded-lg gap-1.5"
+                        className="h-9 flex-1 rounded-lg gap-1.5 text-sm"
                       >
-                        <X className="h-4 w-4 shrink-0" />
+                        <X className="h-3.5 w-3.5 shrink-0" />
                         Clear
                       </Button>
                     )}
                     <Button
-                      className="min-h-[44px] flex-1 rounded-lg"
+                      className="h-9 flex-1 rounded-lg text-sm"
                       onClick={() => setFilterSheetOpen(false)}
                     >
                       Apply
@@ -447,7 +449,7 @@ export function CategoriesView({
                     setRawSearch(e.target.value);
                     setPage(1);
                   }}
-                  className="h-10 rounded-xl pl-9"
+                  className="h-8 rounded-lg pl-9 text-sm"
                 />
               </div>
               <Select
@@ -457,7 +459,7 @@ export function CategoriesView({
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="h-10 w-full rounded-xl sm:w-36">
+                <SelectTrigger className="h-8 w-full rounded-lg text-sm sm:w-36">
                   <Filter className="mr-1 h-3.5 w-3.5 text-gray-400" />
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -476,7 +478,7 @@ export function CategoriesView({
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="h-10 w-full rounded-xl sm:w-40">
+                <SelectTrigger className="h-8 w-full rounded-lg text-sm sm:w-40">
                   <SelectValue placeholder="Sort" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -490,9 +492,9 @@ export function CategoriesView({
                 <Button
                   variant="outline"
                   onClick={clearFilters}
-                  className="h-10 w-full rounded-xl border-border gap-1.5 text-muted-foreground hover:text-foreground sm:w-auto"
+                  className="h-8 w-full rounded-lg border-border gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:w-auto"
                 >
-                  <X className="h-4 w-4 shrink-0" />
+                  <X className="h-3.5 w-3.5 shrink-0" />
                   Clear
                 </Button>
               )}

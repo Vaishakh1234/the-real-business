@@ -209,14 +209,14 @@ export function CategorySheet({
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isPending}
-              className="flex-1 rounded-xl min-h-[44px] h-10 font-medium text-gray-600 bg-white border-gray-200 hover:bg-gray-50 touch-manipulation"
+              className="flex-1 rounded-lg h-9 font-medium text-sm text-gray-600 bg-white border-gray-200 hover:bg-gray-50 touch-manipulation"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isPending}
-              className="flex-1 rounded-xl min-h-[44px] h-10 bg-gray-900 hover:bg-gray-800 text-white font-medium text-sm shadow-sm transition-all active:scale-[0.98] touch-manipulation"
+              className="flex-1 rounded-lg h-9 bg-gray-900 hover:bg-gray-800 text-white font-medium text-sm shadow-sm transition-all active:scale-[0.98] touch-manipulation"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -3,12 +3,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { buildQueryString } from "@/lib/utils";
+import type { AdminAttentionCounts } from "@/lib/queries/admin-attention";
 import type {
   Lead,
   LeadInsert,
   LeadWithProperty,
   LeadFilters,
 } from "@/types";
+
+/** React Query key; also invalidated from `useAdminNotifications` mutations. */
+export const ADMIN_ATTENTION_QUERY_KEY = ["admin-attention-count"] as const;
 
 export function useLeads(filters: LeadFilters = {}) {
   return useQuery<{
@@ -47,6 +51,7 @@ export function useCreateLead() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
       qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
+      qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
       qc.invalidateQueries({ queryKey: ["admin-notifications"] });
       qc.invalidateQueries({ queryKey: ["admin-notifications-unread-count"] });
       qc.invalidateQueries({ queryKey: ["admin-notifications-preview"] });
@@ -78,6 +83,7 @@ export function useUpdateLead() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
       qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
+      qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
       toast.success("Lead updated");
     },
     onError: (err: Error) => toast.error(err.message),
@@ -97,9 +103,35 @@ export function useDeleteLead() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
       qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
+      qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
       toast.success("Lead deleted");
     },
     onError: (err: Error) => toast.error(err.message),
+  });
+}
+
+/** Deduped counts for header bell + Leads nav badge (requires session). */
+export function useAdminAttentionCounts(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: ADMIN_ATTENTION_QUERY_KEY,
+    queryFn: async () => {
+      const res = await fetch("/api/admin/attention-count", {
+        credentials: "include",
+      });
+      if (res.status === 401 || res.status === 403) {
+        return {
+          unseenLeads: 0,
+          unreadNotifications: 0,
+          bellTotal: 0,
+        } satisfies AdminAttentionCounts;
+      }
+      if (!res.ok) throw new Error("Failed to fetch attention counts");
+      return (await res.json()) as AdminAttentionCounts;
+    },
+    enabled: options?.enabled ?? true,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+    retry: 1,
   });
 }
 
@@ -141,6 +173,7 @@ export function useMarkLeadSeen() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
       qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
+      qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
     },
   });
 }

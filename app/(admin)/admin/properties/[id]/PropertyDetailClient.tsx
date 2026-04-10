@@ -116,7 +116,7 @@ function PropertyDetailEmpty() {
           asChild
           variant="outline"
           size="sm"
-          className="min-h-[48px] min-w-[44px] rounded-xl px-6 text-base sm:min-h-[44px] sm:text-sm"
+          className="h-9 rounded-lg px-4 text-sm"
         >
           <Link href="/admin/properties">Back to properties</Link>
         </Button>
@@ -200,37 +200,35 @@ export function PropertyDetailClient({
         <Button
           variant="outline"
           size="icon"
-          className="size-10 rounded-xl sm:size-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5"
+          className="size-9 rounded-lg sm:size-auto sm:h-8 sm:gap-1.5 sm:rounded-lg sm:px-3 sm:text-xs"
           asChild
           title="View on site"
         >
           <Link href={viewOnSiteHref} target="_blank" rel="noopener noreferrer">
-            <ExternalLink className="h-4 w-4 shrink-0" />
-            <span className="hidden text-sm font-medium sm:inline">
-              View on site
-            </span>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden font-medium sm:inline">View on site</span>
           </Link>
         </Button>
       )}
       <Button
         variant="outline"
         size="icon"
-        className="size-10 rounded-xl sm:size-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5"
+        className="size-9 rounded-lg sm:size-auto sm:h-8 sm:gap-1.5 sm:rounded-lg sm:px-3 sm:text-xs"
         onClick={() => setEditSheetOpen(true)}
         title="Edit"
       >
-        <Pencil className="h-4 w-4 shrink-0" />
-        <span className="hidden text-sm font-medium sm:inline">Edit</span>
+        <Pencil className="h-3.5 w-3.5 shrink-0" />
+        <span className="hidden font-medium sm:inline">Edit</span>
       </Button>
       <Button
         variant="destructive"
         size="icon"
-        className="size-10 rounded-xl sm:size-auto sm:gap-2 sm:rounded-xl sm:px-5 sm:py-2.5"
+        className="size-9 rounded-lg sm:size-auto sm:h-8 sm:gap-1.5 sm:rounded-lg sm:px-3 sm:text-xs"
         onClick={() => setDeleteDialogOpen(true)}
         title="Delete"
       >
-        <Trash2 className="h-4 w-4 shrink-0" />
-        <span className="hidden text-sm font-medium sm:inline">Delete</span>
+        <Trash2 className="h-3.5 w-3.5 shrink-0" />
+        <span className="hidden font-medium sm:inline">Delete</span>
       </Button>
     </div>
   );
@@ -805,7 +803,7 @@ export function PropertyDetailClient({
               onClick={handleDeleteConfirm}
               disabled={deleteProperty.isPending}
               variant="destructive"
-              className="min-w-[100px] min-h-[44px]"
+              className="h-9 min-w-[100px] text-sm"
             >
               {deleteProperty.isPending ? (
                 <>

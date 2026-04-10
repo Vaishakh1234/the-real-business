@@ -104,7 +104,8 @@ export function AdminInstallAppView() {
               </div>
               <Button
                 asChild
-                className="shrink-0 rounded-xl bg-emerald-700 hover:bg-emerald-800"
+                size="sm"
+                className="h-8 shrink-0 rounded-lg bg-emerald-700 px-3 text-xs hover:bg-emerald-800"
               >
                 <Link href="/admin/dashboard">Open dashboard</Link>
               </Button>
@@ -153,19 +154,19 @@ export function AdminInstallAppView() {
                   </div>
                   <Button
                     type="button"
-                    size="lg"
-                    className="h-12 shrink-0 rounded-xl bg-brand-blue px-6 text-brand-blue-foreground shadow-md hover:bg-brand-blue-hover"
+                    size="sm"
+                    className="h-9 shrink-0 rounded-lg bg-brand-blue px-4 text-sm text-brand-blue-foreground shadow-md hover:bg-brand-blue-hover"
                     disabled={installing}
                     onClick={() => void runInstall()}
                   >
                     {installing ? (
                       <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Installing…
                       </>
                     ) : (
                       <>
-                        <Download className="mr-2 h-5 w-5" />
+                        <Download className="mr-2 h-4 w-4" />
                         Install app
                       </>
                     )}

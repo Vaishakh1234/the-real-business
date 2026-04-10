@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ADMIN_ATTENTION_QUERY_KEY } from "@/hooks/useLeads";
 import type { AdminNotificationRow } from "@/types";
 
 const QK = {
@@ -101,6 +102,7 @@ export function useMarkNotificationRead() {
       qc.invalidateQueries({ queryKey: ["admin-notifications"] });
       qc.invalidateQueries({ queryKey: QK.unread });
       qc.invalidateQueries({ queryKey: QK.preview });
+      qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
     },
   });
 }
@@ -126,6 +128,7 @@ export function useMarkAllNotificationsRead() {
       qc.invalidateQueries({ queryKey: ["admin-notifications"] });
       qc.invalidateQueries({ queryKey: QK.unread });
       qc.invalidateQueries({ queryKey: QK.preview });
+      qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
     },
   });
 }

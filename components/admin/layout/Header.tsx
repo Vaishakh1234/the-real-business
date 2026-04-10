@@ -28,9 +28,10 @@ import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
 import { cn, formatDate, isUnreadAdminNotification } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { useAdminUnseenLeadCount } from "@/hooks/useLeads";
 import {
-  useAdminNotificationUnreadCount,
+  useAdminAttentionCounts,
+} from "@/hooks/useLeads";
+import {
   useAdminNotificationsPreview,
   useMarkAllNotificationsRead,
   useMarkNotificationRead,
@@ -67,12 +68,12 @@ export function Header() {
         .replace(/\b\w/g, (c) => c.toUpperCase())
     : "Admin";
 
-  const { data: unseenLeadCount = 0 } = useAdminUnseenLeadCount({
+  const { data: attention } = useAdminAttentionCounts({
     enabled: !!email,
   });
-  const { data: unreadNotifCount = 0 } = useAdminNotificationUnreadCount({
-    enabled: !!email,
-  });
+  const unseenLeadCount = attention?.unseenLeads ?? 0;
+  const unreadNotifCount = attention?.unreadNotifications ?? 0;
+  const bellTotal = attention?.bellTotal ?? 0;
   const { data: previewData, isLoading: previewLoading } =
     useAdminNotificationsPreview(6);
   const markNotifRead = useMarkNotificationRead();
@@ -145,23 +146,21 @@ export function Header() {
             "lg:hidden",
           )}
           aria-label={
-            unreadNotifCount > 0
-              ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
+            bellTotal > 0
+              ? `Notifications, ${bellTotal} new`
               : "Notifications"
           }
           title={
-            unreadNotifCount > 0
-              ? `${unreadNotifCount} unread`
-              : "Notifications"
+            bellTotal > 0 ? `${bellTotal} new` : "Notifications"
           }
         >
           <Bell
             className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
             strokeWidth={2}
           />
-          {unreadNotifCount > 0 && (
+          {bellTotal > 0 && (
             <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-              {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
+              {bellTotal > 99 ? "99+" : bellTotal}
             </span>
           )}
         </Link>
@@ -177,23 +176,21 @@ export function Header() {
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 )}
                 aria-label={
-                  unreadNotifCount > 0
-                    ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
+                  bellTotal > 0
+                    ? `Notifications, ${bellTotal} new`
                     : "Notifications"
                 }
                 title={
-                  unreadNotifCount > 0
-                    ? `${unreadNotifCount} unread`
-                    : "Notifications"
+                  bellTotal > 0 ? `${bellTotal} new` : "Notifications"
                 }
               >
                 <Bell
                   className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
                   strokeWidth={2}
                 />
-                {unreadNotifCount > 0 && (
+                {bellTotal > 0 && (
                   <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-                    {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
+                    {bellTotal > 99 ? "99+" : bellTotal}
                   </span>
                 )}
               </button>

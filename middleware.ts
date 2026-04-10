@@ -23,6 +23,16 @@ export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
 
+  /** Per-user manifest (admin shortcuts); prevent shared caches from mixing variants. */
+  if (pathname === "/manifest.webmanifest") {
+    const response = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+    response.headers.set("Cache-Control", "private, no-store");
+    response.headers.set("Vary", "Cookie");
+    return response;
+  }
+
   if (pathname === "/admin" || pathname === "/admin/") {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
@@ -59,5 +69,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/", "/admin/:path*"],
+  matcher: ["/manifest.webmanifest", "/admin", "/admin/", "/admin/:path*"],
 };

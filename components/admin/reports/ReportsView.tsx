@@ -407,7 +407,7 @@ export function ReportsView() {
             value={sortActivity}
             onValueChange={(v) => setSortActivity(v as "asc" | "desc")}
           >
-            <SelectTrigger className="h-9 w-full min-w-0 sm:w-[160px]">
+            <SelectTrigger className="h-8 w-full min-w-0 text-sm sm:w-[160px]">
               <SelectValue placeholder="Sort activity" />
             </SelectTrigger>
             <SelectContent>
@@ -423,9 +423,9 @@ export function ReportsView() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 min-h-[44px] w-full gap-1.5 rounded-lg sm:w-auto"
+                  className="h-8 w-full gap-1.5 rounded-lg text-xs sm:w-auto"
                 >
-                  <LayoutGrid className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <LayoutGrid className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                   Sections
                 </Button>
               </DropdownMenuTrigger>
@@ -451,13 +451,13 @@ export function ReportsView() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 min-h-[44px] w-full rounded-lg gap-1.5 sm:w-auto"
+                  className="h-8 w-full rounded-lg gap-1.5 text-xs sm:w-auto"
                   disabled={!!exporting}
                 >
                   {exporting ? (
-                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin shrink-0" />
                   ) : (
-                    <Download className="h-4 w-4 shrink-0" />
+                    <Download className="h-3.5 w-3.5 shrink-0" />
                   )}
                   Export
                 </Button>
