@@ -1,224 +1,248 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { Download, Share2, Smartphone, X } from "lucide-react";
+import { Download, Info, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { publicContentFrameClass } from "@/lib/constants/publicLayout";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { publicShellBackgroundColor } from "@/lib/constants/publicLayout";
 import { SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
+import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
 
-const DISMISS_STORAGE_KEY = "trb-pwa-install-banner-dismissed";
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-};
-
-function isStandalone(): boolean {
-  if (typeof window === "undefined") return true;
-  const mq = window.matchMedia("(display-mode: standalone)");
-  if (mq.matches) return true;
-  return Boolean(
-    (window.navigator as Navigator & { standalone?: boolean }).standalone,
+function InstallDetailBlocks({
+  isIos,
+  showInstallButton,
+}: {
+  isIos: boolean;
+  showInstallButton: boolean;
+}) {
+  return (
+    <div className="space-y-1.5 text-sm leading-snug text-white/80">
+      <p className="m-0">
+        Add {SITE_NAME} to your home screen for a full-screen experience,
+        quicker return visits, and an icon on your device — ideal on phones and
+        tablets.
+      </p>
+      {isIos ? (
+        <p className="m-0">
+          Use the banner at the top of the screen, or open the{" "}
+          <strong className="font-medium text-white">Share</strong> menu and
+          choose{" "}
+          <strong className="font-medium text-white">Add to Home Screen</strong>
+          .
+        </p>
+      ) : null}
+      {!isIos && !showInstallButton ? (
+        <p className="m-0">
+          <span className="text-white/95">Tip:</span> Look for{" "}
+          <strong className="font-medium text-white/90">Install app</strong> or{" "}
+          <strong className="font-medium text-white/90">
+            Add to Home screen
+          </strong>{" "}
+          in your browser menu. Chrome or Edge on Android usually offers the
+          prompt after you’ve used the site a bit.
+        </p>
+      ) : null}
+    </div>
   );
 }
 
-function isIosDevice(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent;
-  if (/iPad|iPhone|iPod/.test(ua)) return true;
-  return navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
-}
+const installSheetContentProps = {
+  side: "bottom" as const,
+  closeButton: "info" as const,
+  closeButtonClassName:
+    "text-white/80 hover:bg-white/12 hover:text-white [&_svg]:text-current",
+  className: cn(
+    "max-h-[min(85vh,520px)] overflow-y-auto rounded-t-2xl border-x-0 border-t border-white/15",
+    "bg-[#1f1f1f] p-5 pb-8 text-white shadow-[0_-8px_40px_rgba(0,0,0,0.35)]",
+  ),
+};
 
 export function HomePwaInstallBanner() {
-  const [ready, setReady] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
-  const [installing, setInstalling] = useState(false);
-
-  const dismiss = useCallback(() => {
-    try {
-      localStorage.setItem(DISMISS_STORAGE_KEY, "1");
-    } catch {
-      /* ignore */
-    }
-    setVisible(false);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    let dismissed = false;
-    try {
-      dismissed = localStorage.getItem(DISMISS_STORAGE_KEY) === "1";
-    } catch {
-      /* ignore */
-    }
-    if (dismissed || isStandalone()) {
-      setReady(true);
-      setVisible(false);
-      return;
-    }
-
-    setVisible(true);
-    setReady(true);
-
-    const onBeforeInstall = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-    window.addEventListener("beforeinstallprompt", onBeforeInstall);
-
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
-        /* non-fatal — banner still shows manual instructions */
-      });
-    }
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-    };
-  }, []);
+  const {
+    ready,
+    isStandalone,
+    installing,
+    runInstall,
+    isIos,
+    showInstallButton,
+  } = usePwaInstall();
 
   const onInstallClick = async () => {
-    if (!deferredPrompt) return;
-    setInstalling(true);
-    try {
-      await deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-    } catch {
-      /* ignore */
-    } finally {
-      setInstalling(false);
-      setDeferredPrompt(null);
-    }
+    await runInstall();
   };
 
-  if (!ready || !visible) return null;
+  if (!ready || isStandalone) return null;
 
-  const ios = isIosDevice();
+  const mobileTagline = isIos
+    ? "Tap Share, then Add to Home Screen."
+    : "Add to your home screen for quick access.";
 
   return (
     <section
-      className="mb-6 border-t border-neutral-200/80 bg-gradient-to-b from-[#faf9f7] to-[#f3f1ed] pb-[max(1rem,env(safe-area-inset-bottom))] pt-6 sm:mb-8 sm:pt-8"
-      aria-labelledby="pwa-install-heading"
+      style={{ backgroundColor: publicShellBackgroundColor }}
+      className="mb-8 pb-[max(1rem,env(safe-area-inset-bottom))] sm:mb-10 lg:mb-12"
+      aria-label="Install our app"
     >
-      <div className={cn(publicContentFrameClass, "max-w-[1680px]")}>
-        <div
-          className={cn(
-            "relative overflow-hidden rounded-2xl border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.12)] sm:rounded-3xl",
-            "bg-gradient-to-br from-brand-charcoal via-[#252525] to-[#1a1a1a]",
-          )}
-        >
+      <div className="mx-auto w-full max-w-none px-4 xs:px-5 sm:px-6 lg:px-16 xl:px-24">
+        <Sheet>
           <div
-            className="pointer-events-none absolute -right-16 -top-24 h-56 w-56 rounded-full bg-brand-gold/10 blur-3xl sm:-right-8 sm:top-0 sm:h-72 sm:w-72"
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-brand-gold/5 blur-2xl"
-            aria-hidden
-          />
-
-          <div className="relative flex flex-col gap-6 p-5 sm:flex-row sm:items-center sm:gap-8 sm:p-8 lg:p-10">
-            <button
-              type="button"
-              onClick={dismiss}
-              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-white/50 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold sm:right-4 sm:top-4"
-              aria-label="Dismiss install app banner"
-            >
-              <X className="h-5 w-5" strokeWidth={2} />
-            </button>
-
-            <div className="flex shrink-0 items-start gap-4 sm:items-center sm:gap-5 pr-10 sm:pr-0">
-              <div
-                className={cn(
-                  "flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white p-2.5 shadow-lg ring-2 ring-brand-gold/25",
-                  "sm:h-[4.5rem] sm:w-[4.5rem] sm:p-3",
-                )}
+            className={cn(
+              "relative w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.12)] sm:rounded-3xl",
+              "bg-gradient-to-br from-brand-charcoal via-[#252525] to-[#1a1a1a]",
+            )}
+          >
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-full text-white/75 transition-colors hover:bg-white/12 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold sm:right-4 sm:top-4"
+                aria-label="More about installing the app"
               >
-                <Image
-                  src="/icons/icon-192.png"
-                  alt=""
-                  width={192}
-                  height={192}
-                  className="h-full w-full max-h-full max-w-full object-contain object-center"
-                  priority={false}
-                />
-              </div>
-              <div className="flex min-w-0 flex-1 flex-col gap-1 sm:gap-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Smartphone
-                    className="h-5 w-5 shrink-0 text-brand-gold sm:h-6 sm:w-6"
-                    aria-hidden
-                  />
-                  <h2
-                    id="pwa-install-heading"
-                    className="font-heading text-xl font-bold leading-tight text-white sm:text-2xl"
-                  >
-                    Install our app
-                  </h2>
-                </div>
-                <p className="max-w-xl text-sm leading-relaxed text-white/70 sm:text-[15px]">
-                  Add {SITE_NAME} to your home screen for a full-screen
-                  experience, quicker return visits, and an icon on your device
-                  — ideal on phones and tablets.
-                </p>
-                {ios && (
-                  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/55 sm:text-sm">
-                    <Share2
-                      className="inline h-4 w-4 shrink-0 text-brand-gold/90"
-                      aria-hidden
-                    />
-                    <span>
-                      Tap{" "}
-                      <strong className="font-semibold text-white/80">
-                        Share
-                      </strong>
-                      , then{" "}
-                      <strong className="font-semibold text-white/80">
-                        Add to Home Screen
-                      </strong>
-                      .
-                    </span>
-                  </p>
-                )}
-              </div>
-            </div>
+                <Info className="h-5 w-5" strokeWidth={2} aria-hidden />
+              </button>
+            </SheetTrigger>
 
-            <div className="flex w-full shrink-0 flex-col gap-3 sm:w-auto sm:min-w-[200px] sm:items-end sm:self-center">
-              {!ios && deferredPrompt && (
-                <Button
-                  type="button"
-                  size="lg"
-                  disabled={installing}
-                  onClick={onInstallClick}
+            <div
+              className="pointer-events-none absolute -right-16 -top-24 h-56 w-56 rounded-full bg-brand-gold/10 blur-3xl sm:-right-8 sm:top-0 sm:h-72 sm:w-72"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-brand-gold/5 blur-2xl"
+              aria-hidden
+            />
+
+            {/* ——— Mobile: logo + stacked title/tagline (tagline aligns with title, not icon) ——— */}
+            <div className="relative px-4 pb-5 pt-[3.15rem] sm:px-5 lg:hidden">
+              <div className="flex items-start gap-3.5 sm:gap-4">
+                <div
                   className={cn(
-                    "h-12 w-full min-h-[48px] rounded-xl border-0 bg-brand-gold px-6 text-[15px] font-semibold text-brand-charcoal shadow-md",
-                    "hover:bg-brand-gold-hover focus-visible:ring-brand-gold sm:w-auto sm:min-w-[200px]",
+                    "relative flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/25 bg-white p-2 shadow-[0_4px_14px_rgba(0,0,0,0.2)] ring-1 ring-black/5",
                   )}
                 >
-                  <Download className="h-5 w-5" aria-hidden />
-                  {installing ? "Opening…" : "Install app"}
-                </Button>
-              )}
-              {!ios && !deferredPrompt && (
-                <p className="text-center text-xs leading-snug text-white/55 sm:text-right sm:text-sm">
-                  Look for{" "}
-                  <strong className="text-white/75">Install app</strong> or{" "}
-                  <strong className="text-white/75">Add to Home screen</strong>{" "}
-                  in your browser menu — or try Chrome or Edge on mobile.
-                </p>
-              )}
-              {ios && (
-                <p className="text-center text-xs text-white/50 sm:text-right sm:text-sm">
-                  Safari · iPhone &amp; iPad
-                </p>
-              )}
+                  <Image
+                    src="/icons/icon-192.png"
+                    alt=""
+                    width={192}
+                    height={192}
+                    className="h-full w-full object-contain"
+                    priority={false}
+                  />
+                </div>
+
+                <div className="min-w-0 flex-1 pr-11">
+                  <div className="flex gap-2.5">
+                    <Smartphone
+                      className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-brand-gold"
+                      strokeWidth={2}
+                      aria-hidden
+                    />
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <h2 className="font-heading text-[1.0625rem] font-bold leading-snug tracking-[-0.02em] text-white sm:text-lg">
+                        Install our app
+                      </h2>
+                      <p className="text-pretty text-[13px] leading-[1.35] text-white sm:text-sm sm:leading-relaxed">
+                        {mobileTagline}
+                      </p>
+                    </div>
+                  </div>
+
+                  {showInstallButton ? (
+                    <Button
+                      type="button"
+                      size="lg"
+                      disabled={installing}
+                      onClick={onInstallClick}
+                      className={cn(
+                        "mt-4 h-11 w-full rounded-xl border-0 bg-brand-gold text-[15px] font-semibold text-brand-charcoal shadow-[0_2px_12px_rgba(0,0,0,0.2)]",
+                        "hover:bg-brand-gold-hover focus-visible:ring-brand-gold",
+                      )}
+                    >
+                      <Download className="h-5 w-5" aria-hidden />
+                      {installing ? "Opening…" : "Install app"}
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+
+            {/* ——— Desktop ——— */}
+            <div className="relative hidden p-5 pt-14 pb-6 sm:p-8 sm:pt-16 sm:pb-7 lg:block lg:px-10 lg:pt-11 lg:pb-7">
+              <div className="flex w-full flex-col gap-5 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
+                <div className="flex min-w-0 w-full flex-1 gap-4 sm:gap-5 lg:min-h-0">
+                  <div
+                    className={cn(
+                      "flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white p-2.5 shadow-lg ring-2 ring-brand-gold/25",
+                      "sm:h-[4.5rem] sm:w-[4.5rem] sm:p-3",
+                    )}
+                  >
+                    <Image
+                      src="/icons/icon-192.png"
+                      alt=""
+                      width={192}
+                      height={192}
+                      className="h-full w-full max-h-full max-w-full object-contain object-center"
+                      priority={false}
+                    />
+                  </div>
+
+                  <div className="flex min-w-0 w-full flex-1 flex-col gap-2 sm:gap-2.5 lg:justify-center">
+                    <div className="flex items-center gap-2.5">
+                      <Smartphone
+                        className="h-5 w-5 shrink-0 text-brand-gold sm:h-6 sm:w-6"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
+                      <h2 className="font-heading text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
+                        Install our app
+                      </h2>
+                    </div>
+
+                    <InstallDetailBlocks
+                      isIos={isIos}
+                      showInstallButton={showInstallButton}
+                    />
+                  </div>
+                </div>
+
+                {showInstallButton ? (
+                  <div className="flex w-full shrink-0 flex-col justify-center border-t border-white/10 pt-5 sm:w-auto lg:w-auto lg:min-w-[12rem] lg:border-t-0 lg:border-l lg:pl-10 lg:pt-0 xl:min-w-[14rem]">
+                    <Button
+                      type="button"
+                      size="lg"
+                      disabled={installing}
+                      onClick={onInstallClick}
+                      className={cn(
+                        "h-12 w-full min-h-[48px] rounded-xl border-0 bg-brand-gold px-8 text-[15px] font-semibold text-brand-charcoal shadow-md",
+                        "hover:bg-brand-gold-hover focus-visible:ring-brand-gold lg:min-w-[220px]",
+                      )}
+                    >
+                      <Download className="h-5 w-5" aria-hidden />
+                      {installing ? "Opening…" : "Install app"}
+                    </Button>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
-        </div>
+
+          <SheetContent {...installSheetContentProps}>
+            <SheetHeader className="space-y-1 pb-2 text-left">
+              <SheetTitle className="font-heading text-lg text-white">
+                About installing
+              </SheetTitle>
+            </SheetHeader>
+            <InstallDetailBlocks
+              isIos={isIos}
+              showInstallButton={showInstallButton}
+            />
+          </SheetContent>
+        </Sheet>
       </div>
     </section>
   );

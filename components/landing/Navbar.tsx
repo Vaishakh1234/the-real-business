@@ -39,6 +39,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { PropertySearchSuggestionLink } from "@/components/properties/PropertySearchSuggestionLink";
+import { PublicInstallAppControl } from "@/components/landing/PublicInstallAppControl";
 import { cn } from "@/lib/utils";
 import {
   POST_PROPERTY_HREF,
@@ -902,7 +903,7 @@ export function Navbar() {
             )}
           </div>
 
-          <div className="flex shrink-0 items-center justify-end gap-1.5 sm:gap-2">
+          <div className="flex shrink-0 items-center justify-end gap-2.5 sm:gap-3 md:gap-3.5">
             <Link
               href="/wishlist"
               prefetch={true}
@@ -930,6 +931,7 @@ export function Navbar() {
                 </span>
               ) : null}
             </Link>
+            <PublicInstallAppControl overlayNav={overlayNav} />
             <Link
               href={POST_PROPERTY_HREF}
               className={cn(

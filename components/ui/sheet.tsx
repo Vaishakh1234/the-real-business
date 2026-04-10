@@ -3,7 +3,7 @@
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Sheet = SheetPrimitive.Root;
@@ -50,6 +50,10 @@ interface SheetContentProps
     React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {
   overlayClassName?: string;
+  /** Corner control: X (default), info icon (still closes), or none (dismiss via overlay only). */
+  closeButton?: "x" | "info" | null;
+  /** Merged into the close button for dark sheets etc. */
+  closeButtonClassName?: string;
 }
 
 const SheetContent = React.forwardRef<
@@ -57,7 +61,15 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(
   (
-    { side = "right", className, overlayClassName, children, ...props },
+    {
+      side = "right",
+      className,
+      overlayClassName,
+      children,
+      closeButton = "x",
+      closeButtonClassName,
+      ...props
+    },
     ref,
   ) => (
     <SheetPortal>
@@ -68,20 +80,27 @@ const SheetContent = React.forwardRef<
         {...props}
       >
         {children}
-        <SheetPrimitive.Close
-          className={cn(
-            "absolute z-[60] opacity-[0.85] ring-offset-background transition-[opacity,background-color,transform] hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
-            side === "bottom"
-              ? "right-3 top-2.5 rounded-full p-2 text-[#1a2b4b] hover:bg-neutral-100 active:scale-95"
-              : "right-4 top-4 rounded-sm opacity-70 data-[state=open]:bg-secondary",
-          )}
-        >
-          <X
-            className={cn("h-4 w-4", side === "bottom" && "h-[18px] w-[18px]")}
-            aria-hidden
-          />
-          <span className="sr-only">Close</span>
-        </SheetPrimitive.Close>
+        {closeButton ? (
+          <SheetPrimitive.Close
+            className={cn(
+              "absolute z-[60] opacity-[0.85] ring-offset-background transition-[opacity,background-color,transform] hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
+              side === "bottom"
+                ? "right-3 top-2.5 rounded-full p-2 text-[#1a2b4b] hover:bg-neutral-100 active:scale-95"
+                : "right-4 top-4 rounded-sm opacity-70 data-[state=open]:bg-secondary",
+              closeButtonClassName,
+            )}
+          >
+            {closeButton === "info" ? (
+              <Info className="h-5 w-5" strokeWidth={2} aria-hidden />
+            ) : (
+              <X
+                className={cn("h-4 w-4", side === "bottom" && "h-[18px] w-[18px]")}
+                aria-hidden
+              />
+            )}
+            <span className="sr-only">Close</span>
+          </SheetPrimitive.Close>
+        ) : null}
       </SheetPrimitive.Content>
     </SheetPortal>
   ),

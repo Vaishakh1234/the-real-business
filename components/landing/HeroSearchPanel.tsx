@@ -16,7 +16,6 @@ import {
   Search,
   Clock,
   ChevronRight,
-  Heart,
   HousePlus,
   Loader2,
 } from "lucide-react";
@@ -230,7 +229,7 @@ export function HeroSearchPanel({
           : "mt-3 pb-6 sm:mt-4 sm:pb-8 lg:pb-10",
       )}
     >
-      {/* Mobile: larger prompt + favorites / browse CTAs (full search card from md+) */}
+      {/* Mobile: larger prompt + post listing / browse CTAs (full search card from md+) */}
       <div className="w-full min-w-0 md:hidden">
         <p className="text-balance font-heading text-[1.0625rem] font-bold leading-snug tracking-[-0.015em] text-white xs:text-[1.1875rem]">
           {HOME_HERO_SEARCH_PROMPT}
@@ -248,12 +247,12 @@ export function HeroSearchPanel({
             />
           </Link>
           <Link
-            href="/wishlist"
+            href={postPropertyHrefWithCta("POST_PROPERTY_HERO_MOBILE_CTA")}
             className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/40 bg-white/12 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
-            aria-label="Add to favorites — open saved listings"
+            aria-label="Add a listing — post your property"
           >
-            <Heart className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
-            Add to favorites
+            <HousePlus className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
+            Add listing
           </Link>
         </div>
       </div>

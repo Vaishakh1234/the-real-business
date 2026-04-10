@@ -52,6 +52,11 @@ export const adminNavItems: {
   },
 ];
 
+/** Mobile bottom bar items; Alerts omitted (header has the bell to notifications). */
+export const adminBottomNavItems = adminNavItems.filter(
+  (item) => item.href !== "/admin/notifications",
+);
+
 export const adminPageTitles: Record<string, string> = {
   "/admin/dashboard": "Dashboard",
   "/admin/properties": "Properties",

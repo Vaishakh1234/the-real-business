@@ -4,8 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, Heart } from "lucide-react";
-import { HOME_HERO, HOME_HERO_SEARCH_PROMPT } from "@/lib/constants/site";
+import { ChevronRight, HousePlus } from "lucide-react";
+import {
+  HOME_HERO,
+  HOME_HERO_SEARCH_PROMPT,
+  postPropertyHrefWithCta,
+} from "@/lib/constants/site";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 import { usePublicCategories } from "@/hooks/useCategories";
 import { HeroSearchPanel } from "@/components/landing/HeroSearchPanel";
@@ -255,16 +259,16 @@ export function Hero() {
                 />
               </Link>
               <Link
-                href="/wishlist"
+                href={postPropertyHrefWithCta("POST_PROPERTY_HERO_MOBILE_CTA")}
                 className="inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-white/40 bg-white/12 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal"
-                aria-label="Add to favorites — open saved listings"
+                aria-label="Add a listing — post your property"
               >
-                <Heart
+                <HousePlus
                   className="h-4 w-4 shrink-0"
                   strokeWidth={2}
                   aria-hidden
                 />
-                Add to favorites
+                Add listing
               </Link>
             </div>
           </div>
