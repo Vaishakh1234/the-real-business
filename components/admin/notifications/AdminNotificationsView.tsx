@@ -132,43 +132,47 @@ export function AdminNotificationsView() {
     <div className="flex min-h-full flex-col bg-gradient-to-b from-admin-main-bg via-white to-brand-gold-muted/35 pb-[env(safe-area-inset-bottom)]">
       <PageHeader
         title="Notifications"
+        titleClassName="text-xl sm:text-2xl lg:text-3xl"
+        subtitleClassName="text-sm leading-snug sm:text-[15px] sm:leading-snug"
         subtitle="New leads appear here when in-app lead notifications are enabled in Settings."
         breadcrumbs={breadcrumbs}
         actions={
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
+          <div className="flex shrink-0 items-center gap-2">
             <Button
               variant="outline"
-              size="sm"
-              className="h-11 w-full touch-manipulation rounded-xl border-brand-gold/35 bg-white/90 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:border-brand-gold/55 hover:bg-brand-gold-muted sm:h-9 sm:w-auto"
+              size="icon"
+              className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-xl border-brand-gold/35 bg-white/90 shadow-sm backdrop-blur-sm hover:border-brand-gold/55 hover:bg-brand-gold-muted sm:min-h-0 sm:min-w-0"
               asChild
             >
               <Link
                 href="/admin/settings"
-                className="inline-flex items-center justify-center gap-2"
+                aria-label="Notification settings"
+                title="Notification settings"
               >
-                <Settings className="h-4 w-4 shrink-0" aria-hidden />
-                Notification settings
+                <Settings className="h-4 w-4" aria-hidden />
               </Link>
             </Button>
             <Button
-              size="sm"
-              className="h-11 w-full touch-manipulation rounded-xl bg-brand-blue text-brand-blue-foreground shadow-md shadow-brand-blue/25 transition-colors hover:bg-brand-blue-hover sm:h-9 sm:w-auto"
+              type="button"
+              size="icon"
+              className="h-10 w-10 min-h-[44px] min-w-[44px] rounded-xl bg-brand-blue text-brand-blue-foreground shadow-md shadow-brand-blue/25 hover:bg-brand-blue-hover sm:min-h-0 sm:min-w-0"
               disabled={markAll.isPending || total === 0}
+              aria-label="Mark all notifications as read"
+              title="Mark all read"
               onClick={() => void markAll.mutate()}
             >
               {markAll.isPending ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
               ) : (
-                <Check className="mr-2 h-4 w-4" strokeWidth={2.25} />
+                <Check className="h-4 w-4" strokeWidth={2.25} aria-hidden />
               )}
-              Mark all read
             </Button>
           </div>
         }
       />
 
       <div className="mx-auto w-full max-w-5xl flex-1 space-y-4 sm:space-y-6">
-        <p className="text-muted-foreground text-sm md:hidden">
+        <p className="text-muted-foreground text-xs leading-snug md:hidden">
           New leads appear here when in-app lead notifications are enabled in
           Settings.
         </p>
@@ -187,7 +191,10 @@ export function AdminNotificationsView() {
             <div className="pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-brand-blue/5 blur-3xl" />
             <div className="relative mx-auto flex max-w-md flex-col items-center gap-5">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-gold-muted to-white shadow-lg ring-2 ring-brand-gold/20 sm:h-16 sm:w-16">
-                <Bell className="h-7 w-7 text-brand-gold sm:h-8 sm:w-8" strokeWidth={2} />
+                <Bell
+                  className="h-7 w-7 text-brand-gold sm:h-8 sm:w-8"
+                  strokeWidth={2}
+                />
               </div>
               <div className="space-y-2">
                 <p className="flex items-center justify-center gap-2 font-semibold text-[#1a1a1a] text-base sm:text-lg">
@@ -201,15 +208,16 @@ export function AdminNotificationsView() {
               </div>
               <Button
                 variant="outline"
-                className="h-11 w-full max-w-xs touch-manipulation rounded-xl border-brand-gold/40 bg-white/90 hover:bg-brand-gold-muted sm:h-9 sm:w-auto"
+                size="icon"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] rounded-xl border-brand-gold/40 bg-white/90 hover:bg-brand-gold-muted"
                 asChild
               >
                 <Link
                   href="/admin/settings"
-                  className="inline-flex items-center justify-center gap-2"
+                  aria-label="Notification settings"
+                  title="Notification settings"
                 >
-                  <Settings className="h-4 w-4 shrink-0" aria-hidden />
-                  Notification settings
+                  <Settings className="h-5 w-5" aria-hidden />
                 </Link>
               </Button>
             </div>
@@ -242,7 +250,9 @@ export function AdminNotificationsView() {
                           {total > 0 ? (
                             <>
                               {" "}
-                              <span className="text-muted-foreground/80">·</span>{" "}
+                              <span className="text-muted-foreground/80">
+                                ·
+                              </span>{" "}
                               {total} total
                             </>
                           ) : null}

@@ -25,7 +25,7 @@ export function BottomNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex min-h-[48px] flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-2 text-sm font-medium transition-colors",
+              "flex min-h-[44px] flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-0.5 py-1.5 text-[11px] font-medium leading-tight transition-colors",
               isActive
                 ? "text-admin-sidebar-active-indicator"
                 : "text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",
@@ -34,11 +34,12 @@ export function BottomNav() {
           >
             <item.icon
               className={cn(
-                "h-6 w-6 shrink-0",
+                "h-[1.125rem] w-[1.125rem] shrink-0 sm:h-5 sm:w-5",
                 isActive ? "text-admin-sidebar-active-indicator" : item.color,
               )}
+              strokeWidth={2.25}
             />
-            <span className="truncate max-w-[4.5rem]">{item.label}</span>
+            <span className="max-w-[3.75rem] truncate">{item.label}</span>
           </Link>
         );
       })}

@@ -6,6 +6,7 @@ import {
   FileBarChart,
   Settings,
   Bell,
+  Download,
   type LucideIcon,
 } from "lucide-react";
 
@@ -52,6 +53,12 @@ export const adminNavItems: {
     color: "text-orange-600",
   },
   {
+    label: "Install app",
+    href: "/admin/install-app",
+    icon: Download,
+    color: "text-sky-600",
+  },
+  {
     label: "Settings",
     href: "/admin/settings",
     icon: Settings,
@@ -59,10 +66,12 @@ export const adminNavItems: {
   },
 ];
 
-/** Mobile bottom bar items; Settings omitted (header opens quick settings). */
+/** Mobile bottom bar items; Settings, Notifications, Install omitted (sidebar / header). */
 export const adminBottomNavItems = adminNavItems.filter(
   (item) =>
-    item.href !== "/admin/settings" && item.href !== "/admin/notifications",
+    item.href !== "/admin/settings" &&
+    item.href !== "/admin/notifications" &&
+    item.href !== "/admin/install-app",
 );
 
 export const adminPageTitles: Record<string, string> = {
@@ -73,6 +82,7 @@ export const adminPageTitles: Record<string, string> = {
   "/admin/notifications": "Notifications",
   "/admin/settings": "Settings",
   "/admin/reports": "Reports",
+  "/admin/install-app": "Install app",
 };
 
 export function getAdminPageTitle(pathname: string): string {

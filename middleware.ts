@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { getIronSession } from "iron-session";
 import type { AdminSession } from "@/types";
 
@@ -12,28 +13,35 @@ const SESSION_OPTIONS = {
   },
 };
 
-export async function proxy(request: NextRequest) {
+/**
+ * Admin route guard + `x-pathname` for `app/(admin)/admin/layout.tsx` so
+ * `/admin/login` can render without the authenticated shell (see layout).
+ */
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Redirect exact /admin to /admin/dashboard so we never show the index loading state
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
   if (pathname === "/admin" || pathname === "/admin/") {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  // Skip auth check for login page
-  if (pathname === "/admin/login") {
-    return NextResponse.next();
+  if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
+    return NextResponse.next({
+      request: { headers: requestHeaders },
+    });
   }
 
-  // Protect all /admin/* routes (except login)
   if (pathname.startsWith("/admin/")) {
-    const response = NextResponse.next();
+    const response = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
 
-    // Read session from cookies
     const session = await getIronSession<AdminSession>(
       request,
       response,
-      SESSION_OPTIONS
+      SESSION_OPTIONS,
     );
 
     if (!session.isAdmin) {
@@ -45,7 +53,9 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 }
 
 export const config = {

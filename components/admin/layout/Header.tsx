@@ -202,130 +202,130 @@ export function Header() {
               align="end"
               className="w-[min(100vw-1.5rem,22rem)] overflow-hidden rounded-2xl border-0 bg-[#FFFFFF] p-0 shadow-lg sm:w-96"
             >
-            <div className="bg-[#FFFFFF] px-4 py-3">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-semibold text-foreground text-sm tracking-tight">
-                    Notifications
-                  </p>
-                  <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
-                    {unseenLeadCount > 0
-                      ? `${unseenLeadCount} unseen on Leads list`
-                      : "Leads list is up to date"}
-                  </p>
-                </div>
-                {unreadNotifCount > 0 ? (
-                  <button
-                    type="button"
-                    className="shrink-0 rounded-lg bg-brand-blue px-2.5 py-1.5 text-brand-blue-foreground text-xs font-semibold shadow-sm transition-colors hover:bg-brand-blue-hover disabled:opacity-60"
-                    disabled={markAllNotifRead.isPending}
-                    onClick={() => void markAllNotifRead.mutate()}
-                  >
-                    {markAllNotifRead.isPending ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      "Mark all read"
-                    )}
-                  </button>
-                ) : null}
-              </div>
-            </div>
-            <div className="max-h-[min(60vh,320px)] overflow-y-auto overscroll-contain">
-              {previewLoading ? (
-                <div className="flex justify-center py-10">
-                  <Loader2 className="h-7 w-7 animate-spin text-brand-gold" />
-                </div>
-              ) : !previewData?.data?.length ? (
-                <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted/80 ring-1 ring-border">
-                    <Inbox className="h-6 w-6 text-muted-foreground" />
+              <div className="bg-[#FFFFFF] px-4 py-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-foreground text-sm tracking-tight">
+                      Notifications
+                    </p>
+                    <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
+                      {unseenLeadCount > 0
+                        ? `${unseenLeadCount} unseen on Leads list`
+                        : "Leads list is up to date"}
+                    </p>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    No notifications yet.
-                  </p>
+                  {unreadNotifCount > 0 ? (
+                    <button
+                      type="button"
+                      className="shrink-0 rounded-lg bg-brand-blue px-2.5 py-1.5 text-brand-blue-foreground text-xs font-semibold shadow-sm transition-colors hover:bg-brand-blue-hover disabled:opacity-60"
+                      disabled={markAllNotifRead.isPending}
+                      onClick={() => void markAllNotifRead.mutate()}
+                    >
+                      {markAllNotifRead.isPending ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        "Mark all read"
+                      )}
+                    </button>
+                  ) : null}
                 </div>
-              ) : (
-                <ul className="bg-[#FFFFFF]">
-                  {previewData.data.map((n) => {
-                    const unread = isUnreadAdminNotification(n.read_at);
-                    const { Icon, tileClassName } =
-                      getNotificationTypePresentation(n.body);
-                    return (
-                      <li key={n.id}>
-                        <Link
-                          href={`/admin/leads?open=${n.lead_id}`}
-                          className={cn(
-                            "flex gap-3 px-3 py-3 text-left transition-colors sm:gap-3.5 sm:px-4",
-                            "hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-inset",
-                            unread &&
-                              "bg-gradient-to-r from-brand-blue-muted/50 to-transparent",
-                          )}
-                          onClick={async () => {
-                            setNotifOpen(false);
-                            if (unread) {
-                              try {
-                                await markNotifRead.mutateAsync(n.id);
-                              } catch {
-                                /* ignore */
-                              }
-                            }
-                          }}
-                        >
-                          <div
+              </div>
+              <div className="max-h-[min(60vh,320px)] overflow-y-auto overscroll-contain">
+                {previewLoading ? (
+                  <div className="flex justify-center py-10">
+                    <Loader2 className="h-7 w-7 animate-spin text-brand-gold" />
+                  </div>
+                ) : !previewData?.data?.length ? (
+                  <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted/80 ring-1 ring-border">
+                      <Inbox className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground text-sm">
+                      No notifications yet.
+                    </p>
+                  </div>
+                ) : (
+                  <ul className="bg-[#FFFFFF]">
+                    {previewData.data.map((n) => {
+                      const unread = isUnreadAdminNotification(n.read_at);
+                      const { Icon, tileClassName } =
+                        getNotificationTypePresentation(n.body);
+                      return (
+                        <li key={n.id}>
+                          <Link
+                            href={`/admin/leads?open=${n.lead_id}`}
                             className={cn(
-                              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
-                              tileClassName,
+                              "flex gap-3 px-3 py-3 text-left transition-colors sm:gap-3.5 sm:px-4",
+                              "hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-inset",
+                              unread &&
+                                "bg-gradient-to-r from-brand-blue-muted/50 to-transparent",
                             )}
-                            aria-hidden
+                            onClick={async () => {
+                              setNotifOpen(false);
+                              if (unread) {
+                                try {
+                                  await markNotifRead.mutateAsync(n.id);
+                                } catch {
+                                  /* ignore */
+                                }
+                              }
+                            }}
                           >
-                            <Icon
-                              className="h-[1.15rem] w-[1.15rem]"
-                              strokeWidth={2.25}
-                            />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-start justify-between gap-2">
-                              <NotificationLeadTitle
-                                title={n.title}
-                                className="text-sm"
+                            <div
+                              className={cn(
+                                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                                tileClassName,
+                              )}
+                              aria-hidden
+                            >
+                              <Icon
+                                className="h-[1.15rem] w-[1.15rem]"
+                                strokeWidth={2.25}
                               />
-                              {unread ? (
-                                <Badge
-                                  className="h-5 shrink-0 border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
-                                  aria-label="Unread"
-                                >
-                                  New
-                                </Badge>
-                              ) : null}
                             </div>
-                            {n.body ? (
-                              <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
-                                {n.body}
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-start justify-between gap-2">
+                                <NotificationLeadTitle
+                                  title={n.title}
+                                  className="text-sm"
+                                />
+                                {unread ? (
+                                  <Badge
+                                    className="h-5 shrink-0 border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                                    aria-label="Unread"
+                                  >
+                                    New
+                                  </Badge>
+                                ) : null}
+                              </div>
+                              {n.body ? (
+                                <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+                                  {n.body}
+                                </p>
+                              ) : null}
+                              <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground tabular-nums">
+                                <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-brand-gold/80" />
+                                {formatDate(n.created_at)}
                               </p>
-                            ) : null}
-                            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground tabular-nums">
-                              <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-brand-gold/80" />
-                              {formatDate(n.created_at)}
-                            </p>
-                          </div>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-            <div className="bg-[#FFFFFF] px-3 py-3">
-              <Link
-                href="/admin/notifications"
-                className="flex min-h-[44px] items-center justify-center rounded-lg text-center font-semibold text-brand-blue text-sm transition-colors hover:bg-muted/50 sm:min-h-0 sm:py-2"
-                onClick={() => setNotifOpen(false)}
-              >
-                View all notifications
-              </Link>
-            </div>
-          </PopoverContent>
-        </Popover>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+              <div className="bg-[#FFFFFF] px-3 py-3">
+                <Link
+                  href="/admin/notifications"
+                  className="flex min-h-[44px] items-center justify-center rounded-lg text-center font-semibold text-brand-blue text-sm transition-colors hover:bg-muted/50 sm:min-h-0 sm:py-2"
+                  onClick={() => setNotifOpen(false)}
+                >
+                  View all notifications
+                </Link>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

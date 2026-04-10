@@ -2,6 +2,7 @@
 
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export interface BreadcrumbItem {
   label: string;
@@ -10,8 +11,12 @@ export interface BreadcrumbItem {
 
 interface PageHeaderProps {
   title: string;
+  /** Override default title sizes (e.g. smaller heading on dense pages). */
+  titleClassName?: string;
   /** Subtitle text or custom JSX (e.g. colored location · status · type) */
   subtitle?: React.ReactNode;
+  /** Override default subtitle size (default is text-base). */
+  subtitleClassName?: string;
   breadcrumbs?: BreadcrumbItem[];
   actions?: React.ReactNode;
   /** Optional date display - removed from pages, kept for backwards compat */
@@ -23,7 +28,9 @@ interface PageHeaderProps {
 
 export function PageHeader({
   title,
+  titleClassName,
   subtitle,
+  subtitleClassName,
   breadcrumbs,
   actions,
   showDate = false,
@@ -69,11 +76,21 @@ export function PageHeader({
               ))}
             </nav>
           )}
-          <h1 className="text-2xl font-semibold tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl">
+          <h1
+            className={cn(
+              "text-2xl font-semibold tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl",
+              titleClassName,
+            )}
+          >
             {title}
           </h1>
           {subtitle && (
-            <div className="mt-3 hidden text-base text-muted-foreground [&>p]:inline [&>p]:m-0 md:block">
+            <div
+              className={cn(
+                "mt-3 hidden text-base text-muted-foreground [&>p]:inline [&>p]:m-0 md:block",
+                subtitleClassName,
+              )}
+            >
               {subtitle}
             </div>
           )}
