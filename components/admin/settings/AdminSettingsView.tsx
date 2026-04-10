@@ -29,6 +29,7 @@ import { isAndroidChrome, isIOSDevice } from "@/lib/push/platform";
 import { safeClientErrorToastMessage } from "@/lib/safe-client-error-message";
 import { cn } from "@/lib/utils";
 import { LeadAlertsGuideDialog } from "@/components/admin/settings/LeadAlertsGuideDialog";
+import { isInAppLeadNotificationsSettingsUiEnabled } from "@/lib/constants/admin-features";
 
 export type AdminSettingsVariant = "page" | "overlay";
 
@@ -504,7 +505,7 @@ export function AdminSettingsView({
             </p>
           ) : null}
 
-          {inAppSection}
+          {isInAppLeadNotificationsSettingsUiEnabled() ? inAppSection : null}
 
           {leadPushSection}
 
