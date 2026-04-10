@@ -204,3 +204,11 @@ export function normalizePropertyTags(
   }
   return out;
 }
+
+/** In-app admin notification: not yet marked read (read_at missing or empty). */
+export function isUnreadAdminNotification(
+  readAt: string | null | undefined,
+): boolean {
+  if (readAt == null) return true;
+  return String(readAt).trim() === "";
+}

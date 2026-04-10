@@ -20,7 +20,8 @@ export default async function AdminLayout({
     <AdminClientWrapper>
       <Sidebar />
       <Header />
-      <main className="min-h-full bg-admin-main-bg pt-16 pb-[max(5rem,env(safe-area-inset-bottom))] lg:pt-[4.5rem] lg:pb-6 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-6">
+      {/* Fixed header: use explicit pt-* only — py-* overrides padding-top and causes overlap. */}
+      <main className="min-h-full bg-admin-main-bg px-4 pt-16 pb-[max(5rem,env(safe-area-inset-bottom))] sm:px-6 lg:px-8 lg:pt-[4.5rem] lg:pb-6">
         {children}
       </main>
       <BottomNav />

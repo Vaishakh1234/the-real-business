@@ -12,6 +12,7 @@ import {
 import {
   isIosDevice,
   isStandalonePwa,
+  subscribeStandalonePwaChange,
   type BeforeInstallPromptEvent,
 } from "@/lib/pwa-install";
 
@@ -47,7 +48,9 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
     if (isStandalonePwa()) {
       setIsStandalone(true);
       setReady(true);
-      return;
+      return subscribeStandalonePwaChange(() => {
+        if (isStandalonePwa()) setIsStandalone(true);
+      });
     }
     setIsStandalone(false);
     setReady(true);
@@ -70,7 +73,12 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
       });
     }
 
+    const unsubDisplayMode = subscribeStandalonePwaChange(() => {
+      if (isStandalonePwa()) setIsStandalone(true);
+    });
+
     return () => {
+      unsubDisplayMode();
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onAppInstalled);
     };

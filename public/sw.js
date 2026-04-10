@@ -1,4 +1,6 @@
 /* global self, clients */
+/** Keep aligned with lib/constants/site.ts SITE_NAME (push notification title). */
+const SITE_NAME = "The Real Business";
 const DEFAULT_ICON = "/icons/icon-192.png";
 const DEFAULT_URL = "/admin/leads";
 
@@ -9,7 +11,7 @@ self.addEventListener("fetch", function (event) {
 
 self.addEventListener("push", function (event) {
   let payload = {
-    title: "The Real Business",
+    title: SITE_NAME,
     body: "You have a new notification.",
     url: DEFAULT_URL,
     icon: DEFAULT_ICON,

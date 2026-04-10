@@ -55,10 +55,10 @@ export function AdminMobileWebNotice() {
         <AlertDialogHeader>
           <AlertDialogTitle>Admin on your phone</AlertDialogTitle>
           <AlertDialogDescription className="text-center text-balance">
-            You can review leads, get push alerts from the{" "}
-            <strong>Alerts</strong> tab, and manage listings on the go. For
-            heavy editing (long descriptions, many photos), a larger screen is
-            still easier when you have time.
+            You can review leads, get push alerts from <strong>Settings</strong>{" "}
+            (or the header bell), and manage listings on the go. For heavy
+            editing (long descriptions, many photos), a larger screen is still
+            easier when you have time.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

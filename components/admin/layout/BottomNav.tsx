@@ -25,7 +25,7 @@ export function BottomNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex min-h-[48px] flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-2 text-xs font-medium transition-colors",
+              "flex min-h-[48px] flex-1 flex-col items-center justify-center gap-0.5 rounded-lg px-1 py-2 text-sm font-medium transition-colors",
               isActive
                 ? "text-admin-sidebar-active-indicator"
                 : "text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",

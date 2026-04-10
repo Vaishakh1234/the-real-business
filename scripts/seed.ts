@@ -297,6 +297,7 @@ async function seedAdmin() {
         email_notifications: true,
         lead_alerts: true,
         browser_notifications: true,
+        in_app_lead_notifications: true,
         theme: "system",
         language: "en",
         timezone: "Asia/Kolkata",

@@ -151,7 +151,7 @@ export function DashboardView() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
         {/* Property Status Distribution */}
-        <div className="min-w-0 overflow-hidden rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-6">
+        <div className="min-w-0 overflow-hidden rounded-xl border border-admin-card-border bg-admin-card-bg p-4 shadow-sm sm:rounded-2xl sm:p-6">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-bold text-foreground">
               Property Status Distribution
@@ -205,7 +205,7 @@ export function DashboardView() {
         </div>
 
         {/* Lead Status Distribution - full width on mobile, X/Y axis lines visible */}
-        <div className="w-full min-w-0 overflow-hidden rounded-xl border border-admin-card-border bg-admin-card-bg p-3 shadow-sm sm:p-4 lg:rounded-2xl lg:p-6">
+        <div className="w-full min-w-0 overflow-hidden rounded-xl border border-admin-card-border bg-admin-card-bg p-4 shadow-sm sm:p-6 lg:rounded-2xl">
           <div className="mb-4 flex items-center justify-between lg:mb-6">
             <h2 className="text-base font-semibold text-foreground lg:text-lg">
               Lead Status Distribution
@@ -225,7 +225,7 @@ export function DashboardView() {
               </p>
             </div>
           ) : (
-            <div className="h-48 w-full min-w-0 sm:h-64 lg:h-[280px] -mx-3 sm:-mx-4 lg:-mx-6">
+            <div className="h-48 w-full min-w-0 sm:h-64 lg:h-[280px] -mx-4 sm:-mx-6">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={leadStatusData}

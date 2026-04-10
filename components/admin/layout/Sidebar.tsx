@@ -78,7 +78,7 @@ export function Sidebar() {
             style={{ width: "auto", height: "auto" }}
           />
           {!sidebarCollapsed && (
-            <span className="mt-5 flex flex-col justify-center font-heading text-[13px] font-bold uppercase leading-[1.2] tracking-tight text-foreground min-w-0">
+            <span className="mt-5 flex flex-col justify-center font-heading text-[16px] font-bold uppercase leading-[1.2] tracking-tight text-foreground min-w-0">
               <span>THE REAL</span>
               <span>BUSINESS</span>
             </span>
@@ -97,7 +97,7 @@ export function Sidebar() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3.5 rounded-lg px-3 py-3 text-base font-medium transition-colors relative",
+                    "flex items-center gap-3.5 rounded-lg px-3 py-3 text-[17px] font-medium transition-colors relative",
                     isActive
                       ? "bg-admin-sidebar-active text-admin-sidebar-text"
                       : "text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",
@@ -131,7 +131,7 @@ export function Sidebar() {
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
-            "flex items-center gap-3.5 rounded-lg px-3 py-3 text-base font-medium transition-colors text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",
+            "flex items-center gap-3.5 rounded-lg px-3 py-3 text-[17px] font-medium transition-colors text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",
             sidebarCollapsed && "justify-center px-0",
           )}
           title={sidebarCollapsed ? "View site" : undefined}
@@ -142,7 +142,7 @@ export function Sidebar() {
         <button
           onClick={() => setShowLogoutDialog(true)}
           className={cn(
-            "w-full flex items-center gap-3.5 rounded-lg px-3 py-3 text-base font-medium transition-colors text-red-600 hover:bg-red-500/10",
+            "w-full flex items-center gap-3.5 rounded-lg px-3 py-3 text-[17px] font-medium transition-colors text-red-600 hover:bg-red-500/10",
             sidebarCollapsed && "justify-center px-0",
           )}
           title={sidebarCollapsed ? "Log Out" : undefined}

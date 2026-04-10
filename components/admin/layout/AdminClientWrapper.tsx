@@ -38,7 +38,7 @@ export function AdminClientWrapper({
         )}
       >
         <div className="flex flex-1 flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-admin-main-bg">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden bg-admin-main-bg text-[17px] leading-relaxed antialiased">
             {children}
           </div>
         </div>

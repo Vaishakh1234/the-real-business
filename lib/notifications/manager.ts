@@ -1,6 +1,7 @@
 import type { Lead, PushSubscriptionRow } from "@/types";
 import { LEAD_TYPE_LABELS } from "@/lib/constants/lead-types";
 import { getAdminSettingsByEmail } from "@/lib/queries/admin-settings";
+import { insertNotificationsForNewLead } from "@/lib/queries/admin-notifications";
 import {
   deletePushSubscriptionByEndpoint,
   getAllPushSubscriptions,
@@ -55,6 +56,22 @@ function toWebPushSubscription(row: PushSubscriptionRow) {
       auth: row.auth,
     },
   };
+}
+
+/**
+ * After a lead is persisted: web push (if configured) + in-app notification rows.
+ * Fire-and-forget from API routes; errors are logged, not thrown to callers.
+ */
+export async function notifyLeadCreated(lead: Lead): Promise<void> {
+  const results = await Promise.allSettled([
+    sendLeadNotification(lead),
+    insertNotificationsForNewLead(lead),
+  ]);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      console.error("[notifyLeadCreated]", r.reason);
+    }
+  }
 }
 
 /**

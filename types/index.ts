@@ -267,6 +267,8 @@ export interface AdminSettings {
   email_notifications: boolean;
   lead_alerts: boolean;
   browser_notifications: boolean;
+  /** When true, new leads appear in the admin notification inbox (Settings). */
+  in_app_lead_notifications: boolean;
   theme: ThemePreference;
   language: string;
   timezone: string;
@@ -282,9 +284,21 @@ export interface AdminSettingsUpdate {
   email_notifications?: boolean;
   lead_alerts?: boolean;
   browser_notifications?: boolean;
+  in_app_lead_notifications?: boolean;
   theme?: ThemePreference;
   language?: string;
   timezone?: string;
+}
+
+/** In-app notification row (one per lead per admin when enabled). */
+export interface AdminNotificationRow {
+  id: string;
+  admin_email: string;
+  lead_id: string;
+  title: string;
+  body: string | null;
+  read_at: string | null;
+  created_at: string;
 }
 
 // ─── Web Push (service worker subscriptions) ────────────────────────────────

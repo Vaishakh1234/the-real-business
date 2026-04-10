@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/auth/session";
 import { getLeads, createLead } from "@/lib/queries/leads";
+import { notifyLeadCreated } from "@/lib/notifications/manager";
 import { CONNECTION_UNAVAILABLE_MESSAGE, withConnectionRetry } from "@/lib/db-errors";
 import type { Lead, LeadInsert, LeadType } from "@/types";
 
@@ -62,6 +63,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const data = await createLead(body as LeadInsert);
+    void notifyLeadCreated(data).catch((err) => {
+      console.error("[POST /api/admin/leads] notifyLeadCreated", err);
+    });
     return NextResponse.json({ data }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to create lead";

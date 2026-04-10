@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createLead } from "@/lib/queries/leads";
-import { sendLeadNotification } from "@/lib/notifications/manager";
+import { notifyLeadCreated } from "@/lib/notifications/manager";
 import type { LeadSource, LeadType } from "@/types";
 
 const ALLOWED_SOURCES: LeadSource[] = [
@@ -101,8 +101,8 @@ export async function POST(request: NextRequest) {
       notes: null,
     });
 
-    void sendLeadNotification(data).catch((err) => {
-      console.error("[POST /api/leads] push notify", err);
+    void notifyLeadCreated(data).catch((err) => {
+      console.error("[POST /api/leads] notifyLeadCreated", err);
     });
 
     return NextResponse.json({ success: true, data }, { status: 201 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
   Plus,
@@ -185,6 +186,8 @@ export function LeadsView({
   header?: LeadsViewHeaderConfig;
 } = {}) {
   const isMobile = useIsMobile();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [rawSearch, setRawSearch] = useState("");
@@ -245,6 +248,26 @@ export function LeadsView({
     seenMarkRef.current.add(editLead.id);
     markSeen.mutate(editLead.id);
   }, [sheetOpen, editLead?.id, editLead?.seen_at, markSeen]);
+
+  const openLeadId = searchParams.get("open");
+  useEffect(() => {
+    if (!openLeadId || !/^[0-9a-f-]{36}$/i.test(openLeadId)) return;
+    let cancelled = false;
+    (async () => {
+      const res = await fetch(`/api/admin/leads/${openLeadId}`, {
+        credentials: "include",
+      });
+      if (!res.ok || cancelled) return;
+      const json = (await res.json()) as { data?: LeadWithProperty };
+      if (cancelled || !json.data) return;
+      setEditLead(json.data);
+      setSheetOpen(true);
+      router.replace("/admin/leads", { scroll: false });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [openLeadId, router]);
 
   const columns: ColumnDef<LeadWithProperty>[] = [
     {
@@ -826,11 +849,6 @@ export function LeadsView({
                   list.map((lead) => (
                     <AdminListCard
                       key={lead.id}
-                      className={
-                        !lead.seen_at
-                          ? "border-amber-200/80 bg-amber-50/50 hover:bg-amber-50/70"
-                          : undefined
-                      }
                       left={
                         <LeadAvatar
                           name={lead.name}

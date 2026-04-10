@@ -4,6 +4,7 @@ import {
   Tags,
   UserPlus,
   FileBarChart,
+  Settings,
   Bell,
   type LucideIcon,
 } from "lucide-react";
@@ -39,7 +40,7 @@ export const adminNavItems: {
     color: "text-violet-600",
   },
   {
-    label: "Alerts",
+    label: "Notifications",
     href: "/admin/notifications",
     icon: Bell,
     color: "text-rose-600",
@@ -50,11 +51,18 @@ export const adminNavItems: {
     icon: FileBarChart,
     color: "text-orange-600",
   },
+  {
+    label: "Settings",
+    href: "/admin/settings",
+    icon: Settings,
+    color: "text-slate-600",
+  },
 ];
 
-/** Mobile bottom bar items; Alerts omitted (header has the bell to notifications). */
+/** Mobile bottom bar items; Settings omitted (header opens quick settings). */
 export const adminBottomNavItems = adminNavItems.filter(
-  (item) => item.href !== "/admin/notifications",
+  (item) =>
+    item.href !== "/admin/settings" && item.href !== "/admin/notifications",
 );
 
 export const adminPageTitles: Record<string, string> = {
@@ -62,7 +70,8 @@ export const adminPageTitles: Record<string, string> = {
   "/admin/properties": "Properties",
   "/admin/categories": "Categories",
   "/admin/leads": "Leads",
-  "/admin/notifications": "Lead alerts",
+  "/admin/notifications": "Notifications",
+  "/admin/settings": "Settings",
   "/admin/reports": "Reports",
 };
 

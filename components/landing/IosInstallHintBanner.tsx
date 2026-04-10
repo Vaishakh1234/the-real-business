@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Share2, X } from "lucide-react";
 import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
+import { SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "pwa-ios-install-hint-dismissed";
@@ -50,7 +51,7 @@ export function IosInstallHintBanner() {
         <p className="min-w-0 text-pretty">
           Tap the <strong className="font-semibold">Share</strong> icon, then
           select <strong className="font-semibold">Add to Home Screen</strong>{" "}
-          to install this app.
+          to install {SITE_NAME}.
         </p>
         <button
           type="button"

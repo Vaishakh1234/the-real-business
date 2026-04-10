@@ -37,7 +37,7 @@ export function PageHeader({
           {backHref && (
             <Link
               href={backHref}
-              className="mb-2 flex min-h-[44px] w-fit items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground lg:hidden"
+              className="mb-2 flex min-h-[44px] w-fit items-center gap-1 text-base font-medium text-muted-foreground hover:text-foreground lg:hidden"
             >
               <ChevronLeft className="h-4 w-4 shrink-0" />
               {backLabel}
@@ -46,7 +46,7 @@ export function PageHeader({
           {breadcrumbs && breadcrumbs.length > 0 && (
             <nav
               aria-label="Breadcrumb"
-              className="mb-2 hidden items-center gap-1.5 text-sm text-muted-foreground lg:flex"
+              className="mb-2 hidden items-center gap-1.5 text-base text-muted-foreground lg:flex"
             >
               {breadcrumbs.map((item, i) => (
                 <span key={i} className="flex items-center gap-1.5">
@@ -69,11 +69,11 @@ export function PageHeader({
               ))}
             </nav>
           )}
-          <h1 className="text-xl font-semibold tracking-tight text-[#1a1a1a] sm:text-2xl lg:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl">
             {title}
           </h1>
           {subtitle && (
-            <div className="mt-1 hidden text-sm text-muted-foreground [&>p]:inline [&>p]:m-0 md:block">
+            <div className="mt-3 hidden text-base text-muted-foreground [&>p]:inline [&>p]:m-0 md:block">
               {subtitle}
             </div>
           )}

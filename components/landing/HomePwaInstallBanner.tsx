@@ -10,7 +10,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { publicShellBackgroundColor } from "@/lib/constants/publicLayout";
+import {
+  publicContentFrameClass,
+  publicShellBackgroundColor,
+} from "@/lib/constants/publicLayout";
 import { SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
@@ -81,8 +84,8 @@ export function HomePwaInstallBanner() {
   if (!ready || isStandalone) return null;
 
   const mobileTagline = isIos
-    ? "Tap Share, then Add to Home Screen."
-    : "Add to your home screen for quick access.";
+    ? `Tap Share, then Add to Home Screen — the icon will show as ${SITE_NAME}.`
+    : `Add ${SITE_NAME} to your home screen for quick access.`;
 
   return (
     <section
@@ -90,7 +93,7 @@ export function HomePwaInstallBanner() {
       className="mb-8 pb-[max(1rem,env(safe-area-inset-bottom))] sm:mb-10 lg:mb-12"
       aria-label="Install our app"
     >
-      <div className="mx-auto w-full max-w-none px-4 xs:px-5 sm:px-6 lg:px-16 xl:px-24">
+      <div className={publicContentFrameClass}>
         <Sheet>
           <div
             className={cn(
@@ -144,7 +147,7 @@ export function HomePwaInstallBanner() {
                     />
                     <div className="min-w-0 flex-1 space-y-1">
                       <h2 className="font-heading text-[1.0625rem] font-bold leading-snug tracking-[-0.02em] text-white sm:text-lg">
-                        Install our app
+                        Install {SITE_NAME}
                       </h2>
                       <p className="text-pretty text-[13px] leading-[1.35] text-white sm:text-sm sm:leading-relaxed">
                         {mobileTagline}
@@ -164,7 +167,7 @@ export function HomePwaInstallBanner() {
                       )}
                     >
                       <Download className="h-5 w-5" aria-hidden />
-                      {installing ? "Opening…" : "Install app"}
+                      {installing ? "Opening…" : `Install ${SITE_NAME}`}
                     </Button>
                   ) : null}
                 </div>
@@ -199,7 +202,7 @@ export function HomePwaInstallBanner() {
                         aria-hidden
                       />
                       <h2 className="font-heading text-xl font-bold leading-tight tracking-tight text-white sm:text-2xl">
-                        Install our app
+                        Install {SITE_NAME}
                       </h2>
                     </div>
 
@@ -223,7 +226,7 @@ export function HomePwaInstallBanner() {
                       )}
                     >
                       <Download className="h-5 w-5" aria-hidden />
-                      {installing ? "Opening…" : "Install app"}
+                      {installing ? "Opening…" : `Install ${SITE_NAME}`}
                     </Button>
                   </div>
                 ) : null}

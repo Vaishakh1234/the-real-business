@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, Loader2, LogOut } from "lucide-react";
+import { Bell, Inbox, Loader2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,8 +26,22 @@ import { Logo } from "@/components/ui/Logo";
 import { useAppStore } from "@/store/appStore";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn, formatDate, isUnreadAdminNotification } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import { useAdminUnseenLeadCount } from "@/hooks/useLeads";
+import {
+  useAdminNotificationUnreadCount,
+  useAdminNotificationsPreview,
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+} from "@/hooks/useAdminNotifications";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { getNotificationTypePresentation } from "@/lib/admin-notification-display";
+import { NotificationLeadTitle } from "@/components/admin/notifications/NotificationLeadTitle";
 
 function getGreeting(displayName: string): string {
   const hour = new Date().getHours();
@@ -44,6 +58,7 @@ export function Header() {
 
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
 
   const displayName = email
     ? email
@@ -55,6 +70,13 @@ export function Header() {
   const { data: unseenLeadCount = 0 } = useAdminUnseenLeadCount({
     enabled: !!email,
   });
+  const { data: unreadNotifCount = 0 } = useAdminNotificationUnreadCount({
+    enabled: !!email,
+  });
+  const { data: previewData, isLoading: previewLoading } =
+    useAdminNotificationsPreview(6);
+  const markNotifRead = useMarkNotificationRead();
+  const markAllNotifRead = useMarkAllNotificationsRead();
 
   async function handleLogout() {
     setIsLoggingOut(true);
@@ -89,16 +111,16 @@ export function Header() {
             className="shrink-0"
             title="The Real Business"
           />
-          <p className="mt-2 truncate text-lg font-semibold leading-tight text-black sm:text-xl">
+          <p className="mt-2 truncate text-xl font-semibold leading-tight text-black sm:text-2xl">
             The Real Business
           </p>
         </div>
         {/* Desktop: greeting + date */}
         <div className="hidden lg:block">
-          <p className="text-lg font-semibold text-foreground">
+          <p className="text-xl font-semibold text-foreground">
             {getGreeting(displayName)}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {new Date().toLocaleDateString("en-IN", {
               weekday: "long",
               day: "numeric",
@@ -110,34 +132,201 @@ export function Header() {
       </div>
 
       <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        {/*
+          Mobile / tablet: go straight to the notifications page (no overlay).
+          Desktop (lg+): keep the quick-preview popover.
+        */}
         <Link
           href="/admin/notifications"
           className={cn(
             "relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-transparent text-muted-foreground transition-colors",
             "hover:border-admin-header-border hover:bg-muted/80 hover:text-foreground",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "lg:hidden",
           )}
           aria-label={
-            unseenLeadCount > 0
-              ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"} — alerts and notifications`
-              : "Lead alerts and push notifications"
+            unreadNotifCount > 0
+              ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
+              : "Notifications"
           }
           title={
-            unseenLeadCount > 0
-              ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
-              : "Lead alerts"
+            unreadNotifCount > 0
+              ? `${unreadNotifCount} unread`
+              : "Notifications"
           }
         >
           <Bell
             className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
             strokeWidth={2}
           />
-          {unseenLeadCount > 0 && (
+          {unreadNotifCount > 0 && (
             <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-              {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
+              {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
             </span>
           )}
         </Link>
+
+        <div className="hidden lg:block">
+          <Popover open={notifOpen} onOpenChange={setNotifOpen}>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className={cn(
+                  "relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-transparent text-muted-foreground transition-colors",
+                  "hover:border-admin-header-border hover:bg-muted/80 hover:text-foreground",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                )}
+                aria-label={
+                  unreadNotifCount > 0
+                    ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
+                    : "Notifications"
+                }
+                title={
+                  unreadNotifCount > 0
+                    ? `${unreadNotifCount} unread`
+                    : "Notifications"
+                }
+              >
+                <Bell
+                  className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
+                  strokeWidth={2}
+                />
+                {unreadNotifCount > 0 && (
+                  <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
+                    {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
+                  </span>
+                )}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="end"
+              className="w-[min(100vw-1.5rem,22rem)] overflow-hidden rounded-2xl border-0 bg-[#FFFFFF] p-0 shadow-lg sm:w-96"
+            >
+            <div className="bg-[#FFFFFF] px-4 py-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-semibold text-foreground text-sm tracking-tight">
+                    Notifications
+                  </p>
+                  <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
+                    {unseenLeadCount > 0
+                      ? `${unseenLeadCount} unseen on Leads list`
+                      : "Leads list is up to date"}
+                  </p>
+                </div>
+                {unreadNotifCount > 0 ? (
+                  <button
+                    type="button"
+                    className="shrink-0 rounded-lg bg-brand-blue px-2.5 py-1.5 text-brand-blue-foreground text-xs font-semibold shadow-sm transition-colors hover:bg-brand-blue-hover disabled:opacity-60"
+                    disabled={markAllNotifRead.isPending}
+                    onClick={() => void markAllNotifRead.mutate()}
+                  >
+                    {markAllNotifRead.isPending ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      "Mark all read"
+                    )}
+                  </button>
+                ) : null}
+              </div>
+            </div>
+            <div className="max-h-[min(60vh,320px)] overflow-y-auto overscroll-contain">
+              {previewLoading ? (
+                <div className="flex justify-center py-10">
+                  <Loader2 className="h-7 w-7 animate-spin text-brand-gold" />
+                </div>
+              ) : !previewData?.data?.length ? (
+                <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-muted/80 ring-1 ring-border">
+                    <Inbox className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-muted-foreground text-sm">
+                    No notifications yet.
+                  </p>
+                </div>
+              ) : (
+                <ul className="bg-[#FFFFFF]">
+                  {previewData.data.map((n) => {
+                    const unread = isUnreadAdminNotification(n.read_at);
+                    const { Icon, tileClassName } =
+                      getNotificationTypePresentation(n.body);
+                    return (
+                      <li key={n.id}>
+                        <Link
+                          href={`/admin/leads?open=${n.lead_id}`}
+                          className={cn(
+                            "flex gap-3 px-3 py-3 text-left transition-colors sm:gap-3.5 sm:px-4",
+                            "hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-inset",
+                            unread &&
+                              "bg-gradient-to-r from-brand-blue-muted/50 to-transparent",
+                          )}
+                          onClick={async () => {
+                            setNotifOpen(false);
+                            if (unread) {
+                              try {
+                                await markNotifRead.mutateAsync(n.id);
+                              } catch {
+                                /* ignore */
+                              }
+                            }
+                          }}
+                        >
+                          <div
+                            className={cn(
+                              "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                              tileClassName,
+                            )}
+                            aria-hidden
+                          >
+                            <Icon
+                              className="h-[1.15rem] w-[1.15rem]"
+                              strokeWidth={2.25}
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-start justify-between gap-2">
+                              <NotificationLeadTitle
+                                title={n.title}
+                                className="text-sm"
+                              />
+                              {unread ? (
+                                <Badge
+                                  className="h-5 shrink-0 border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                                  aria-label="Unread"
+                                >
+                                  New
+                                </Badge>
+                              ) : null}
+                            </div>
+                            {n.body ? (
+                              <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground sm:text-xs">
+                                {n.body}
+                              </p>
+                            ) : null}
+                            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground tabular-nums">
+                              <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-brand-gold/80" />
+                              {formatDate(n.created_at)}
+                            </p>
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+            <div className="bg-[#FFFFFF] px-3 py-3">
+              <Link
+                href="/admin/notifications"
+                className="flex min-h-[44px] items-center justify-center rounded-lg text-center font-semibold text-brand-blue text-sm transition-colors hover:bg-muted/50 sm:min-h-0 sm:py-2"
+                onClick={() => setNotifOpen(false)}
+              >
+                View all notifications
+              </Link>
+            </div>
+          </PopoverContent>
+        </Popover>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg px-2 py-1.5 hover:bg-muted transition-colors lg:min-h-0 lg:min-w-0 lg:gap-2.5">
@@ -150,10 +339,10 @@ export function Header() {
                 <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-admin-header-bg" />
               </div>
               <div className="text-left hidden lg:flex flex-col min-w-0">
-                <span className="text-sm font-medium text-foreground leading-none truncate">
+                <span className="text-base font-medium text-foreground leading-none truncate">
                   {displayName}
                 </span>
-                <span className="text-xs text-muted-foreground mt-0.5 leading-none truncate max-w-[140px]">
+                <span className="text-sm text-muted-foreground mt-0.5 leading-none truncate max-w-[140px]">
                   {email ?? "Super Admin"}
                 </span>
               </div>

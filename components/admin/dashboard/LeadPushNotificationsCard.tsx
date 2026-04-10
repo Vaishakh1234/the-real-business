@@ -4,10 +4,11 @@ import Link from "next/link";
 import { ArrowRight, Bell, BellOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdminLeadPush } from "@/hooks/useAdminLeadPush";
+import { safeClientErrorToastMessage } from "@/lib/safe-client-error-message";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-/** Compact summary on the dashboard; full setup lives at `/admin/notifications`. */
+/** Compact summary on the dashboard; full setup lives at `/admin/settings`. */
 export function LeadPushNotificationsCard() {
   const {
     settings,
@@ -24,16 +25,14 @@ export function LeadPushNotificationsCard() {
   async function onEnable() {
     try {
       await enablePush();
-      toast.success("Lead alerts enabled. Open Alerts anytime to manage.");
+      toast.success("Lead alerts enabled. Open Settings anytime to manage.");
     } catch (e) {
       if (e instanceof Error && e.message === "NOTIFICATION_DENIED") {
         toast.error("Notifications blocked. Allow them in browser settings.");
         return;
       }
       console.error(e);
-      toast.error(
-        e instanceof Error ? e.message : "Could not enable notifications.",
-      );
+      toast.error(safeClientErrorToastMessage(e));
     }
   }
 
@@ -43,23 +42,21 @@ export function LeadPushNotificationsCard() {
       toast.success("Lead alerts turned off on this device.");
     } catch (e) {
       console.error(e);
-      toast.error(
-        e instanceof Error ? e.message : "Could not disable notifications.",
-      );
+      toast.error(safeClientErrorToastMessage(e));
     }
   }
 
   return (
     <div
       className={cn(
-        "rounded-xl border border-admin-card-border bg-admin-card-bg p-4 shadow-sm sm:p-5",
+        "rounded-xl border border-admin-card-border bg-admin-card-bg p-4 shadow-sm sm:p-6",
         "flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between",
       )}
     >
-      <div className="flex min-w-0 flex-1 gap-3">
+      <div className="flex min-w-0 flex-1 gap-3 sm:gap-4">
         <div
           className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg sm:h-12 sm:w-12 sm:rounded-xl",
             pushActive
               ? "bg-[#00c07c] text-white"
               : "bg-muted text-muted-foreground",
@@ -67,9 +64,9 @@ export function LeadPushNotificationsCard() {
           aria-hidden
         >
           {pushActive ? (
-            <Bell className="h-5 w-5" strokeWidth={2} />
+            <Bell className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2} />
           ) : (
-            <BellOff className="h-5 w-5" />
+            <BellOff className="h-5 w-5 sm:h-6 sm:w-6" />
           )}
         </div>
         <div className="min-w-0 flex-1">
@@ -79,8 +76,8 @@ export function LeadPushNotificationsCard() {
           <p className="mt-1 text-muted-foreground text-sm leading-relaxed">
             Push to your phone when a lead or enquiry comes in.{" "}
             <span className="lg:hidden">
-              Use the <strong className="text-foreground">Alerts</strong> tab or
-              the bell in the header for the full setup.
+              Use <strong className="text-foreground">Settings</strong> or the
+              bell in the header for the full setup.
             </span>
             <span className="hidden lg:inline">
               Prefer the dedicated page for step-by-step mobile setup.
@@ -104,8 +101,8 @@ export function LeadPushNotificationsCard() {
           className="w-full sm:w-auto"
           asChild
         >
-          <Link href="/admin/notifications" className="gap-2">
-            Open alerts setup
+          <Link href="/admin/settings" className="gap-2">
+            Open settings
             <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
@@ -132,24 +129,32 @@ export function LeadPushNotificationsCard() {
           ) : pushActive ? (
             <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               size="sm"
-              className="flex-1"
+              className="flex-1 gap-1.5 border-rose-200 bg-rose-50/90 font-medium text-rose-800 shadow-sm hover:bg-rose-100 hover:text-rose-900 dark:border-rose-900/55 dark:bg-rose-950/45 dark:text-rose-100 dark:hover:bg-rose-950/65"
               disabled={busy || !settings}
               onClick={() => void onDisable()}
             >
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {busy ? (
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+              ) : (
+                <BellOff className="h-4 w-4 shrink-0" strokeWidth={2} />
+              )}
               Turn off
             </Button>
           ) : (
             <Button
               type="button"
               size="sm"
-              className="flex-1"
+              className="flex-1 gap-1.5 bg-[#00c07c] font-medium text-white shadow-sm hover:bg-[#00a86a] dark:bg-[#00c07c] dark:hover:bg-[#00b870]"
               disabled={busy || !settings}
               onClick={() => void onEnable()}
             >
-              {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {busy ? (
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+              ) : (
+                <Bell className="h-4 w-4 shrink-0" strokeWidth={2} />
+              )}
               Quick enable
             </Button>
           )}

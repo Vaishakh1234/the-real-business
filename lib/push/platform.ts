@@ -1,3 +1,5 @@
+import { isStandalonePwa } from "@/lib/pwa-install";
+
 /** iOS Safari / iPadOS (excludes desktop Safari unless touch iPad). */
 export function isIOSDevice(): boolean {
   if (typeof window === "undefined") return false;
@@ -8,14 +10,10 @@ export function isIOSDevice(): boolean {
   return iOS;
 }
 
-/** PWA running in standalone (home screen) mode. */
+/** PWA running in standalone / installed (home screen) mode. */
 export function isStandaloneDisplay(): boolean {
   if (typeof window === "undefined") return false;
-  const mm = window.matchMedia("(display-mode: standalone)");
-  if (mm.matches) return true;
-  return Boolean(
-    (window.navigator as Navigator & { standalone?: boolean }).standalone
-  );
+  return isStandalonePwa();
 }
 
 export function isAndroidChrome(): boolean {

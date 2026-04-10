@@ -81,7 +81,7 @@ export function MobileNavDrawer() {
                   height={36}
                   className="shrink-0 object-contain"
                 />
-                <span className="font-heading text-sm font-bold uppercase tracking-tight text-foreground">
+                <span className="font-heading text-base font-bold uppercase tracking-tight text-foreground">
                   The Real Business
                 </span>
               </Link>
@@ -98,7 +98,7 @@ export function MobileNavDrawer() {
                         href={item.href}
                         onClick={() => setMobileNavOpen(false)}
                         className={cn(
-                          "flex min-h-[48px] items-center gap-3.5 rounded-lg px-3 py-3 text-base font-medium transition-colors",
+                          "flex min-h-[48px] items-center gap-3.5 rounded-lg px-3 py-3 text-[17px] font-medium transition-colors",
                           isActive
                             ? "bg-admin-sidebar-active text-admin-sidebar-text"
                             : "text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",
@@ -140,7 +140,7 @@ export function MobileNavDrawer() {
                   setMobileNavOpen(false);
                   setShowLogoutDialog(true);
                 }}
-                className="flex min-h-[48px] w-full items-center gap-3.5 rounded-lg px-3 py-3 text-base font-medium text-red-600 transition-colors hover:bg-red-500/10"
+                className="flex min-h-[48px] w-full items-center gap-3.5 rounded-lg px-3 py-3 text-[17px] font-medium text-red-600 transition-colors hover:bg-red-500/10"
               >
                 <LogOut className="h-6 w-6 shrink-0" />
                 <span>Log Out</span>

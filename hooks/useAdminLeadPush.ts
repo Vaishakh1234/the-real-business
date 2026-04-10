@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { AdminSettings } from "@/types";
+import type { AdminSettings, AdminSettingsUpdate } from "@/types";
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -31,6 +31,7 @@ export function useAdminLeadPush() {
   const [pushActive, setPushActive] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [patching, setPatching] = useState(false);
 
   const supported = usePushSupported();
 
@@ -192,6 +193,32 @@ export function useAdminLeadPush() {
     }
   }, []);
 
+  const patchSettings = useCallback(async (patch: AdminSettingsUpdate) => {
+    setPatching(true);
+    try {
+      const patchRes = await fetch("/api/admin/settings", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+      });
+      if (!patchRes.ok) {
+        const j = await patchRes.json().catch(() => ({}));
+        throw new Error(
+          typeof j.error === "string" ? j.error : "Could not update settings.",
+        );
+      }
+      const pj = (await patchRes.json()) as { data: AdminSettings };
+      setSettings(pj.data);
+      if (patch.browser_notifications === false) {
+        setPushActive(false);
+      }
+      return pj.data;
+    } finally {
+      setPatching(false);
+    }
+  }, []);
+
   return {
     settings,
     settingsError,
@@ -200,8 +227,10 @@ export function useAdminLeadPush() {
     pushActive,
     loading,
     busy,
+    patching,
     supported,
     refresh,
+    patchSettings,
     enablePush,
     disablePush,
   };

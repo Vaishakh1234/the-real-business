@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
+import { SITE_NAME } from "@/lib/constants/site";
 
 const THEME = "#1a1a1a";
 const BG = "#ffffff";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "The Real Business — Real Estate & Property Consultancy",
-    short_name: "The Real Business",
+    name: `${SITE_NAME} — Real Estate & Property Consultancy`,
+    /** Label under the home-screen icon; must match marketing site name. */
+    short_name: SITE_NAME,
     description:
       "Real estate marketing, property consultancy, and buying & selling support in Palakkad, Kerala.",
     start_url: "/?source=pwa",
@@ -44,10 +46,10 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
       },
       {
-        name: "Lead alerts",
-        short_name: "Alerts",
-        description: "Set up push notifications for new leads",
-        url: "/admin/notifications?source=pwa",
+        name: "Admin settings",
+        short_name: "Settings",
+        description: "Account and lead alert preferences",
+        url: "/admin/settings?source=pwa",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
       },
       {

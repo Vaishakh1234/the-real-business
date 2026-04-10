@@ -11,6 +11,7 @@ export const adminSettingsPatchSchema = z
     email_notifications: z.boolean().optional(),
     lead_alerts: z.boolean().optional(),
     browser_notifications: z.boolean().optional(),
+    in_app_lead_notifications: z.boolean().optional(),
     theme: themePreference.optional(),
     language: z.string().optional(),
     timezone: z.string().optional(),

@@ -47,6 +47,9 @@ export function useCreateLead() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
       qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
+      qc.invalidateQueries({ queryKey: ["admin-notifications"] });
+      qc.invalidateQueries({ queryKey: ["admin-notifications-unread-count"] });
+      qc.invalidateQueries({ queryKey: ["admin-notifications-preview"] });
       toast.success("Lead created");
     },
     onError: (err: Error) => toast.error(err.message),
