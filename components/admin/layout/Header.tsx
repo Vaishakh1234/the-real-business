@@ -28,9 +28,7 @@ import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
 import { cn, formatDate, isUnreadAdminNotification } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import {
-  useAdminAttentionCounts,
-} from "@/hooks/useLeads";
+import { useAdminAttentionCounts } from "@/hooks/useLeads";
 import {
   useAdminNotificationsPreview,
   useMarkAllNotificationsRead,
@@ -71,7 +69,6 @@ export function Header() {
   const { data: attention } = useAdminAttentionCounts({
     enabled: !!email,
   });
-  const unseenLeadCount = attention?.unseenLeads ?? 0;
   const unreadNotifCount = attention?.unreadNotifications ?? 0;
   const { data: previewData, isLoading: previewLoading } =
     useAdminNotificationsPreview(6);
@@ -145,13 +142,13 @@ export function Header() {
             "lg:hidden",
           )}
           aria-label={
-            unseenLeadCount > 0
-              ? `Notifications, ${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+            unreadNotifCount > 0
+              ? `Notifications, ${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
               : "Notifications"
           }
           title={
-            unseenLeadCount > 0
-              ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+            unreadNotifCount > 0
+              ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
               : "Notifications"
           }
         >
@@ -159,9 +156,9 @@ export function Header() {
             className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
             strokeWidth={2}
           />
-          {unseenLeadCount > 0 && (
+          {unreadNotifCount > 0 && (
             <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-              {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
+              {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
             </span>
           )}
         </Link>
@@ -177,13 +174,13 @@ export function Header() {
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 )}
                 aria-label={
-                  unseenLeadCount > 0
-                    ? `Notifications, ${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+                  unreadNotifCount > 0
+                    ? `Notifications, ${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
                     : "Notifications"
                 }
                 title={
-                  unseenLeadCount > 0
-                    ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+                  unreadNotifCount > 0
+                    ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
                     : "Notifications"
                 }
               >
@@ -191,9 +188,9 @@ export function Header() {
                   className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
                   strokeWidth={2}
                 />
-                {unseenLeadCount > 0 && (
+                {unreadNotifCount > 0 && (
                   <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-                    {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
+                    {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
                   </span>
                 )}
               </button>
@@ -209,9 +206,9 @@ export function Header() {
                       Notifications
                     </p>
                     <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
-                      {unseenLeadCount > 0
-                        ? `${unseenLeadCount} unseen on Leads list`
-                        : "Leads list is up to date"}
+                      {unreadNotifCount > 0
+                        ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
+                        : "No unread notifications"}
                     </p>
                   </div>
                   {unreadNotifCount > 0 ? (
