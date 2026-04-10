@@ -1,3 +1,4 @@
+import type { AdminAttentionCounts } from "@/lib/queries/admin-attention";
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
@@ -54,6 +55,26 @@ const TYPE_TILE: Record<LeadType, string> = {
   list_property: "bg-rose-100 text-rose-800 ring-1 ring-rose-200/90 shadow-sm",
   general: "bg-slate-100 text-slate-700 ring-1 ring-slate-200/90 shadow-sm",
 };
+
+/**
+ * Header notification popover copy: must match row-level unread state (not the bell
+ * badge total, which dedupes unseen leads vs unread notifications).
+ */
+export function getNotificationPopoverSubtitle(
+  attention: AdminAttentionCounts | undefined,
+  options: { isPending: boolean; hasSession: boolean },
+): string {
+  if (options.isPending && options.hasSession) return "Loading…";
+  const unread = attention?.unreadNotifications ?? 0;
+  const unseen = attention?.unseenLeads ?? 0;
+  if (unread > 0) {
+    return `${unread} unread notification${unread === 1 ? "" : "s"}`;
+  }
+  if (unseen > 0) {
+    return `${unseen} new lead${unseen === 1 ? "" : "s"} to review`;
+  }
+  return "You're all caught up";
+}
 
 export function getNotificationTypePresentation(body: string | null | undefined): {
   Icon: LucideIcon;

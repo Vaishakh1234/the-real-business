@@ -21,15 +21,12 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { adminNavItems } from "@/lib/constants/admin-nav";
-import { useAdminAttentionCounts } from "@/hooks/useLeads";
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { clearAuth, email } = useAuthStore();
-  const { data: attention } = useAdminAttentionCounts({ enabled: !!email });
-  const unseenLeads = attention?.unseenLeads ?? 0;
-  const { sidebarCollapsed, toggleSidebar } = useAppStore();
+  const { clearAuth } = useAuthStore();
+  const { sidebarCollapsed } = useAppStore();
 
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -106,13 +103,7 @@ export function Sidebar() {
                       : "text-admin-sidebar-text-muted hover:bg-admin-sidebar-hover hover:text-admin-sidebar-text",
                     sidebarCollapsed && "justify-center px-0",
                   )}
-                  title={
-                    sidebarCollapsed
-                      ? item.href === "/admin/leads" && unseenLeads > 0
-                        ? `${item.label} (${unseenLeads} new)`
-                        : item.label
-                      : undefined
-                  }
+                  title={sidebarCollapsed ? item.label : undefined}
                 >
                   {isActive && !sidebarCollapsed && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-7 bg-admin-sidebar-active-indicator rounded-r-full" />
@@ -126,19 +117,6 @@ export function Sidebar() {
                     )}
                   />
                   {!sidebarCollapsed && <span>{item.label}</span>}
-                  {item.href === "/admin/leads" && unseenLeads > 0 ? (
-                    <span
-                      className={cn(
-                        "absolute flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-sidebar-bg",
-                        sidebarCollapsed
-                          ? "right-1 top-2"
-                          : "right-2 top-1/2 -translate-y-1/2",
-                      )}
-                      aria-hidden
-                    >
-                      {unseenLeads > 99 ? "99+" : unseenLeads}
-                    </span>
-                  ) : null}
                 </Link>
               </li>
             );

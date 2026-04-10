@@ -97,7 +97,15 @@ function NotificationRow({ row }: { row: AdminNotificationRow }) {
             </p>
           ) : null}
           <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground tabular-nums sm:text-xs">
-            <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-brand-gold/70" />
+            <span
+              className={cn(
+                "inline-block h-1 w-1 shrink-0 rounded-full",
+                unread
+                  ? "bg-brand-gold/80"
+                  : "bg-muted-foreground/35",
+              )}
+              aria-hidden
+            />
             {formatDate(row.created_at)}
           </p>
         </div>
