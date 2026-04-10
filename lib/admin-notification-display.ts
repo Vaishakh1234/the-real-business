@@ -57,8 +57,8 @@ const TYPE_TILE: Record<LeadType, string> = {
 };
 
 /**
- * Header notification popover copy: must match row-level unread state (not the bell
- * badge total, which dedupes unseen leads vs unread notifications).
+ * Header popover subtitle: unread inbox count first; if none, unseen leads (Leads queue).
+ * Bell badge uses `unreadNotifications` only (same as inbox “New”).
  */
 export function getNotificationPopoverSubtitle(
   attention: AdminAttentionCounts | undefined,

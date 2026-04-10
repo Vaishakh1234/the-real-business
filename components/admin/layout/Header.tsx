@@ -69,12 +69,12 @@ export function Header() {
         .replace(/\b\w/g, (c) => c.toUpperCase())
     : "Admin";
 
+  /** Session cookie is source of truth; do not gate on `email` (persist can lag or be empty). */
   const { data: attention, isPending: attentionPending } =
     useAdminAttentionCounts({
-      enabled: !!email,
+      enabled: true,
     });
-  /** Deduped: unseen leads + unread notifications (no double-count). Matches `/api/admin/attention-count`. */
-  const bellBadgeCount = attention?.bellTotal ?? 0;
+  /** In-app inbox unread count — same as each “New” row on `/admin/notifications`. */
   const unreadNotifCount = attention?.unreadNotifications ?? 0;
   const { data: previewData, isLoading: previewLoading } =
     useAdminNotificationsPreview(6);
@@ -148,13 +148,13 @@ export function Header() {
             "lg:hidden",
           )}
           aria-label={
-            bellBadgeCount > 0
-              ? `Notifications, ${bellBadgeCount} pending (new leads and unread alerts)`
+            unreadNotifCount > 0
+              ? `Notifications, ${unreadNotifCount} unread`
               : "Notifications"
           }
           title={
-            bellBadgeCount > 0
-              ? `${bellBadgeCount} pending (new leads and unread alerts)`
+            unreadNotifCount > 0
+              ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
               : "Notifications"
           }
         >
@@ -162,9 +162,9 @@ export function Header() {
             className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
             strokeWidth={2}
           />
-          {bellBadgeCount > 0 && (
+          {unreadNotifCount > 0 && (
             <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-              {bellBadgeCount > 99 ? "99+" : bellBadgeCount}
+              {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
             </span>
           )}
         </Link>
@@ -180,13 +180,13 @@ export function Header() {
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 )}
                 aria-label={
-                  bellBadgeCount > 0
-                    ? `Notifications, ${bellBadgeCount} pending (new leads and unread alerts)`
+                  unreadNotifCount > 0
+                    ? `Notifications, ${unreadNotifCount} unread`
                     : "Notifications"
                 }
                 title={
-                  bellBadgeCount > 0
-                    ? `${bellBadgeCount} pending (new leads and unread alerts)`
+                  unreadNotifCount > 0
+                    ? `${unreadNotifCount} unread notification${unreadNotifCount === 1 ? "" : "s"}`
                     : "Notifications"
                 }
               >
@@ -194,9 +194,9 @@ export function Header() {
                   className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
                   strokeWidth={2}
                 />
-                {bellBadgeCount > 0 && (
+                {unreadNotifCount > 0 && (
                   <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-                    {bellBadgeCount > 99 ? "99+" : bellBadgeCount}
+                    {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
                   </span>
                 )}
               </button>
@@ -214,7 +214,7 @@ export function Header() {
                     <p className="mt-0.5 text-muted-foreground text-xs leading-relaxed">
                       {getNotificationPopoverSubtitle(attention, {
                         isPending: attentionPending,
-                        hasSession: !!email,
+                        hasSession: true,
                       })}
                     </p>
                   </div>
@@ -288,14 +288,16 @@ export function Header() {
                               />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <div className="flex items-start justify-between gap-2">
-                                <NotificationLeadTitle
-                                  title={n.title}
-                                  className="text-sm"
-                                />
+                              <div className="flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+                                <div className="min-w-0 flex-1">
+                                  <NotificationLeadTitle
+                                    title={n.title}
+                                    className="block truncate text-sm"
+                                  />
+                                </div>
                                 {unread ? (
                                   <Badge
-                                    className="h-5 shrink-0 border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
+                                    className="h-5 shrink-0 self-center border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white"
                                     aria-label="Unread"
                                   >
                                     New

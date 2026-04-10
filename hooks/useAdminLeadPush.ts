@@ -110,7 +110,6 @@ export function useAdminLeadPush() {
         body: JSON.stringify({
           notifications_enabled: true,
           lead_alerts: true,
-          browser_notifications: true,
         }),
       });
       if (!patchRes.ok) {
@@ -171,22 +170,26 @@ export function useAdminLeadPush() {
     try {
       const reg = await navigator.serviceWorker.getRegistration();
       const sub = await reg?.pushManager.getSubscription();
+      const endpoint = sub?.endpoint;
       await sub?.unsubscribe();
 
-      const patchRes = await fetch("/api/admin/settings", {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ browser_notifications: false }),
-      });
-      if (!patchRes.ok) {
-        const j = await patchRes.json().catch(() => ({}));
-        throw new Error(
-          typeof j.error === "string" ? j.error : "Could not update settings.",
-        );
+      if (endpoint) {
+        const delRes = await fetch("/api/admin/push/subscribe", {
+          method: "DELETE",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ endpoint }),
+        });
+        if (!delRes.ok) {
+          const j = await delRes.json().catch(() => ({}));
+          throw new Error(
+            typeof j.error === "string"
+              ? j.error
+              : "Could not remove this device from lead alerts.",
+          );
+        }
       }
-      const pj = (await patchRes.json()) as { data: AdminSettings };
-      setSettings(pj.data);
+
       setPushActive(false);
     } finally {
       setBusy(false);

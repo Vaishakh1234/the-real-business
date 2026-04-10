@@ -6,20 +6,10 @@ import {
   deletePushSubscriptionByEndpoint,
   getAllPushSubscriptions,
 } from "@/lib/queries/push-subscriptions";
+import { shouldSendLeadPushForAdmin } from "@/lib/notifications/lead-push-policy";
 import { ensureWebPushConfigured, webpush } from "@/lib/notifications/vapid";
 
 const NOTIFICATION_ICON = "/icons/icon-192.png";
-
-function shouldSendForAdmin(settings: Awaited<
-  ReturnType<typeof getAdminSettingsByEmail>
->): boolean {
-  if (!settings) return true;
-  return (
-    settings.notifications_enabled &&
-    settings.lead_alerts &&
-    settings.browser_notifications
-  );
-}
 
 function buildLeadPayload(lead: Lead) {
   const title = `New lead: ${lead.name}`;
@@ -101,7 +91,7 @@ export async function sendLeadNotification(lead: Lead): Promise<void> {
     if (allow === undefined) {
       try {
         const s = await getAdminSettingsByEmail(row.admin_email);
-        allow = shouldSendForAdmin(s);
+        allow = shouldSendLeadPushForAdmin(s);
         settingsCache.set(row.admin_email, allow);
       } catch (e) {
         console.error("[push] admin_settings", row.admin_email, e);

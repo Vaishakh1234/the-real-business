@@ -17,7 +17,7 @@ const SESSION_OPTIONS = {
  * Admin route guard + `x-pathname` for `app/(admin)/admin/layout.tsx` so
  * `/admin/login` can render without the authenticated shell (see layout).
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const requestHeaders = new Headers(request.headers);

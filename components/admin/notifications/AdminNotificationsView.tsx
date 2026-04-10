@@ -77,14 +77,16 @@ function NotificationRow({ row }: { row: AdminNotificationRow }) {
           />
         </div>
         <div className="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
-          <div className="flex items-start justify-between gap-2">
-            <NotificationLeadTitle
-              title={row.title}
-              className="text-sm sm:text-[15px]"
-            />
+          <div className="flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+            <div className="min-w-0 flex-1">
+              <NotificationLeadTitle
+                title={row.title}
+                className="block truncate text-sm sm:text-[15px]"
+              />
+            </div>
             {unread ? (
               <Badge
-                className="h-5 shrink-0 border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm sm:px-2"
+                className="h-5 shrink-0 self-center border-0 bg-brand-blue px-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm sm:px-2"
                 aria-label="Unread"
               >
                 New
@@ -100,9 +102,7 @@ function NotificationRow({ row }: { row: AdminNotificationRow }) {
             <span
               className={cn(
                 "inline-block h-1 w-1 shrink-0 rounded-full",
-                unread
-                  ? "bg-brand-gold/80"
-                  : "bg-muted-foreground/35",
+                unread ? "bg-brand-gold/80" : "bg-muted-foreground/35",
               )}
               aria-hidden
             />
@@ -145,35 +145,51 @@ export function AdminNotificationsView() {
         subtitle="New leads appear here when in-app lead notifications are enabled in Settings."
         breadcrumbs={breadcrumbs}
         actions={
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
             <Button
               variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-lg border-brand-gold/35 bg-white/90 shadow-sm backdrop-blur-sm hover:border-brand-gold/55 hover:bg-brand-gold-muted"
+              size="sm"
+              className="h-11 w-11 shrink-0 gap-0 rounded-lg border-brand-gold/35 bg-white/90 p-0 shadow-sm backdrop-blur-sm hover:border-brand-gold/55 hover:bg-brand-gold-muted lg:h-9 lg:w-auto lg:gap-2 lg:px-3"
               asChild
             >
               <Link
                 href="/admin/settings"
+                className="inline-flex items-center justify-center lg:gap-2"
                 aria-label="Notification settings"
                 title="Notification settings"
               >
-                <Settings className="h-3.5 w-3.5" aria-hidden />
+                <Settings className="h-4 w-4 shrink-0" aria-hidden />
+                <span className="hidden lg:inline">Settings</span>
               </Link>
             </Button>
             <Button
               type="button"
-              size="icon"
-              className="h-8 w-8 rounded-lg bg-brand-blue text-brand-blue-foreground shadow-md shadow-brand-blue/25 hover:bg-brand-blue-hover"
+              size="sm"
+              className="h-11 w-11 shrink-0 gap-0 rounded-lg bg-brand-blue p-0 text-brand-blue-foreground shadow-md shadow-brand-blue/25 hover:bg-brand-blue-hover lg:h-9 lg:w-auto lg:gap-2 lg:px-3.5"
               disabled={markAll.isPending || total === 0}
-              aria-label="Mark all notifications as read"
-              title="Mark all read"
+              title="Mark all notifications as read"
+              aria-label={
+                markAll.isPending
+                  ? "Marking all notifications as read"
+                  : "Mark all notifications as read"
+              }
               onClick={() => void markAll.mutate()}
             >
               {markAll.isPending ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+                <Loader2
+                  className="h-4 w-4 shrink-0 animate-spin"
+                  aria-hidden
+                />
               ) : (
-                <Check className="h-3.5 w-3.5" strokeWidth={2.25} aria-hidden />
+                <Check
+                  className="h-4 w-4 shrink-0"
+                  strokeWidth={2.25}
+                  aria-hidden
+                />
               )}
+              <span className="hidden lg:inline">
+                {markAll.isPending ? "Marking…" : "Mark all read"}
+              </span>
             </Button>
           </div>
         }
@@ -216,16 +232,18 @@ export function AdminNotificationsView() {
               </div>
               <Button
                 variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-lg border-brand-gold/40 bg-white/90 hover:bg-brand-gold-muted"
+                size="sm"
+                className="h-11 w-11 shrink-0 gap-0 rounded-lg border-brand-gold/40 bg-white/90 p-0 hover:bg-brand-gold-muted lg:h-9 lg:w-auto lg:gap-2 lg:px-4"
                 asChild
               >
                 <Link
                   href="/admin/settings"
+                  className="inline-flex items-center justify-center lg:gap-2"
                   aria-label="Notification settings"
                   title="Notification settings"
                 >
-                  <Settings className="h-4 w-4" aria-hidden />
+                  <Settings className="h-4 w-4 shrink-0" aria-hidden />
+                  <span className="hidden lg:inline">Settings</span>
                 </Link>
               </Button>
             </div>

@@ -39,7 +39,7 @@ describe("getNotificationPopoverSubtitle", () => {
         {
           unseenLeads: 4,
           unreadNotifications: 0,
-          bellTotal: 4,
+          bellTotal: 0,
         },
         { isPending: false, hasSession: true },
       ),
@@ -62,7 +62,7 @@ describe("getNotificationPopoverSubtitle", () => {
         {
           unseenLeads: 1,
           unreadNotifications: 0,
-          bellTotal: 1,
+          bellTotal: 0,
         },
         { isPending: false, hasSession: true },
       ),
