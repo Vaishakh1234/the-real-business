@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, Loader2 } from "lucide-react";
 import { LEGAL_LINKS } from "@/lib/constants/site";
 
 export function ContactForm() {
@@ -39,6 +39,7 @@ export function ContactForm() {
           phone: form.phone,
           message: `Interest: ${form.interest}\n\n${form.message}`,
           source: "website",
+          lead_type: "contact",
         }),
       });
 
@@ -170,13 +171,17 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "loading"}
+        aria-busy={status === "loading"}
         className="w-full flex items-center justify-center gap-2 min-h-[44px] bg-brand-charcoal text-white text-sm font-semibold py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed touch-manipulation active:scale-[0.98]"
       >
         {status === "loading" ? (
-          <span>Sending...</span>
+          <>
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+            <span>Sending…</span>
+          </>
         ) : (
           <>
-            Send Message <Send className="h-4 w-4" />
+            Send Message <Send className="h-4 w-4 shrink-0" aria-hidden />
           </>
         )}
       </button>

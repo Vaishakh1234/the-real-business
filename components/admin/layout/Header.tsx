@@ -1,16 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, LogOut } from "lucide-react";
-import { useAppStore } from "@/store/appStore";
-
-function getGreeting(displayName: string): string {
-  const hour = new Date().getHours();
-  const name = displayName.split(" ")[0] || "there";
-  if (hour < 12) return `Good morning, ${name}`;
-  if (hour < 17) return `Good afternoon, ${name}`;
-  return `Good evening, ${name}`;
-}
+import { Bell, Loader2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,9 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuthStore } from "@/store/authStore";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -32,8 +22,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
 import { Logo } from "@/components/ui/Logo";
+import { useAppStore } from "@/store/appStore";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { useAdminUnseenLeadCount } from "@/hooks/useLeads";
+
+function getGreeting(displayName: string): string {
+  const hour = new Date().getHours();
+  const name = displayName.split(" ")[0] || "there";
+  if (hour < 12) return `Good morning, ${name}`;
+  if (hour < 17) return `Good afternoon, ${name}`;
+  return `Good evening, ${name}`;
+}
 
 export function Header() {
   const router = useRouter();
@@ -44,8 +46,15 @@ export function Header() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const displayName = email
-    ? email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    ? email
+        .split("@")[0]
+        .replace(/[._-]/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase())
     : "Admin";
+
+  const { data: unseenLeadCount = 0 } = useAdminUnseenLeadCount({
+    enabled: !!email,
+  });
 
   async function handleLogout() {
     setIsLoggingOut(true);
@@ -100,7 +109,35 @@ export function Header() {
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <Link
+          href="/admin/notifications"
+          className={cn(
+            "relative flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-transparent text-muted-foreground transition-colors",
+            "hover:border-admin-header-border hover:bg-muted/80 hover:text-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          )}
+          aria-label={
+            unseenLeadCount > 0
+              ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"} — alerts and notifications`
+              : "Lead alerts and push notifications"
+          }
+          title={
+            unseenLeadCount > 0
+              ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+              : "Lead alerts"
+          }
+        >
+          <Bell
+            className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
+            strokeWidth={2}
+          />
+          {unseenLeadCount > 0 && (
+            <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
+              {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
+            </span>
+          )}
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg px-2 py-1.5 hover:bg-muted transition-colors lg:min-h-0 lg:min-w-0 lg:gap-2.5">

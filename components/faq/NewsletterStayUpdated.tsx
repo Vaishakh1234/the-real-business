@@ -33,6 +33,7 @@ export function NewsletterStayUpdated() {
           email: trimmed,
           message: "Newsletter subscription from /faq page",
           source: "website",
+          lead_type: "general",
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {

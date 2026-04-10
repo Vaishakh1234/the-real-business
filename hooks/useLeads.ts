@@ -3,7 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { buildQueryString } from "@/lib/utils";
-import type { Lead, LeadWithProperty, LeadFilters } from "@/types";
+import type {
+  Lead,
+  LeadInsert,
+  LeadWithProperty,
+  LeadFilters,
+} from "@/types";
 
 export function useLeads(filters: LeadFilters = {}) {
   return useQuery<{
@@ -28,7 +33,7 @@ export function useLeads(filters: LeadFilters = {}) {
 export function useCreateLead() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (body: Omit<Lead, "id" | "created_at" | "updated_at">) => {
+    mutationFn: async (body: LeadInsert) => {
       const res = await fetch("/api/admin/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,6 +46,7 @@ export function useCreateLead() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
+      qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
       toast.success("Lead created");
     },
     onError: (err: Error) => toast.error(err.message),
@@ -68,6 +74,7 @@ export function useUpdateLead() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
+      qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
       toast.success("Lead updated");
     },
     onError: (err: Error) => toast.error(err.message),
@@ -86,13 +93,56 @@ export function useDeleteLead() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
+      qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
       toast.success("Lead deleted");
     },
     onError: (err: Error) => toast.error(err.message),
   });
 }
 
-/** Public contact form submission — POSTs to /api/leads, shows toast, invalidates admin leads list */
+/** Unseen lead count for admin header badge (requires session). */
+export function useAdminUnseenLeadCount(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: ["admin-leads-unseen-count"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/leads/unseen-count", {
+        credentials: "include",
+      });
+      if (res.status === 401 || res.status === 403) return 0;
+      if (!res.ok) throw new Error("Failed to fetch unseen count");
+      const json = (await res.json()) as { count?: number };
+      return typeof json.count === "number" ? json.count : 0;
+    },
+    enabled: options?.enabled ?? true,
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+    retry: 1,
+  });
+}
+
+/** Mark a lead as seen when opened in the admin panel. */
+export function useMarkLeadSeen() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/admin/leads/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ seen_at: new Date().toISOString() }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to update lead");
+      return json.data as Lead;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["leads"] });
+      qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
+    },
+  });
+}
+
+/** Public contact form submission — POSTs to /api/leads; UI should show inline feedback, invalidates admin leads list */
 export function useSubmitContactForm() {
   const qc = useQueryClient();
   return useMutation({
@@ -102,11 +152,16 @@ export function useSubmitContactForm() {
       phone?: string | null;
       message: string;
       source?: Lead["source"];
+      lead_type?: Lead["lead_type"];
     }) => {
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...body, source: body.source ?? "website" }),
+        body: JSON.stringify({
+          ...body,
+          source: body.source ?? "website",
+          lead_type: body.lead_type ?? "enquiry",
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to send message");
@@ -114,8 +169,6 @@ export function useSubmitContactForm() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["leads"] });
-      toast.success("Message sent! We'll get back to you soon.");
     },
-    onError: (err: Error) => toast.error(err.message),
   });
 }

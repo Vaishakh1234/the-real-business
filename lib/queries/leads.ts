@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { toUserFriendlyMessage } from "@/lib/db-errors";
-import type { Lead, LeadWithProperty, LeadFilters } from "@/types";
+import type { Lead, LeadInsert, LeadWithProperty, LeadFilters } from "@/types";
 
 export async function getLeads(
   opts: Partial<LeadFilters>
@@ -12,6 +12,7 @@ export async function getLeads(
     search,
     status,
     source,
+    lead_type,
     sort_by = "created_at",
     sort_order = "desc",
   } = opts;
@@ -24,6 +25,7 @@ export async function getLeads(
 
   if (status && status !== "all") query = query.eq("status", status);
   if (source && source !== "all") query = query.eq("source", source);
+  if (lead_type && lead_type !== "all") query = query.eq("lead_type", lead_type);
   if (search) {
     query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`);
   }
@@ -51,9 +53,8 @@ export async function getLeadById(id: string): Promise<LeadWithProperty | null> 
   return data as LeadWithProperty;
 }
 
-export async function createLead(
-  input: Omit<Lead, "id" | "created_at" | "updated_at">
-): Promise<Lead> {
+/** Insert payload; `profile_bg_color` is set by the database trigger. */
+export async function createLead(input: LeadInsert): Promise<Lead> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("leads")
@@ -85,4 +86,18 @@ export async function deleteLead(id: string): Promise<void> {
   const supabase = createAdminClient();
   const { error } = await supabase.from("leads").delete().eq("id", id);
   if (error) throw new Error(toUserFriendlyMessage(error));
+}
+
+export async function countUnseenLeads(): Promise<number> {
+  const supabase = createAdminClient();
+  const { count, error } = await supabase
+    .from("leads")
+    .select("id", { count: "exact", head: true })
+    .is("seen_at", null);
+  if (error) throw new Error(toUserFriendlyMessage(error));
+  return count ?? 0;
+}
+
+export async function markLeadSeen(id: string): Promise<Lead> {
+  return updateLead(id, { seen_at: new Date().toISOString() });
 }

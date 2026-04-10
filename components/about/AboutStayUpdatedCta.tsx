@@ -36,6 +36,7 @@ export function AboutStayUpdatedCta() {
           email: trimmed,
           message: "Newsletter subscription from /about page",
           source: "website",
+          lead_type: "general",
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {

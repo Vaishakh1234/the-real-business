@@ -55,6 +55,7 @@ import {
 import { useReports } from "@/hooks/useReports";
 import { formatDate, cn } from "@/lib/utils";
 import Link from "next/link";
+import { LEAD_TYPE_LABELS } from "@/lib/constants/lead-types";
 import type { LeadSource, RecentActivity, ReportsData } from "@/types";
 import { DataTablePagination } from "@/components/admin/data-table/DataTablePagination";
 import { ReportsSkeleton } from "@/components/admin/skeletons/AdminPageSkeleton";
@@ -200,6 +201,16 @@ function reportsToExportRows(reports: ReportsData): Record<string, unknown>[] {
       "Created At": "",
     });
   });
+  (lead_stats.by_type ?? []).forEach((t) => {
+    rows.push({
+      Metric: `Leads by Type: ${LEAD_TYPE_LABELS[t.type] ?? t.type}`,
+      Value: t.count,
+      Type: "",
+      Title: "",
+      Subtitle: "",
+      "Created At": "",
+    });
+  });
   category_distribution.forEach((c) => {
     rows.push({
       Metric: `Category: ${c.name}`,
@@ -237,6 +248,7 @@ const SECTIONS = [
   { id: "lead_pie" as const, label: "Lead status" },
   { id: "category_bar" as const, label: "By category" },
   { id: "source_bar" as const, label: "By source" },
+  { id: "type_bar" as const, label: "By lead type" },
   { id: "activity" as const, label: "Recent activity" },
 ];
 
@@ -373,6 +385,12 @@ export function ReportsView() {
     reports?.lead_stats?.by_source?.map((s) => ({
       name: SOURCE_LABELS[s.source] ?? s.source,
       count: s.count,
+    })) ?? [];
+
+  const typeBarData =
+    reports?.lead_stats?.by_type?.map((t) => ({
+      name: LEAD_TYPE_LABELS[t.type] ?? t.type,
+      count: t.count,
     })) ?? [];
 
   if (isLoading) {
@@ -746,6 +764,65 @@ export function ReportsView() {
           </div>
         )}
       </div>
+
+      {sections.has("type_bar") && (
+        <div className="rounded-xl border border-admin-card-border bg-admin-card-bg p-6 shadow-sm">
+          <h2 className="mb-6 text-lg font-bold text-foreground">
+            Leads by Type
+          </h2>
+          {typeBarData.length === 0 ? (
+            <div className="flex h-[200px] flex-col items-center justify-center rounded-xl bg-muted/50">
+              <UserPlus className="h-12 w-12 text-muted-foreground/50" />
+              <p className="mt-1 text-sm text-muted-foreground">
+                No lead type data
+              </p>
+            </div>
+          ) : (
+            <div className="h-[260px] max-w-3xl">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={typeBarData}
+                  margin={{ top: 5, right: 8, left: 0, bottom: 5 }}
+                  barCategoryGap="12%"
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#e5e7eb"
+                    className="stroke-gray-300"
+                  />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    width={28}
+                    tick={{ fontSize: 10, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(v) => (Number(v) === v ? String(v) : v)}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "12px",
+                      border: "1px solid #e5e7eb",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Bar
+                    dataKey="count"
+                    fill="#0ea5e9"
+                    radius={[4, 4, 0, 0]}
+                    name="Leads"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Recent Activity */}
       {sections.has("activity") && (

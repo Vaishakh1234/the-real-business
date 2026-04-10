@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/auth/session";
 import { getLeads, createLead } from "@/lib/queries/leads";
 import { CONNECTION_UNAVAILABLE_MESSAGE, withConnectionRetry } from "@/lib/db-errors";
-import type { Lead } from "@/types";
+import type { Lead, LeadInsert, LeadType } from "@/types";
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get("search") ?? undefined;
   const status = searchParams.get("status") ?? undefined;
   const source = searchParams.get("source") ?? undefined;
+  const lead_type = searchParams.get("lead_type") ?? undefined;
   const sort_by = searchParams.get("sort_by") ?? "created_at";
   const sort_order = (searchParams.get("sort_order") as "asc" | "desc") ?? "desc";
 
@@ -29,6 +30,7 @@ export async function GET(request: NextRequest) {
         search,
         status: status as Lead["status"] | "all" | undefined,
         source: source as Lead["source"] | "all" | undefined,
+        lead_type: lead_type as LeadType | "all" | undefined,
         sort_by,
         sort_order,
       }),
@@ -59,9 +61,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const data = await createLead(
-      body as Omit<Lead, "id" | "created_at" | "updated_at">
-    );
+    const data = await createLead(body as LeadInsert);
     return NextResponse.json({ data }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to create lead";

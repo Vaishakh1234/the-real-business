@@ -2,19 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ListPropertyLeadForm } from "@/components/properties/ListPropertyLeadForm";
 import { Button } from "@/components/ui/button";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
-import { CONTACT, SITE_NAME } from "@/lib/constants/site";
+import { LISTING_CARD } from "@/lib/constants/listing-card";
+import { CONTACT, SITE_NAME, getContactWhatsAppUrl } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
+import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
 
 const ILLUSTRATION_SRC = "/images/home-modal/home-modal-5.png";
 
-import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
-
 const postTitle = `Post property — ${SITE_NAME}`;
 const postDescription =
-  "List your property for sale or rent in Palakkad. Reach us on WhatsApp — we’ll guide you through the next steps.";
+  "List your property for sale or rent in Palakkad — submit details online, or reach us on WhatsApp. We’ll guide you through the next steps.";
 
 export const metadata: Metadata = {
   title: postTitle,
@@ -23,7 +24,13 @@ export const metadata: Metadata = {
   ...defaultPageOgTwitter("/post-property", postTitle, postDescription),
 };
 
+/** Matches `DirectoryPropertyListingCard` CTAs: outline “View details” + filled “Contact” (WhatsApp). */
+const listingStyleCtaRowClass =
+  "inline-flex min-h-11 w-full flex-1 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:w-auto";
+
 export default function PostPropertyPage() {
+  const whatsappHref = getContactWhatsAppUrl();
+
   return (
     <>
       <Breadcrumbs
@@ -31,13 +38,10 @@ export default function PostPropertyPage() {
         currentPath="/post-property"
       />
       <section
-        className={cn(
-          publicContentFrameClass,
-          "flex min-h-[calc(100svh-6rem)] flex-col items-center justify-center py-14 sm:min-h-[calc(100svh-7rem)] sm:py-20 lg:py-24",
-        )}
+        className={cn(publicContentFrameClass, "py-14 sm:py-20 lg:py-24")}
       >
-        <div className="flex w-full max-w-screen-2xl flex-col items-stretch gap-12 xl:flex-row xl:items-center xl:gap-20 2xl:gap-28">
-          <div className="relative aspect-[4/3] w-full min-w-0 overflow-hidden xl:min-h-0 xl:flex-[1.42]">
+        <div className="mx-auto flex w-full max-w-screen-2xl flex-col items-stretch gap-12 xl:flex-row xl:items-start xl:gap-16 2xl:gap-24">
+          <div className="relative aspect-[4/3] w-full min-w-0 overflow-hidden rounded-2xl border border-neutral-200/60 bg-white shadow-[0_8px_40px_-12px_rgba(26,26,26,0.12)] ring-1 ring-black/[0.04] xl:flex-[1.42]">
             <Image
               src={ILLUSTRATION_SRC}
               alt=""
@@ -47,44 +51,74 @@ export default function PostPropertyPage() {
               priority
             />
           </div>
-          <div className="flex min-w-0 w-full flex-col items-center gap-6 text-center sm:gap-8 xl:flex-1 xl:items-start xl:text-left">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-gold sm:text-base">
-              Get listed
-            </p>
-            <h1 className="font-heading text-4xl font-bold leading-[1.08] text-foreground sm:text-5xl xl:text-5xl 2xl:text-6xl">
-              We&apos;ll help you list the right way
-            </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Share your property basics over WhatsApp — location, type, and
-              what you&apos;re hoping to achieve. Our team will respond with
-              next steps and any documents we need.
-            </p>
-            <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row sm:gap-4 xl:mt-0 xl:items-start">
-              {CONTACT.whatsappUrl && (
+          <div className="flex min-w-0 w-full flex-col items-center gap-6 text-center sm:gap-8 xl:min-w-0 xl:flex-1 xl:items-stretch xl:text-left">
+            <div className="flex w-full max-w-xl flex-col items-center gap-6 xl:max-w-none xl:items-start">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-gold sm:text-base">
+                Get listed
+              </p>
+              <h1 className="font-heading text-4xl font-bold leading-[1.08] text-foreground sm:text-5xl xl:text-5xl 2xl:text-6xl">
+                We&apos;ll help you list the right way
+              </h1>
+              <p className="max-w-xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+                Share your property basics — location, type, and what you&apos;re
+                hoping to achieve. See how we present listings, reach us on
+                WhatsApp, or send the form and our team will follow up.
+              </p>
+              <div className="mt-1 flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch xl:max-w-none">
                 <Button
                   asChild
-                  size="lg"
-                  className="h-14 rounded-full bg-brand-charcoal px-8 text-base font-semibold tracking-tight text-white shadow-[0_2px_12px_rgba(0,0,0,0.1)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-brand-charcoal/92 hover:shadow-[0_4px_20px_rgba(0,0,0,0.14)] focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98] sm:h-16 sm:px-10 sm:text-lg [&_svg]:size-5 sm:[&_svg]:size-6"
+                  variant="outline"
+                  className={cn(
+                    listingStyleCtaRowClass,
+                    "border-2 border-neutral-300 bg-white text-brand-charcoal hover:border-neutral-400 hover:bg-neutral-50",
+                  )}
                 >
-                  <Link
-                    href={CONTACT.whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <WhatsAppIcon className="shrink-0" />
-                    Contact through WhatsApp
-                  </Link>
+                  <Link href="/properties">View details</Link>
                 </Button>
-              )}
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-14 rounded-full border-2 border-brand-charcoal px-8 text-base font-semibold tracking-tight text-brand-charcoal shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-[background-color,box-shadow,transform] duration-200 hover:bg-brand-charcoal hover:text-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.14)] focus-visible:ring-2 focus-visible:ring-brand-gold active:scale-[0.98] sm:h-16 sm:px-10 sm:text-lg"
-              >
-                <Link href="/contact">{CONTACT.contactUsLabel}</Link>
-              </Button>
+                {whatsappHref ? (
+                  <Button
+                    asChild
+                    className={cn(
+                      listingStyleCtaRowClass,
+                      "min-w-[148px] border-0 text-white hover:opacity-95",
+                    )}
+                    style={{ backgroundColor: LISTING_CARD.ctaRed }}
+                  >
+                    <a
+                      href={whatsappHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <WhatsAppIcon className="h-4 w-4 shrink-0" aria-hidden />
+                      Contact
+                    </a>
+                  </Button>
+                ) : (
+                  <Button
+                    asChild
+                    className={cn(
+                      listingStyleCtaRowClass,
+                      "min-w-[148px] border-0 text-white hover:opacity-95",
+                    )}
+                    style={{ backgroundColor: LISTING_CARD.ctaRed }}
+                  >
+                    <Link href="/contact">Contact</Link>
+                  </Button>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                <Link
+                  href="/contact"
+                  className="font-medium text-brand-charcoal underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-brand-gold"
+                >
+                  {CONTACT.contactUsLabel}
+                </Link>
+                <span className="text-neutral-400"> · </span>
+                <span>Or use the form below.</span>
+              </p>
             </div>
+
+            <ListPropertyLeadForm className="mt-6 w-full max-w-2xl xl:mt-8 xl:max-w-none" />
           </div>
         </div>
       </section>

@@ -25,6 +25,7 @@ interface DataTableProps<TData> {
   emptyMessage?: string;
   emptyIcon?: React.ReactNode;
   onRowClick?: (row: Row<TData>) => void;
+  getRowClassName?: (row: Row<TData>) => string | undefined;
   className?: string;
 }
 
@@ -35,6 +36,7 @@ export function DataTable<TData>({
   emptyMessage = "No results found.",
   emptyIcon,
   onRowClick,
+  getRowClassName,
   className,
 }: DataTableProps<TData>) {
   const table = useReactTable({
@@ -109,7 +111,10 @@ export function DataTable<TData>({
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                className={cn(onRowClick && "cursor-pointer")}
+                className={cn(
+                  onRowClick && "cursor-pointer",
+                  getRowClassName?.(row),
+                )}
                 onClick={() => onRowClick?.(row)}
               >
                 {row.getVisibleCells().map((cell) => (

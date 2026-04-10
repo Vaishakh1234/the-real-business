@@ -36,7 +36,7 @@ import { PropertyDetailGallery } from "@/components/properties/PropertyDetailGal
 import { PropertyEnquirySidebar } from "@/components/properties/PropertyEnquirySidebar";
 import { RelatedGuidesSection } from "@/components/properties/RelatedGuidesSection";
 import { RelatedPropertiesSection } from "@/components/properties/RelatedPropertiesSection";
-import { LISTING_CARD } from "@/components/properties/PropertyListingCard";
+import { LISTING_CARD } from "@/lib/constants/listing-card";
 import { getAreaSlugForCity } from "@/lib/constants/areas";
 
 interface PropertyDetailPublicClientProps {

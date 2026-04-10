@@ -30,7 +30,8 @@ import {
   type LeadCreateFormData,
   type LeadUpdateFormData,
 } from "@/lib/validations/lead.schema";
-import type { Lead, LeadWithProperty } from "@/types";
+import { LEAD_TYPE_LABELS, LEAD_TYPE_ORDER } from "@/lib/constants/lead-types";
+import type { Lead, LeadType, LeadWithProperty } from "@/types";
 import { Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -75,6 +76,7 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
       phone: "",
       message: "",
       source: "manual",
+      lead_type: "enquiry" as LeadType,
       property_id: "",
     },
   });
@@ -93,6 +95,7 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
         phone: lead.phone ?? "",
         message: lead.message ?? "",
         source: lead.source,
+        lead_type: lead.lead_type,
         property_id: lead.property_id ?? "",
       });
     }
@@ -112,6 +115,7 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
         phone: "",
         message: "",
         source: "manual",
+        lead_type: "enquiry",
         property_id: "",
       });
     }
@@ -126,6 +130,7 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
       phone: values.phone || null,
       message: values.message || null,
       source: values.source,
+      lead_type: values.lead_type,
       status: "new" as const,
       property_id: values.property_id || null,
       property_title: null,
@@ -147,6 +152,7 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
         phone: createValues.phone || null,
         message: createValues.message || null,
         source: createValues.source,
+        lead_type: createValues.lead_type,
         property_id: createValues.property_id || null,
         status: updateValues.status,
         notes: updateValues.notes || null,
@@ -290,6 +296,27 @@ export function LeadSheet({ open, onOpenChange, lead }: LeadSheetProps) {
                     <SelectItem value="chatbot" className="rounded-lg">
                       Chatbot
                     </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-gray-700 ml-1">
+                  Lead type
+                </Label>
+                <Select
+                  value={watch("lead_type")}
+                  onValueChange={(v) => setValue("lead_type", v as LeadType)}
+                >
+                  <SelectTrigger className="h-12 rounded-xl border-gray-200">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl shadow-2xl">
+                    {LEAD_TYPE_ORDER.map((t) => (
+                      <SelectItem key={t} value={t} className="rounded-lg">
+                        {LEAD_TYPE_LABELS[t]}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

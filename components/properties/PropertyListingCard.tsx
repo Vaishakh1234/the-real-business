@@ -18,7 +18,13 @@ import {
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import { useRef, useState } from "react";
 import type { PropertyWithRelations } from "@/types";
-import { HOME_EXPLORE, CONTACT, SITE_NAME } from "@/lib/constants/site";
+import {
+  CONTACT,
+  getContactWhatsAppUrl,
+  HOME_EXPLORE,
+  SITE_NAME,
+} from "@/lib/constants/site";
+import { LISTING_CARD } from "@/lib/constants/listing-card";
 import { isRemoteImageOptimizedUrl } from "@/lib/public-image-hosts";
 import { useWishlist } from "@/hooks/useWishlist";
 import {
@@ -30,14 +36,7 @@ import {
 } from "@/lib/utils";
 import { toast } from "sonner";
 
-/** Shared listing card palette — matches home explore (navy, green ref, red CTA). */
-export const LISTING_CARD = {
-  navy: "#1a2b4b",
-  meta: "#6b7280",
-  metaIcon: "#3b82f6",
-  badgeGreen: "#00a65a",
-  ctaRed: "#ff0018",
-} as const;
+export { LISTING_CARD };
 
 export function propertyListingRefCode(
   p: PropertyWithRelations,
@@ -411,6 +410,7 @@ function DirectoryListingCardMobile({
   priceDataValue,
   subtitleMobile,
   typeLabel,
+  whatsappHref,
 }: {
   property: PropertyWithRelations;
   href: string;
@@ -418,6 +418,7 @@ function DirectoryListingCardMobile({
   priceDataValue: string;
   subtitleMobile: string;
   typeLabel: string;
+  whatsappHref: string;
 }) {
   const { has, toggle } = useWishlist();
   const inWishlist = has(property.id);
@@ -710,14 +711,15 @@ function DirectoryListingCardMobile({
           <div className="flex flex-row items-center gap-2">
             <Link
               href={href}
-              className="flex min-h-11 min-w-0 flex-1 items-center justify-center rounded-full px-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-95 active:opacity-90 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+              className="flex min-h-11 min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-95 active:opacity-90 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
               style={{ backgroundColor: LISTING_CARD.ctaRed }}
             >
               View Details
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
             </Link>
-            {CONTACT.whatsappUrl && (
+            {whatsappHref ? (
               <a
-                href={CONTACT.whatsappUrl}
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm transition-opacity hover:opacity-95 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
@@ -726,7 +728,7 @@ function DirectoryListingCardMobile({
               >
                 <WhatsAppIcon className="h-5 w-5 shrink-0" />
               </a>
-            )}
+            ) : null}
             {telHref && (
               <a
                 href={telHref}
@@ -793,6 +795,8 @@ export function DirectoryPropertyListingCard({
   const statLabelClass =
     "text-[11px] font-semibold uppercase tracking-wider text-neutral-500";
 
+  const whatsappHref = getContactWhatsAppUrl();
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 12 }}
@@ -811,6 +815,7 @@ export function DirectoryPropertyListingCard({
         priceDataValue={priceDataValue}
         subtitleMobile={subtitleMobile}
         typeLabel={typeLabel}
+        whatsappHref={whatsappHref}
       />
 
       <div className="hidden min-h-0 flex-col lg:flex lg:flex-row">
@@ -1003,11 +1008,12 @@ export function DirectoryPropertyListingCard({
               href={href}
               className="inline-flex min-h-9 flex-1 items-center justify-center gap-2 rounded-lg border-2 border-neutral-300 bg-white px-3 text-sm font-semibold text-brand-charcoal transition-colors hover:border-neutral-400 hover:bg-neutral-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:flex-initial sm:min-w-[130px]"
             >
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
               View details
             </Link>
-            {CONTACT.whatsappUrl ? (
+            {whatsappHref ? (
               <a
-                href={CONTACT.whatsappUrl}
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-h-9 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 sm:flex-initial sm:min-w-[148px]"

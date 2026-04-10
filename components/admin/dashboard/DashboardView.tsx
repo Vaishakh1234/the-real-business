@@ -17,6 +17,7 @@ import { useDashboard } from "@/hooks/useDashboard";
 import { formatDate, cn } from "@/lib/utils";
 import Link from "next/link";
 import { DashboardSkeleton } from "@/components/admin/skeletons/AdminPageSkeleton";
+import { LeadPushNotificationsCard } from "@/components/admin/dashboard/LeadPushNotificationsCard";
 
 const PROPERTY_STATUS_COLORS: Record<string, string> = {
   active: "#22c55e",
@@ -69,6 +70,7 @@ export function DashboardView() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      <LeadPushNotificationsCard />
       {/* KPI Stats Row */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {[

@@ -53,10 +53,12 @@ export function AdminMobileWebNotice() {
         )}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle>Try the admin panel on a computer</AlertDialogTitle>
+          <AlertDialogTitle>Admin on your phone</AlertDialogTitle>
           <AlertDialogDescription className="text-center text-balance">
-            This dashboard works best on a larger screen. For a smoother
-            experience, open it in a desktop or tablet browser when you can.
+            You can review leads, get push alerts from the{" "}
+            <strong>Alerts</strong> tab, and manage listings on the go. For
+            heavy editing (long descriptions, many photos), a larger screen is
+            still easier when you have time.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -7,6 +7,7 @@ import { HomePortalLayout } from "@/components/landing/HomePortalLayout";
 import { HomeSidebar } from "@/components/landing/HomeSidebar";
 import { HomeFAQ } from "@/components/landing/FAQ";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { HomePwaInstallBanner } from "@/components/landing/HomePwaInstallBanner";
 import { SITE_NAME } from "@/lib/constants/site";
 import type { Metadata } from "next";
 import { defaultPageOgTwitter } from "@/lib/seo/social-metadata";
@@ -42,6 +43,7 @@ export default function LandingPage() {
       </HomePortalLayout>
       <HomeFAQ />
       <Testimonials />
+      <HomePwaInstallBanner />
     </>
   );
 }

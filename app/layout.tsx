@@ -18,6 +18,7 @@ const lora = Lora({
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#1a1a1a",
 };
 
 export const metadata: Metadata = {
@@ -40,8 +41,16 @@ export const metadata: Metadata = {
     "The Real Business",
   ],
   icons: {
-    icon: "/logo-icon-bg.png",
-    apple: "/logo-icon-bg.png",
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "The Real Business",
+    statusBarStyle: "default",
   },
   openGraph: {
     type: "website",

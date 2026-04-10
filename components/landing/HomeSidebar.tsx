@@ -11,7 +11,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
-import { CONTACT, POST_PROPERTY_HREF } from "@/lib/constants/site";
+import {
+  CONTACT,
+  getContactWhatsAppUrl,
+  POST_PROPERTY_HREF,
+} from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 
 /** Home portal cards — match `HomeCoreValuesSection` surface + hover. */
@@ -103,6 +107,8 @@ function AudienceCard({
 }
 
 export function HomeSidebar() {
+  const whatsappHref = getContactWhatsAppUrl();
+
   return (
     <aside
       className={cn(
@@ -124,9 +130,9 @@ export function HomeSidebar() {
             <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
             {CONTACT.contactUsLabel}
           </Link>
-          {CONTACT.whatsappUrl && (
+          {whatsappHref ? (
             <a
-              href={CONTACT.whatsappUrl}
+              href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               className={audienceCta({ intent: "whatsapp" })}
@@ -134,7 +140,7 @@ export function HomeSidebar() {
               <WhatsAppIcon className="h-5 w-5 shrink-0" />
               {CONTACT.whatsappLabel}
             </a>
-          )}
+          ) : null}
         </div>
       </AudienceCard>
 

@@ -6,10 +6,15 @@ import { Check, Heart, Loader2, Share2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { useWishlist } from "@/hooks/useWishlist";
-import { ASK_LEON, CONTACT, SOCIAL_LINKS } from "@/lib/constants/site";
+import {
+  ASK_LEON,
+  CONTACT,
+  getContactWhatsAppUrl,
+  SOCIAL_LINKS,
+} from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 import { SocialIcon } from "@/components/ui/SocialIcon";
-import { LISTING_CARD } from "@/components/properties/PropertyListingCard";
+import { LISTING_CARD } from "@/lib/constants/listing-card";
 
 const ENQUIRY_DEFAULT = "I'm interested in this property.";
 const VISIT_DEFAULT = "I would like to book a site visit for this property.";
@@ -31,6 +36,7 @@ export function PropertyEnquirySidebar({
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState(ENQUIRY_DEFAULT);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const whatsappHref = getContactWhatsAppUrl();
 
   const syncMessageWithTab = useCallback((next: LeadTab) => {
     setTab(next);
@@ -91,6 +97,7 @@ export function PropertyEnquirySidebar({
           phone: trimmedPhone || null,
           message: bodyMessage,
           source: "website",
+          lead_type: tab === "visit" ? "site_visit" : "enquiry",
           property_id: propertyId,
         }),
       });
@@ -134,12 +141,12 @@ export function PropertyEnquirySidebar({
             Our team will contact you shortly.
           </p>
 
-          {CONTACT.whatsappUrl && (
+          {whatsappHref ? (
             <>
               <p className="mt-8 text-sm text-muted-foreground">or</p>
 
               <a
-                href={CONTACT.whatsappUrl}
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-gold text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-gold/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
@@ -155,7 +162,7 @@ export function PropertyEnquirySidebar({
                 {CONTACT.whatsappLabel}
               </a>
             </>
-          )}
+          ) : null}
 
           <button
             type="button"
@@ -349,12 +356,12 @@ export function PropertyEnquirySidebar({
         </button>
       </form>
 
-      {CONTACT.whatsappUrl && (
+      {whatsappHref ? (
         <>
           <p className="py-3 text-center text-sm text-muted-foreground">or</p>
 
           <a
-            href={CONTACT.whatsappUrl}
+            href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-gold text-sm font-semibold text-white hover:bg-brand-gold/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
@@ -370,7 +377,7 @@ export function PropertyEnquirySidebar({
             {CONTACT.whatsappLabel}
           </a>
         </>
-      )}
+      ) : null}
 
       <div className="border-t border-neutral-200 pt-4">
         <p className="text-xs font-medium text-muted-foreground mb-2">

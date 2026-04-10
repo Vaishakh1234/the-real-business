@@ -1,5 +1,12 @@
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { ReportsData, PropertyStats, LeadStats, CategoryDistribution, RecentActivity } from "@/types";
+import type {
+  ReportsData,
+  PropertyStats,
+  LeadStats,
+  CategoryDistribution,
+  RecentActivity,
+  LeadType,
+} from "@/types";
 
 export interface ReportsFilters {
   date_from?: string; // ISO date
@@ -12,7 +19,7 @@ export async function getReportsData(filters: ReportsFilters = {}): Promise<Repo
   const { date_from, date_to, sort_activity = "desc" } = filters;
 
   let propertiesQuery = supabase.from("properties").select("status, type, created_at");
-  let leadsQuery = supabase.from("leads").select("status, source, created_at");
+  let leadsQuery = supabase.from("leads").select("status, source, lead_type, created_at");
   if (date_from) {
     propertiesQuery = propertiesQuery.gte("created_at", date_from);
     leadsQuery = leadsQuery.gte("created_at", date_from);
@@ -64,8 +71,11 @@ export async function getReportsData(filters: ReportsFilters = {}): Promise<Repo
   // Lead stats
   const leads = leadsResult.data ?? [];
   const sourceMap = new Map<string, number>();
+  const typeMap = new Map<string, number>();
   leads.forEach((l) => {
     sourceMap.set(l.source, (sourceMap.get(l.source) ?? 0) + 1);
+    const lt = (l as { lead_type?: string }).lead_type ?? "enquiry";
+    typeMap.set(lt, (typeMap.get(lt) ?? 0) + 1);
   });
 
   const lead_stats: LeadStats = {
@@ -77,6 +87,10 @@ export async function getReportsData(filters: ReportsFilters = {}): Promise<Repo
     lost: leads.filter((l) => l.status === "lost").length,
     by_source: Array.from(sourceMap.entries()).map(([source, count]) => ({
       source: source as LeadStats["by_source"][number]["source"],
+      count,
+    })),
+    by_type: Array.from(typeMap.entries()).map(([type, count]) => ({
+      type: type as LeadType,
       count,
     })),
   };

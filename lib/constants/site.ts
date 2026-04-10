@@ -582,3 +582,11 @@ export const SOCIAL_LINKS: SocialLink[] = [
     ariaLabel: "YouTube",
   },
 ].filter((link) => link.href !== "") as SocialLink[];
+
+/** WhatsApp URL for CTAs: prefer `CONTACT.whatsappUrl`, else the WhatsApp entry in `SOCIAL_LINKS`. */
+export function getContactWhatsAppUrl(): string {
+  const fromContact = CONTACT.whatsappUrl?.trim();
+  if (fromContact) return fromContact;
+  const social = SOCIAL_LINKS.find((l) => l.platform === "whatsapp");
+  return social?.href?.trim() ?? "";
+}

@@ -17,7 +17,8 @@
     "e2e:watch": "playwright test --headed --slow-mo=300",
     "test:all": "npm run test:run && npm run e2e",
     "db:reset": "supabase db reset",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "generate:pwa-icons": "tsx scripts/generate-pwa-icons.ts"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^11.1.0",
@@ -60,6 +61,7 @@
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "web-push": "^3.6.7",
     "xlsx": "^0.18.5",
     "zod": "^3.24.1",
     "zustand": "^5.0.2"
@@ -75,6 +77,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.27",
     "dotenv": "^16.4.5",

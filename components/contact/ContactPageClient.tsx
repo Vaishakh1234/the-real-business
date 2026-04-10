@@ -1,11 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Send,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  MessageCircle,
+} from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import {
   Select,
   SelectContent,
@@ -15,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
-import { CONTACT, SOCIAL_LINKS } from "@/lib/constants/site";
+import { CONTACT, getContactWhatsAppUrl, SOCIAL_LINKS } from "@/lib/constants/site";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { useSubmitContactForm } from "@/hooks/useLeads";
 
@@ -64,7 +76,12 @@ const interestOptions: {
 ];
 
 export function ContactPageClient() {
+  const whatsappHref = getContactWhatsAppUrl();
   const submitContact = useSubmitContactForm();
+  const [submitBanner, setSubmitBanner] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
   const {
     register,
     handleSubmit,
@@ -84,6 +101,7 @@ export function ContactPageClient() {
   });
 
   const onSubmit = (data: ContactFormValues) => {
+    setSubmitBanner(null);
     submitContact.mutate(
       {
         name: `${data.firstName.trim()} ${data.lastName.trim()}`.trim(),
@@ -91,9 +109,26 @@ export function ContactPageClient() {
         phone: data.phone?.trim() || null,
         message: `Interest: ${interestOptions.find((o) => o.value === data.interest)?.label ?? data.interest}\n\n${data.message ?? "(No message)"}`,
         source: "website",
+        lead_type: "contact",
       },
       {
-        onSuccess: () => reset(),
+        onSuccess: () => {
+          reset();
+          setSubmitBanner({
+            type: "success",
+            message:
+              "Your message has been sent successfully. We'll get back to you within one business day.",
+          });
+        },
+        onError: (err) => {
+          setSubmitBanner({
+            type: "error",
+            message:
+              err instanceof Error
+                ? err.message
+                : "Something went wrong. Please try again or email us directly.",
+          });
+        },
       },
     );
   };
@@ -146,6 +181,34 @@ export function ContactPageClient() {
                 question, our team is ready to assist you.
               </p>
             </div>
+
+            {submitBanner ? (
+              <div
+                role="alert"
+                aria-live={
+                  submitBanner.type === "error" ? "assertive" : "polite"
+                }
+                className={cn(
+                  "mb-6 flex gap-3 rounded-xl border p-4 text-sm leading-relaxed",
+                  submitBanner.type === "success"
+                    ? "border-emerald-200/80 bg-emerald-50 text-emerald-950"
+                    : "border-red-200/80 bg-red-50 text-red-950",
+                )}
+              >
+                {submitBanner.type === "success" ? (
+                  <CheckCircle2
+                    className="h-5 w-5 shrink-0 text-emerald-600"
+                    aria-hidden
+                  />
+                ) : (
+                  <AlertCircle
+                    className="h-5 w-5 shrink-0 text-red-600"
+                    aria-hidden
+                  />
+                )}
+                <p className="min-w-0 flex-1">{submitBanner.message}</p>
+              </div>
+            ) : null}
 
             <form
               className="space-y-6"
@@ -308,10 +371,23 @@ export function ContactPageClient() {
               <button
                 type="submit"
                 disabled={submitContact.isPending}
-                className="w-full py-4 bg-brand-charcoal text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                aria-busy={submitContact.isPending}
+                className="w-full py-4 bg-brand-charcoal text-white rounded-xl font-medium flex items-center justify-center gap-2 min-h-[48px] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <Send size={18} />
-                {submitContact.isPending ? "Sending…" : "Send Message"}
+                {submitContact.isPending ? (
+                  <>
+                    <Loader2
+                      className="h-5 w-5 shrink-0 animate-spin"
+                      aria-hidden
+                    />
+                    <span>Sending…</span>
+                  </>
+                ) : (
+                  <>
+                    <Send size={18} className="shrink-0" aria-hidden />
+                    Send Message
+                  </>
+                )}
               </button>
             </form>
           </motion.div>
@@ -360,20 +436,24 @@ export function ContactPageClient() {
                   </div>
                 ) : null}
 
-                {CONTACT.whatsappUrl ? (
+                {whatsappHref ? (
                   <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center text-brand-gold shrink-0 shadow-sm">
-                      <MessageCircle size={18} className="sm:w-5 sm:h-5" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm">
+                      <WhatsAppIcon className="h-[18px] w-[18px] text-[#25D366] sm:h-5 sm:w-5" />
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
                         WhatsApp
                       </h4>
+                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug mb-2">
+                        Prefer a quick chat? Message us on WhatsApp — we typically
+                        reply within business hours.
+                      </p>
                       <a
-                        href={CONTACT.whatsappUrl}
+                        href={whatsappHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-brand-gold text-[13px] sm:text-base leading-snug hover:underline"
+                        className="inline-flex text-[13px] sm:text-base font-medium text-brand-gold leading-snug hover:underline"
                       >
                         {CONTACT.whatsappLabel}
                       </a>
@@ -420,7 +500,7 @@ export function ContactPageClient() {
                   <h4 className="font-bold text-foreground mb-3 text-sm sm:text-base">
                     Follow Us
                   </h4>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     {SOCIAL_LINKS.map((social) => (
                       <a
                         key={social.platform}
@@ -436,6 +516,23 @@ export function ContactPageClient() {
                   </div>
                 </div>
               )}
+
+              {whatsappHref ? (
+                <div className="mt-6 sm:mt-8 pt-6 border-t border-border">
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-charcoal px-4 py-4 text-center text-base font-medium text-white transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                  >
+                    <WhatsAppIcon className="h-5 w-5 shrink-0 text-white" />
+                    Chat on WhatsApp
+                  </a>
+                  <p className="mt-3 text-center text-xs text-muted-foreground">
+                    Opens WhatsApp on your phone or desktop.
+                  </p>
+                </div>
+              ) : null}
             </div>
           </motion.div>
         </div>

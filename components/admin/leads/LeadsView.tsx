@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
   Plus,
@@ -62,14 +62,24 @@ import { DataTable } from "@/components/admin/data-table/DataTable";
 import { DataTablePagination } from "@/components/admin/data-table/DataTablePagination";
 import { AdminListCard } from "@/components/admin/AdminListCard";
 import { LeadSheet } from "./LeadSheet";
-import { useLeads, useDeleteLead } from "@/hooks/useLeads";
+import { useLeads, useDeleteLead, useMarkLeadSeen } from "@/hooks/useLeads";
+import {
+  LEAD_TYPE_LABELS,
+  LEAD_TYPE_ORDER,
+  coerceLeadType,
+} from "@/lib/constants/lead-types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useExportWorker } from "@/hooks/useExportWorker";
 import { buildQueryString } from "@/lib/utils";
 import { formatDate, cn } from "@/lib/utils";
 import { toast } from "sonner";
-import type { LeadWithProperty, LeadStatus, LeadSource } from "@/types";
+import type {
+  LeadWithProperty,
+  LeadStatus,
+  LeadSource,
+  LeadType,
+} from "@/types";
 import { Badge } from "@/components/ui/badge";
 import {
   PageHeader,
@@ -100,6 +110,14 @@ const STATUS_STYLES: Record<LeadStatus, string> = {
   lost: "bg-gray-100 text-gray-600 border-gray-200",
 };
 
+const TYPE_STYLES: Record<LeadType, string> = {
+  enquiry: "bg-sky-50 text-sky-800 border-sky-100",
+  site_visit: "bg-violet-50 text-violet-800 border-violet-100",
+  contact: "bg-emerald-50 text-emerald-800 border-emerald-100",
+  list_property: "bg-rose-50 text-rose-800 border-rose-100",
+  general: "bg-neutral-100 text-neutral-700 border-neutral-200",
+};
+
 /** First letter of first name for Google-style profile initial */
 function getLeadInitial(name: string | null | undefined): string {
   if (!name || typeof name !== "string") return "?";
@@ -111,18 +129,26 @@ function getLeadInitial(name: string | null | undefined): string {
 function LeadAvatar({
   name,
   size = "md",
+  profileBgColor,
 }: {
   name: string | null | undefined;
   size?: "sm" | "md";
+  profileBgColor?: string | null;
 }) {
   const initial = getLeadInitial(name);
   const sizeClass = size === "sm" ? "h-8 w-8 text-xs" : "h-9 w-9 text-sm";
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full bg-gray-200 font-semibold text-gray-700",
+        "flex shrink-0 items-center justify-center rounded-full font-semibold text-slate-800",
         sizeClass,
+        !profileBgColor && "bg-gray-200 text-gray-700",
       )}
+      style={
+        profileBgColor
+          ? { backgroundColor: profileBgColor, color: "#0f172a" }
+          : undefined
+      }
       aria-hidden
     >
       {initial}
@@ -138,6 +164,7 @@ function leadsToExportRows(
     Email: l.email ?? "",
     Phone: l.phone ?? "",
     Source: SOURCE_LABELS[l.source],
+    Type: LEAD_TYPE_LABELS[coerceLeadType(l.lead_type)],
     Status: l.status,
     "Property Title": l.property?.title ?? "",
     "Property Price": l.property?.price != null ? l.property.price : "",
@@ -164,6 +191,7 @@ export function LeadsView({
   const search = useDebounce(rawSearch, 300);
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
   const [sourceFilter, setSourceFilter] = useState<LeadSource | "all">("all");
+  const [leadTypeFilter, setLeadTypeFilter] = useState<LeadType | "all">("all");
   const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
@@ -184,16 +212,20 @@ export function LeadsView({
     search: search || undefined,
     status: statusFilter === "all" ? undefined : statusFilter,
     source: sourceFilter === "all" ? undefined : sourceFilter,
+    lead_type: leadTypeFilter === "all" ? undefined : leadTypeFilter,
     sort_by: sortBy,
     sort_order: sortOrder,
   });
   const isTableLoading = isLoading || isFetching;
   const deleteLead = useDeleteLead();
+  const markSeen = useMarkLeadSeen();
+  const seenMarkRef = useRef<Set<string>>(new Set());
 
   const hasFilters =
     rawSearch !== "" ||
     statusFilter !== "all" ||
     sourceFilter !== "all" ||
+    leadTypeFilter !== "all" ||
     sortBy !== "created_at" ||
     sortOrder !== "desc";
 
@@ -201,10 +233,18 @@ export function LeadsView({
     setRawSearch("");
     setStatusFilter("all");
     setSourceFilter("all");
+    setLeadTypeFilter("all");
     setSortBy("created_at");
     setSortOrder("desc");
     setPage(1);
   };
+
+  useEffect(() => {
+    if (!sheetOpen || !editLead?.id || editLead.seen_at) return;
+    if (seenMarkRef.current.has(editLead.id)) return;
+    seenMarkRef.current.add(editLead.id);
+    markSeen.mutate(editLead.id);
+  }, [sheetOpen, editLead?.id, editLead?.seen_at, markSeen]);
 
   const columns: ColumnDef<LeadWithProperty>[] = [
     {
@@ -223,7 +263,11 @@ export function LeadsView({
       size: 200,
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <LeadAvatar name={row.original.name} size="sm" />
+          <LeadAvatar
+            name={row.original.name}
+            size="sm"
+            profileBgColor={row.original.profile_bg_color}
+          />
           <span className="font-medium text-foreground">
             {row.original.name}
           </span>
@@ -262,6 +306,19 @@ export function LeadsView({
           {SOURCE_LABELS[row.original.source]}
         </Badge>
       ),
+    },
+    {
+      accessorKey: "lead_type",
+      header: "Type",
+      size: 120,
+      cell: ({ row }) => {
+        const lt = coerceLeadType(row.original.lead_type);
+        return (
+          <Badge variant="outline" className={cn("text-xs", TYPE_STYLES[lt])}>
+            {LEAD_TYPE_LABELS[lt]}
+          </Badge>
+        );
+      },
     },
     {
       accessorKey: "status",
@@ -317,7 +374,11 @@ export function LeadsView({
       cell: ({ row }) => {
         const lead = row.original;
         return (
-          <div className="flex justify-end">
+          <div
+            className="flex justify-end"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -380,6 +441,7 @@ export function LeadsView({
         search: search || undefined,
         status: statusFilter === "all" ? undefined : statusFilter,
         source: sourceFilter === "all" ? undefined : sourceFilter,
+        lead_type: leadTypeFilter === "all" ? undefined : leadTypeFilter,
         sort_by: sortBy,
         sort_order: sortOrder,
       });
@@ -567,6 +629,30 @@ export function LeadsView({
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-medium text-foreground">
+                        Lead type
+                      </label>
+                      <Select
+                        value={leadTypeFilter}
+                        onValueChange={(v) => {
+                          setLeadTypeFilter(v as LeadType | "all");
+                          setPage(1);
+                        }}
+                      >
+                        <SelectTrigger className="h-10 w-full rounded-xl">
+                          <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="all">All types</SelectItem>
+                          {LEAD_TYPE_ORDER.map((t) => (
+                            <SelectItem key={t} value={t}>
+                              {LEAD_TYPE_LABELS[t]}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs font-medium text-foreground">
                         Sort
                       </label>
                       <Select
@@ -667,6 +753,25 @@ export function LeadsView({
                 </SelectContent>
               </Select>
               <Select
+                value={leadTypeFilter}
+                onValueChange={(v) => {
+                  setLeadTypeFilter(v as LeadType | "all");
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-10 w-full rounded-xl sm:w-40">
+                  <SelectValue placeholder="Lead type" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="all">All types</SelectItem>
+                  {LEAD_TYPE_ORDER.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {LEAD_TYPE_LABELS[t]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
                 value={`${sortBy}:${sortOrder}`}
                 onValueChange={(v) => {
                   const [sb, so] = v.split(":");
@@ -721,7 +826,18 @@ export function LeadsView({
                   list.map((lead) => (
                     <AdminListCard
                       key={lead.id}
-                      left={<LeadAvatar name={lead.name} size="md" />}
+                      className={
+                        !lead.seen_at
+                          ? "border-amber-200/80 bg-amber-50/50 hover:bg-amber-50/70"
+                          : undefined
+                      }
+                      left={
+                        <LeadAvatar
+                          name={lead.name}
+                          size="md"
+                          profileBgColor={lead.profile_bg_color}
+                        />
+                      }
                       title={lead.name}
                       subtitle={
                         [lead.email, lead.phone].filter(Boolean).join(" · ") ||
@@ -807,6 +923,10 @@ export function LeadsView({
                   emptyIcon={
                     <UserCircle className="mb-4 h-10 w-10 text-muted-foreground/50" />
                   }
+                  onRowClick={(row) => {
+                    setEditLead(row.original);
+                    setSheetOpen(true);
+                  }}
                 />
               </div>
               <div className="border-t border-admin-card-border bg-muted/30 p-4">
@@ -860,7 +980,11 @@ export function LeadsView({
                   <div>
                     <ProfileFieldLabel>Name</ProfileFieldLabel>
                     <div className="flex items-center gap-3">
-                      <LeadAvatar name={viewLead.name} size="md" />
+                      <LeadAvatar
+                        name={viewLead.name}
+                        size="md"
+                        profileBgColor={viewLead.profile_bg_color}
+                      />
                       <p className="text-xl font-semibold text-foreground">
                         {viewLead.name}
                       </p>
@@ -882,10 +1006,19 @@ export function LeadsView({
               </div>
 
               <div>
-                <ProfileSectionLabel>Source & Status</ProfileSectionLabel>
+                <ProfileSectionLabel>Source, type & status</ProfileSectionLabel>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline" className="rounded-lg">
                     {SOURCE_LABELS[viewLead.source]}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className={cn(
+                      "rounded-lg text-xs",
+                      TYPE_STYLES[coerceLeadType(viewLead.lead_type)],
+                    )}
+                  >
+                    {LEAD_TYPE_LABELS[coerceLeadType(viewLead.lead_type)]}
                   </Badge>
                   <Badge
                     className={cn(

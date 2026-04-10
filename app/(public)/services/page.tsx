@@ -16,6 +16,7 @@ import type { Metadata } from "next";
 import {
   ABOUT_WHY_CHOOSE_US,
   CONTACT,
+  getContactWhatsAppUrl,
   SERVICES,
   SERVICES_HERO_TAGLINE,
   SERVICES_PROCESS,
@@ -60,7 +61,15 @@ const WHY_US_ICONS: Record<AboutWhyChooseUsIconKey, LucideIcon> = {
   Award,
 };
 
+/** Shared sizing so service card CTAs align across the three pillars. */
+const serviceCtaPrimaryClass =
+  "inline-flex h-11 min-h-[44px] w-full flex-1 shrink-0 items-center justify-center rounded-xl bg-brand-charcoal px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90 sm:min-w-0";
+const serviceCtaSecondaryClass =
+  "inline-flex h-11 min-h-[44px] w-full flex-1 shrink-0 items-center justify-center rounded-xl border-2 border-brand-gold px-4 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white sm:min-w-0";
+
 export default function ServicesPage() {
+  const whatsappHref = getContactWhatsAppUrl();
+
   return (
     <>
       <Breadcrumbs
@@ -89,46 +98,40 @@ export default function ServicesPage() {
               const Icon = SERVICE_ICONS[service.iconKey];
               const cta =
                 service.iconKey === "Megaphone" ? (
-                  <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <div className="mt-auto flex flex-col gap-2 pt-6 sm:flex-row sm:items-stretch">
+                    <Link href="/properties" className={serviceCtaPrimaryClass}>
+                      Browse live listings
+                    </Link>
                     <Link
                       href="/post-property"
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-brand-gold px-4 py-2 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white"
+                      className={serviceCtaSecondaryClass}
                     >
                       Post your property
                     </Link>
-                    <Link
-                      href="/properties"
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90"
-                    >
-                      Browse live listings
-                    </Link>
                   </div>
                 ) : service.iconKey === "Briefcase" ? (
-                  <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                    <Link
-                      href="/contact"
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90"
-                    >
+                  <div className="mt-auto flex flex-col gap-2 pt-6 sm:flex-row sm:items-stretch">
+                    <Link href="/contact" className={serviceCtaPrimaryClass}>
                       Book a consultancy call
                     </Link>
                     <Link
                       href="/guides/property-buying-guide-palakkad"
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-brand-gold px-4 py-2 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white"
+                      className={serviceCtaSecondaryClass}
                     >
                       Read the buying guide
                     </Link>
                   </div>
                 ) : (
-                  <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <div className="mt-auto flex flex-col gap-2 pt-6 sm:flex-row sm:items-stretch">
                     <Link
                       href="/properties?type=sale"
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-charcoal/90"
+                      className={serviceCtaPrimaryClass}
                     >
                       Properties for sale
                     </Link>
                     <Link
                       href="/properties?type=rent"
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-brand-gold px-4 py-2 text-sm font-semibold text-brand-gold transition-colors hover:bg-brand-gold hover:text-white"
+                      className={serviceCtaSecondaryClass}
                     >
                       Properties for rent
                     </Link>
@@ -139,14 +142,14 @@ export default function ServicesPage() {
                   key={service.title}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-gold/30 bg-white/60 shadow-sm transition-all duration-300 hover:border-brand-gold/50 hover:shadow-md"
                 >
-                  <div className="flex flex-1 flex-col p-6 sm:p-8">
-                    <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-gold transition-colors group-hover:bg-brand-gold/25 sm:h-16 sm:w-16">
+                  <div className="flex min-h-0 flex-1 flex-col p-6 sm:p-8">
+                    <div className="mb-6 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-gold transition-colors group-hover:bg-brand-gold/25 sm:h-16 sm:w-16">
                       <Icon className="h-7 w-7 sm:h-8 sm:w-8" />
                     </div>
                     <h3 className="mb-3 text-xl font-bold text-brand-charcoal sm:text-2xl">
                       {service.title}
                     </h3>
-                    <p className="mb-6 text-base leading-relaxed text-muted-foreground">
+                    <p className="mb-6 shrink-0 text-base leading-relaxed text-muted-foreground">
                       {service.description}
                     </p>
                     <ul className="space-y-2">
@@ -260,9 +263,9 @@ export default function ServicesPage() {
               reply with a clear next step.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              {CONTACT.whatsappUrl ? (
+              {whatsappHref ? (
                 <a
-                  href={CONTACT.whatsappUrl}
+                  href={whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-brand-gold px-8 py-3 font-semibold text-white transition-colors hover:bg-brand-gold/90 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 sm:w-auto"

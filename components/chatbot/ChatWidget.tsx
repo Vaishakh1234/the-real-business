@@ -130,6 +130,7 @@ export function ChatWidget() {
         phone: leadPhone || null,
         message: message || null,
         source: "chatbot",
+        lead_type: "enquiry",
       }),
     })
       .then(async (res) => {

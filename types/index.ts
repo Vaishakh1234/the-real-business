@@ -127,6 +127,14 @@ export interface PropertyFilters {
 export type LeadSource = "website" | "meta_ads" | "google_ads" | "manual" | "chatbot";
 export type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "lost";
 
+/** Intent of the lead (channel is still `source`: website, chatbot, etc.). */
+export type LeadType =
+  | "enquiry"
+  | "site_visit"
+  | "contact"
+  | "list_property"
+  | "general";
+
 export interface Lead {
   id: string;
   name: string;
@@ -135,12 +143,23 @@ export interface Lead {
   message: string | null;
   source: LeadSource;
   status: LeadStatus;
+  lead_type: LeadType;
+  /** When an admin last opened this lead; null means not yet seen in the panel. */
+  seen_at: string | null;
+  /** Pastel background for the initial avatar; assigned on insert (DB trigger + palette). */
+  profile_bg_color: string;
   property_id: string | null;
   property_title: string | null;
   notes: string | null;
   created_at: string;
   updated_at: string;
 }
+
+/** Fields accepted when creating a lead (`profile_bg_color` and `seen_at` are set by the DB). */
+export type LeadInsert = Omit<
+  Lead,
+  "id" | "created_at" | "updated_at" | "profile_bg_color" | "seen_at"
+>;
 
 export interface LeadWithProperty extends Lead {
   property: {
@@ -158,6 +177,7 @@ export interface LeadFilters {
   search?: string;
   status?: LeadStatus | "all";
   source?: LeadSource | "all";
+  lead_type?: LeadType | "all";
   sort_by?: string;
   sort_order?: "asc" | "desc";
 }
@@ -183,6 +203,7 @@ export interface LeadStats {
   converted: number;
   lost: number;
   by_source: { source: LeadSource; count: number }[];
+  by_type: { type: LeadType; count: number }[];
 }
 
 export interface CategoryDistribution {
@@ -264,4 +285,28 @@ export interface AdminSettingsUpdate {
   theme?: ThemePreference;
   language?: string;
   timezone?: string;
+}
+
+// ─── Web Push (service worker subscriptions) ────────────────────────────────
+
+export interface PushSubscriptionRow {
+  id: string;
+  admin_email: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  user_agent: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Browser PushManager.subscribe shape (keys as base64url strings). */
+export interface WebPushSubscriptionKeys {
+  p256dh: string;
+  auth: string;
+}
+
+export interface WebPushSubscriptionInput {
+  endpoint: string;
+  keys: WebPushSubscriptionKeys;
 }

@@ -4,6 +4,7 @@ import {
   Tags,
   UserPlus,
   FileBarChart,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 
@@ -38,6 +39,12 @@ export const adminNavItems: {
     color: "text-violet-600",
   },
   {
+    label: "Alerts",
+    href: "/admin/notifications",
+    icon: Bell,
+    color: "text-rose-600",
+  },
+  {
     label: "Reports",
     href: "/admin/reports",
     icon: FileBarChart,
@@ -50,6 +57,7 @@ export const adminPageTitles: Record<string, string> = {
   "/admin/properties": "Properties",
   "/admin/categories": "Categories",
   "/admin/leads": "Leads",
+  "/admin/notifications": "Lead alerts",
   "/admin/reports": "Reports",
 };
 

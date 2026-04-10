@@ -3,18 +3,16 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import { ASK_LEON, CONTACT } from "@/lib/constants/site";
+import { ASK_LEON, getContactWhatsAppUrl } from "@/lib/constants/site";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 
 export function AskLeon() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const ctaHref =
-    ASK_LEON.useWhatsApp && CONTACT.whatsappUrl
-      ? CONTACT.whatsappUrl
-      : "/contact";
-  const isExternal = ASK_LEON.useWhatsApp && !!CONTACT.whatsappUrl;
+  const wa = getContactWhatsAppUrl();
+  const ctaHref = ASK_LEON.useWhatsApp && wa ? wa : "/contact";
+  const isExternal = ASK_LEON.useWhatsApp && !!wa;
 
   return (
     <section
