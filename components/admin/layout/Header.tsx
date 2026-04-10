@@ -73,7 +73,6 @@ export function Header() {
   });
   const unseenLeadCount = attention?.unseenLeads ?? 0;
   const unreadNotifCount = attention?.unreadNotifications ?? 0;
-  const bellTotal = attention?.bellTotal ?? 0;
   const { data: previewData, isLoading: previewLoading } =
     useAdminNotificationsPreview(6);
   const markNotifRead = useMarkNotificationRead();
@@ -146,21 +145,23 @@ export function Header() {
             "lg:hidden",
           )}
           aria-label={
-            bellTotal > 0
-              ? `Notifications, ${bellTotal} new`
+            unseenLeadCount > 0
+              ? `Notifications, ${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
               : "Notifications"
           }
           title={
-            bellTotal > 0 ? `${bellTotal} new` : "Notifications"
+            unseenLeadCount > 0
+              ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+              : "Notifications"
           }
         >
           <Bell
             className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
             strokeWidth={2}
           />
-          {bellTotal > 0 && (
+          {unseenLeadCount > 0 && (
             <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-              {bellTotal > 99 ? "99+" : bellTotal}
+              {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
             </span>
           )}
         </Link>
@@ -176,21 +177,23 @@ export function Header() {
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 )}
                 aria-label={
-                  bellTotal > 0
-                    ? `Notifications, ${bellTotal} new`
+                  unseenLeadCount > 0
+                    ? `Notifications, ${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
                     : "Notifications"
                 }
                 title={
-                  bellTotal > 0 ? `${bellTotal} new` : "Notifications"
+                  unseenLeadCount > 0
+                    ? `${unseenLeadCount} unseen lead${unseenLeadCount === 1 ? "" : "s"}`
+                    : "Notifications"
                 }
               >
                 <Bell
                   className="h-5 w-5 sm:h-[1.35rem] sm:w-[1.35rem]"
                   strokeWidth={2}
                 />
-                {bellTotal > 0 && (
+                {unseenLeadCount > 0 && (
                   <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold leading-none text-destructive-foreground ring-2 ring-admin-header-bg">
-                    {bellTotal > 99 ? "99+" : bellTotal}
+                    {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
                   </span>
                 )}
               </button>
