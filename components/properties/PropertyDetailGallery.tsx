@@ -1,11 +1,17 @@
 "use client";
 
-import { Building2, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Building2,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { isRemoteImageOptimizedUrl } from "@/lib/public-image-hosts";
 import { PropertyImage } from "@/components/ui/PropertyImage";
+import { PropertyDetailImageViewer } from "@/components/properties/PropertyDetailImageViewer";
 
 const AUTO_ADVANCE_MS = 5000;
 
@@ -21,12 +27,14 @@ export function PropertyDetailGallery({
   const [pageVisible, setPageVisible] = useState(true);
   /** Bumps when the user picks a slide so the autoplay interval restarts from now. */
   const [autoplayEpoch, setAutoplayEpoch] = useState(0);
+  const [viewerOpen, setViewerOpen] = useState(false);
   const reduceMotion = useReducedMotion();
 
   const imagesKey = images.length ? images.join("\0") : "";
 
   useEffect(() => {
     setSelected(0);
+    setViewerOpen(false);
   }, [imagesKey]);
 
   useEffect(() => {
@@ -94,17 +102,34 @@ export function PropertyDetailGallery({
   return (
     <div
       className="space-y-2 sm:space-y-3"
-      onKeyDown={onKeyDown}
       onMouseEnter={() => setGalleryHovered(true)}
       onMouseLeave={() => setGalleryHovered(false)}
     >
+      <PropertyDetailImageViewer
+        open={viewerOpen}
+        onOpenChange={setViewerOpen}
+        images={images}
+        title={title}
+        index={safeIndex}
+        onIndexChange={(i) => {
+          touchUser();
+          setSelected(i);
+        }}
+      />
       <figure className="relative aspect-[16/10] min-h-[220px] max-h-[min(52vh,520px)] w-full overflow-hidden rounded-xl border border-neutral-200/90 bg-white p-2 shadow-[0_4px_20px_rgba(15,23,42,0.06)] sm:min-h-[240px] sm:rounded-2xl sm:p-3 md:p-4 sm:shadow-[0_2px_12px_rgba(15,23,42,0.05)]">
         <div
           role="region"
           aria-roledescription="carousel"
-          aria-label="Property photos"
+          aria-label="Property photos. Press Enter to view full screen."
           tabIndex={0}
           className="relative h-full min-h-[168px] w-full overflow-hidden rounded-lg sm:min-h-[180px] sm:rounded-xl"
+          onKeyDown={(e) => {
+            onKeyDown(e);
+            if (e.key === "Enter" && !e.defaultPrevented) {
+              e.preventDefault();
+              setViewerOpen(true);
+            }
+          }}
         >
           <div
             className="flex h-full transition-transform duration-500 ease-in-out"
@@ -113,13 +138,18 @@ export function PropertyDetailGallery({
             {images.map((url, i) => (
               <div
                 key={`${url}-${i}`}
-                className="relative h-full min-w-full shrink-0"
+                className="relative h-full min-w-full shrink-0 cursor-zoom-in"
+                onClick={() => {
+                  touchUser();
+                  setSelected(i);
+                  setViewerOpen(true);
+                }}
               >
                 <PropertyImage
                   src={url}
                   alt={`${title} — photo ${i + 1} of ${images.length}`}
                   fill
-                  className="object-contain"
+                  className="pointer-events-none object-contain"
                   sizes="(max-width: 1024px) 100vw, 66vw"
                   priority={i === 0}
                   unoptimized={!isRemoteImageOptimizedUrl(url)}
@@ -127,11 +157,24 @@ export function PropertyDetailGallery({
               </div>
             ))}
           </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setViewerOpen(true);
+            }}
+            aria-label="View photos full screen"
+            title="View full screen"
+            className="absolute right-2 top-2 z-20 flex size-10 items-center justify-center rounded-full border border-neutral-200/90 bg-white/95 text-[#1a2b4b] shadow-md backdrop-blur-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 sm:right-3 sm:top-3 sm:size-11"
+          >
+            <Maximize2 className="size-4 sm:size-[1.15rem]" aria-hidden />
+          </button>
           {images.length > 1 ? (
             <>
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   touchUser();
                   goPrev();
                 }}
@@ -146,7 +189,8 @@ export function PropertyDetailGallery({
               </button>
               <button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   touchUser();
                   goNext();
                 }}

@@ -190,7 +190,7 @@ export function PropertyEnquirySidebar({
   }
 
   return (
-    <div className="space-y-4 rounded-xl border border-neutral-200/90 bg-white p-3.5 shadow-[0_4px_20px_rgba(15,23,42,0.06)] sm:space-y-5 sm:rounded-2xl sm:p-6 sm:shadow-[0_2px_12px_rgba(15,23,42,0.05)]">
+    <div className="space-y-4 rounded-xl border border-neutral-200/90 bg-white px-3.5 pt-3.5 pb-6 shadow-[0_4px_20px_rgba(15,23,42,0.06)] sm:space-y-5 sm:rounded-2xl sm:px-6 sm:pt-6 sm:pb-8 sm:shadow-[0_2px_12px_rgba(15,23,42,0.05)]">
       <div className="flex gap-2">
         <button
           type="button"

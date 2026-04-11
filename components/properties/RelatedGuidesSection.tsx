@@ -10,7 +10,7 @@ export function RelatedGuidesSection() {
     >
       <h2
         id="related-guides-heading"
-        className="font-heading text-lg font-bold text-[#1a2b4b] sm:text-xl"
+        className="font-heading text-2xl font-bold leading-tight tracking-tight text-[#1a2b4b] md:text-3xl"
       >
         Related guides
       </h2>
