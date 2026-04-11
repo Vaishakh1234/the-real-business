@@ -76,6 +76,34 @@ export function formatRelativeTime(dateString: string): string {
   return "Just now";
 }
 
+const IST_TIMEZONE = "Asia/Kolkata";
+
+/**
+ * Admin in-app notifications: clock time in India (IST) plus a short relative label
+ * for the last 24 hours (e.g. "1h ago · 11 Apr 2026, 4:30 pm IST").
+ */
+export function formatAdminNotificationTimestamp(iso: string): string {
+  const date = new Date(iso);
+  const istLine = date.toLocaleString("en-IN", {
+    timeZone: IST_TIMEZONE,
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+  const ist = `${istLine} IST`;
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffHours = diffMs / 3600000;
+  if (diffHours >= 0 && diffHours < 24) {
+    return `${formatRelativeTime(iso)} · ${ist}`;
+  }
+  return ist;
+}
+
 /** Compact listing counts for mobile headers (e.g. 9900 → "9.9K"). */
 export function formatListingCountCompact(n: number): string {
   if (!Number.isFinite(n) || n < 0) return "0";

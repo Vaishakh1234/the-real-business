@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,9 +12,6 @@ import {
   Clock,
   Send,
   Loader2,
-  CheckCircle2,
-  AlertCircle,
-  MessageCircle,
 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import {
@@ -30,6 +26,7 @@ import { publicContentFrameClass } from "@/lib/constants/publicLayout";
 import { CONTACT, getContactWhatsAppUrl, SOCIAL_LINKS } from "@/lib/constants/site";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { useSubmitContactForm } from "@/hooks/useLeads";
+import { toast } from "sonner";
 
 const contactFormSchema = z.object({
   firstName: z
@@ -78,10 +75,6 @@ const interestOptions: {
 export function ContactPageClient() {
   const whatsappHref = getContactWhatsAppUrl();
   const submitContact = useSubmitContactForm();
-  const [submitBanner, setSubmitBanner] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
   const {
     register,
     handleSubmit,
@@ -101,7 +94,6 @@ export function ContactPageClient() {
   });
 
   const onSubmit = (data: ContactFormValues) => {
-    setSubmitBanner(null);
     submitContact.mutate(
       {
         name: `${data.firstName.trim()} ${data.lastName.trim()}`.trim(),
@@ -114,20 +106,16 @@ export function ContactPageClient() {
       {
         onSuccess: () => {
           reset();
-          setSubmitBanner({
-            type: "success",
-            message:
-              "Your message has been sent successfully. We'll get back to you within one business day.",
-          });
+          toast.success(
+            "Your message has been sent. We'll get back to you within one business day.",
+          );
         },
         onError: (err) => {
-          setSubmitBanner({
-            type: "error",
-            message:
-              err instanceof Error
-                ? err.message
-                : "Something went wrong. Please try again or email us directly.",
-          });
+          toast.error(
+            err instanceof Error
+              ? err.message
+              : "Something went wrong. Please try again or email us directly.",
+          );
         },
       },
     );
@@ -181,34 +169,6 @@ export function ContactPageClient() {
                 question, our team is ready to assist you.
               </p>
             </div>
-
-            {submitBanner ? (
-              <div
-                role="alert"
-                aria-live={
-                  submitBanner.type === "error" ? "assertive" : "polite"
-                }
-                className={cn(
-                  "mb-6 flex gap-3 rounded-xl border p-4 text-sm leading-relaxed",
-                  submitBanner.type === "success"
-                    ? "border-emerald-200/80 bg-emerald-50 text-emerald-950"
-                    : "border-red-200/80 bg-red-50 text-red-950",
-                )}
-              >
-                {submitBanner.type === "success" ? (
-                  <CheckCircle2
-                    className="h-5 w-5 shrink-0 text-emerald-600"
-                    aria-hidden
-                  />
-                ) : (
-                  <AlertCircle
-                    className="h-5 w-5 shrink-0 text-red-600"
-                    aria-hidden
-                  />
-                )}
-                <p className="min-w-0 flex-1">{submitBanner.message}</p>
-              </div>
-            ) : null}
 
             <form
               className="space-y-6"

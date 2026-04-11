@@ -1,5 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { getNotificationPopoverSubtitle } from "@/lib/admin-notification-display";
+import {
+  getNotificationPopoverSubtitle,
+  parseNewLeadTitle,
+} from "@/lib/admin-notification-display";
+
+describe("parseNewLeadTitle", () => {
+  it("parses New lead prefix", () => {
+    expect(parseNewLeadTitle("New lead: Jane Doe")).toEqual({
+      prefix: "New lead: ",
+      name: "Jane Doe",
+    });
+  });
+
+  it("parses New contact prefix", () => {
+    expect(parseNewLeadTitle("New contact: Ramesh Kumar")).toEqual({
+      prefix: "New contact: ",
+      name: "Ramesh Kumar",
+    });
+  });
+});
 
 describe("getNotificationPopoverSubtitle", () => {
   it("shows loading when pending and session exists", () => {

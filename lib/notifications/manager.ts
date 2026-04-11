@@ -8,11 +8,12 @@ import {
 } from "@/lib/queries/push-subscriptions";
 import { shouldSendLeadPushForAdmin } from "@/lib/notifications/lead-push-policy";
 import { ensureWebPushConfigured, webpush } from "@/lib/notifications/vapid";
+import { leadNotificationTitle } from "@/lib/notifications/lead-notification-title";
 
 const NOTIFICATION_ICON = "/icons/icon-192.png";
 
 function buildLeadPayload(lead: Lead) {
-  const title = `New lead: ${lead.name}`;
+  const title = leadNotificationTitle(lead);
   const parts: string[] = [];
   if (lead.lead_type) {
     parts.push(`Type: ${LEAD_TYPE_LABELS[lead.lead_type] ?? lead.lead_type}`);

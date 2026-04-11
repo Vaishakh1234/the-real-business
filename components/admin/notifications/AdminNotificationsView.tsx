@@ -22,7 +22,11 @@ import {
   useMarkNotificationRead,
 } from "@/hooks/useAdminNotifications";
 import { getNotificationTypePresentation } from "@/lib/admin-notification-display";
-import { cn, formatDate, isUnreadAdminNotification } from "@/lib/utils";
+import {
+  cn,
+  formatAdminNotificationTimestamp,
+  isUnreadAdminNotification,
+} from "@/lib/utils";
 import type { AdminNotificationRow } from "@/types";
 import {
   PageHeader,
@@ -106,7 +110,7 @@ function NotificationRow({ row }: { row: AdminNotificationRow }) {
               )}
               aria-hidden
             />
-            {formatDate(row.created_at)}
+            {formatAdminNotificationTimestamp(row.created_at)}
           </p>
         </div>
         <ChevronRight

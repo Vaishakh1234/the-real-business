@@ -63,9 +63,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const data = await createLead(body as LeadInsert);
-    void notifyLeadCreated(data).catch((err) => {
+    try {
+      await notifyLeadCreated(data);
+    } catch (err) {
       console.error("[POST /api/admin/leads] notifyLeadCreated", err);
-    });
+    }
     return NextResponse.json({ data }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to create lead";

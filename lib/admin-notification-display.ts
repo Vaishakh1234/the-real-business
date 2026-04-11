@@ -14,14 +14,16 @@ import {
 } from "@/lib/constants/lead-types";
 import type { LeadType } from "@/types";
 
-/** "New lead: Name" → bold name; otherwise null (show full title as-is). */
+/** "New lead: Name" / "New contact: Name" → bold name; otherwise null (show full title as-is). */
 export function parseNewLeadTitle(title: string): {
   prefix: string;
   name: string;
 } | null {
-  const m = /^New lead:\s*(.+)$/i.exec(title.trim());
-  if (!m?.[1]) return null;
-  return { prefix: "New lead: ", name: m[1].trim() };
+  const m = /^New (lead|contact):\s*(.+)$/i.exec(title.trim());
+  if (!m?.[2]) return null;
+  const kind = m[1].toLowerCase() === "contact" ? "contact" : "lead";
+  const prefix = kind === "contact" ? "New contact: " : "New lead: ";
+  return { prefix, name: m[2].trim() };
 }
 
 /** Infer lead type from notification body: `Type: Enquiry · Source: …` */

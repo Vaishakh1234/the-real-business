@@ -2,9 +2,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { toUserFriendlyMessage } from "@/lib/db-errors";
 import type { AdminNotificationRow, Lead } from "@/types";
 import { LEAD_TYPE_LABELS } from "@/lib/constants/lead-types";
+import { leadNotificationTitle } from "@/lib/notifications/lead-notification-title";
 
 function buildLeadNotificationCopy(lead: Lead): { title: string; body: string | null } {
-  const title = `New lead: ${lead.name}`;
+  const title = leadNotificationTitle(lead);
   const parts: string[] = [];
   if (lead.lead_type) {
     parts.push(`Type: ${LEAD_TYPE_LABELS[lead.lead_type] ?? lead.lead_type}`);

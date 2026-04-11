@@ -101,9 +101,11 @@ export async function POST(request: NextRequest) {
       notes: null,
     });
 
-    void notifyLeadCreated(data).catch((err) => {
+    try {
+      await notifyLeadCreated(data);
+    } catch (err) {
       console.error("[POST /api/leads] notifyLeadCreated", err);
-    });
+    }
 
     return NextResponse.json({ success: true, data }, { status: 201 });
   } catch (err) {

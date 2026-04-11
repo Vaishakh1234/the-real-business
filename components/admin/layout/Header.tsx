@@ -26,7 +26,11 @@ import { Logo } from "@/components/ui/Logo";
 import { useAppStore } from "@/store/appStore";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
-import { cn, formatDate, isUnreadAdminNotification } from "@/lib/utils";
+import {
+  cn,
+  formatAdminNotificationTimestamp,
+  isUnreadAdminNotification,
+} from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useAdminAttentionCounts } from "@/hooks/useLeads";
 import {
@@ -319,7 +323,7 @@ export function Header() {
                                   )}
                                   aria-hidden
                                 />
-                                {formatDate(n.created_at)}
+                                {formatAdminNotificationTimestamp(n.created_at)}
                               </p>
                             </div>
                           </Link>

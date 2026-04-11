@@ -9,7 +9,7 @@ type NotificationLeadTitleProps = {
 };
 
 /**
- * Renders "New lead: **Name**" with the lead name bold; falls back to plain title.
+ * Renders "New lead:" / "New contact:" + bold name; falls back to plain title.
  */
 export function NotificationLeadTitle({
   title,
