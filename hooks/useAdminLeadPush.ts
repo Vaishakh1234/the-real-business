@@ -44,6 +44,10 @@ export function useAdminLeadPush() {
         fetch("/api/admin/push/vapid-key", { credentials: "include" }),
       ]);
 
+      // Bug 3 fix: keep a reference to the parsed settings so we can gate
+      // pushActive on the account-level browser_notifications DB flag below.
+      let loadedSettings: AdminSettings | null = null;
+
       if (!settingsRes.ok) {
         const j = await settingsRes.json().catch(() => ({}));
         setSettings(null);
@@ -54,6 +58,7 @@ export function useAdminLeadPush() {
         );
       } else {
         const j = (await settingsRes.json()) as { data: AdminSettings };
+        loadedSettings = j.data;
         setSettings(j.data);
       }
 
@@ -71,7 +76,11 @@ export function useAdminLeadPush() {
         endpoint = sub?.endpoint;
       }
 
-      if (endpoint && vj.configured) {
+      // Bug 3 fix: if the DB account-level flag is explicitly off, treat this
+      // device as inactive regardless of what the subscription table says.
+      if (loadedSettings && !loadedSettings.browser_notifications) {
+        setPushActive(false);
+      } else if (endpoint && vj.configured) {
         const st = await fetch(
           `/api/admin/push/status?endpoint=${encodeURIComponent(endpoint)}`,
           { credentials: "include" },
@@ -101,8 +110,29 @@ export function useAdminLeadPush() {
       throw new Error("Notifications are not supported in this browser.");
     }
 
+    // Bug 1 fix: check/request browser permission BEFORE touching the DB so
+    // that a denial never leaves settings in a half-enabled state.
+    if (Notification.permission === "denied") {
+      throw new Error("NOTIFICATION_DENIED");
+    }
+
     setBusy(true);
     try {
+      const reg = await navigator.serviceWorker.register("/sw.js");
+      await navigator.serviceWorker.ready;
+
+      // Only prompt when the browser hasn't decided yet; if already "granted"
+      // this returns immediately without showing a dialog (browser behaviour).
+      if (Notification.permission !== "granted") {
+        const perm = await Notification.requestPermission();
+        if (perm !== "granted") {
+          throw new Error("NOTIFICATION_DENIED");
+        }
+      }
+
+      // Bug 1 fix (cont.) + Bug 2 fix: patch DB only after permission is
+      // confirmed, and include browser_notifications:true so the account-level
+      // flag stays consistent with the subscription we are about to create.
       const patchRes = await fetch("/api/admin/settings", {
         method: "PATCH",
         credentials: "include",
@@ -110,6 +140,7 @@ export function useAdminLeadPush() {
         body: JSON.stringify({
           notifications_enabled: true,
           lead_alerts: true,
+          browser_notifications: true,
         }),
       });
       if (!patchRes.ok) {
@@ -120,14 +151,6 @@ export function useAdminLeadPush() {
       }
       const pj = (await patchRes.json()) as { data: AdminSettings };
       setSettings(pj.data);
-
-      const reg = await navigator.serviceWorker.register("/sw.js");
-      await navigator.serviceWorker.ready;
-
-      const perm = await Notification.requestPermission();
-      if (perm !== "granted") {
-        throw new Error("NOTIFICATION_DENIED");
-      }
 
       const appKey = urlBase64ToUint8Array(publicKey);
       const sub = await reg.pushManager.subscribe({

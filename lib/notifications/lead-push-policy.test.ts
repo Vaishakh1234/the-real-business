@@ -49,13 +49,25 @@ describe("shouldSendLeadPushForAdmin", () => {
     ).toBe(true);
   });
 
-  it("does not use browser_notifications (per-device subscriptions handle opt-in)", () => {
+  it("returns false when browser_notifications is off (account-level kill-switch)", () => {
     expect(
       shouldSendLeadPushForAdmin(
         baseSettings({
           notifications_enabled: true,
           lead_alerts: true,
           browser_notifications: false,
+        }),
+      ),
+    ).toBe(false);
+  });
+
+  it("returns true only when all three flags are enabled", () => {
+    expect(
+      shouldSendLeadPushForAdmin(
+        baseSettings({
+          notifications_enabled: true,
+          lead_alerts: true,
+          browser_notifications: true,
         }),
       ),
     ).toBe(true);
