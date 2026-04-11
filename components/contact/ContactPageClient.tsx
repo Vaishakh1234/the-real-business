@@ -402,20 +402,17 @@ export function ContactPageClient() {
                       <WhatsAppIcon className="h-[18px] w-[18px] text-[#25D366] sm:h-5 sm:w-5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
+                      <h4 className="font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">
                         WhatsApp
                       </h4>
-                      <p className="text-gray-600 text-[13px] sm:text-base leading-snug mb-2">
-                        Prefer a quick chat? Message us on WhatsApp — we typically
-                        reply within business hours.
-                      </p>
                       <a
                         href={whatsappHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex text-[13px] sm:text-base font-medium text-brand-gold leading-snug hover:underline"
+                        className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-charcoal px-4 py-4 text-center text-base font-medium text-white transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
                       >
-                        {CONTACT.whatsappLabel}
+                        <WhatsAppIcon className="h-5 w-5 shrink-0 text-white" />
+                        Chat on WhatsApp
                       </a>
                     </div>
                   </div>
@@ -477,22 +474,6 @@ export function ContactPageClient() {
                 </div>
               )}
 
-              {whatsappHref ? (
-                <div className="mt-6 sm:mt-8 pt-6 border-t border-border">
-                  <a
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-charcoal px-4 py-4 text-center text-base font-medium text-white transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
-                  >
-                    <WhatsAppIcon className="h-5 w-5 shrink-0 text-white" />
-                    Chat on WhatsApp
-                  </a>
-                  <p className="mt-3 text-center text-xs text-muted-foreground">
-                    Opens WhatsApp on your phone or desktop.
-                  </p>
-                </div>
-              ) : null}
             </div>
           </motion.div>
         </div>
