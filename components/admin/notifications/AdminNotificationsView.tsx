@@ -214,10 +214,8 @@ export function AdminNotificationsView() {
             <p className="text-muted-foreground text-sm">Loading inbox…</p>
           </div>
         ) : rows.length === 0 ? (
-          <div className="relative overflow-hidden rounded-xl border border-dashed border-brand-gold/35 bg-gradient-to-br from-white via-brand-gold-muted/40 to-brand-blue-muted/35 px-4 py-12 text-center shadow-sm sm:rounded-2xl sm:px-6 sm:py-16">
-            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-brand-gold/10 blur-2xl" />
-            <div className="pointer-events-none absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-brand-blue/5 blur-3xl" />
-            <div className="relative mx-auto flex max-w-md flex-col items-center gap-5">
+          <div className="rounded-xl border border-admin-card-border bg-admin-card-bg px-4 py-12 text-center shadow-sm sm:rounded-2xl sm:px-6 sm:py-16">
+            <div className="mx-auto flex max-w-md flex-col items-center gap-5">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-gold-muted to-white shadow-lg ring-2 ring-brand-gold/20 sm:h-16 sm:w-16">
                 <Bell
                   className="h-7 w-7 text-brand-gold sm:h-8 sm:w-8"
