@@ -191,13 +191,17 @@ function PropertyCard({
                 {property.area_sqft} sqft
               </span>
             )}
-          {structureKind === "house" && property.bedrooms != null && (
+          {structureKind === "house" &&
+            property.bedrooms != null &&
+            Number(property.bedrooms) > 0 && (
             <span className="flex items-center gap-1.5">
               <Bed className="h-3.5 w-3.5" aria-hidden />
               {property.bedrooms} beds
             </span>
           )}
-          {structureKind === "house" && property.bathrooms != null && (
+          {structureKind === "house" &&
+            property.bathrooms != null &&
+            Number(property.bathrooms) > 0 && (
             <span className="flex items-center gap-1.5">
               <Bath className="h-3.5 w-3.5" aria-hidden />
               {property.bathrooms} baths

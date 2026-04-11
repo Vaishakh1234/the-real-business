@@ -676,14 +676,18 @@ export function PropertyDetailPublicClient({
             </div>
 
             <SpecChipsSlider key={property.id}>
-              {structureKind === "house" && property.bedrooms != null ? (
+              {structureKind === "house" &&
+              property.bedrooms != null &&
+              Number(property.bedrooms) > 0 ? (
                 <SpecChip
                   icon={Bed}
                   label="Bedrooms"
                   value={String(property.bedrooms)}
                 />
               ) : null}
-              {structureKind === "house" && property.bathrooms != null ? (
+              {structureKind === "house" &&
+              property.bathrooms != null &&
+              Number(property.bathrooms) > 0 ? (
                 <SpecChip
                   icon={Bath}
                   label="Bathrooms"
@@ -699,14 +703,17 @@ export function PropertyDetailPublicClient({
                   value={`${property.area_sqft} sqft`}
                 />
               ) : null}
-              {structureKind !== "plot" && property.floors != null ? (
+              {structureKind !== "plot" &&
+              property.floors != null &&
+              Number(property.floors) > 0 ? (
                 <SpecChip
                   icon={Layers}
                   label="Floors"
                   value={String(property.floors)}
                 />
               ) : null}
-              {property.total_cent != null ? (
+              {property.total_cent != null &&
+              Number(property.total_cent) > 0 ? (
                 <SpecChip
                   icon={LandPlot}
                   label="Total cent"

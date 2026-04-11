@@ -107,23 +107,27 @@ export function PropertyCard({ property }: PropertyCardProps) {
         )}
         {/* Property specs */}
         {(structureKind === "house"
-          ? property.bedrooms ||
-            property.bathrooms ||
+          ? (property.bedrooms != null && Number(property.bedrooms) > 0) ||
+            (property.bathrooms != null && Number(property.bathrooms) > 0) ||
             (property.area_sqft != null && Number(property.area_sqft) > 0)
           : structureKind === "building"
             ? (property.area_sqft != null && Number(property.area_sqft) > 0) ||
-              property.floors
+              (property.floors != null && Number(property.floors) > 0)
             : property.plot_dimensions?.trim() ||
               property.plot_number?.trim() ||
-              property.total_cent != null) && (
+              (property.total_cent != null && Number(property.total_cent) > 0)) && (
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4 pb-4 border-b border-border">
-            {structureKind === "house" && property.bedrooms != null && (
+            {structureKind === "house" &&
+              property.bedrooms != null &&
+              Number(property.bedrooms) > 0 && (
               <div className="flex items-center gap-1.5">
                 <Bed className="h-4 w-4 text-muted-foreground" />
                 <span>{property.bedrooms} Bed</span>
               </div>
             )}
-            {structureKind === "house" && property.bathrooms != null && (
+            {structureKind === "house" &&
+              property.bathrooms != null &&
+              Number(property.bathrooms) > 0 && (
               <div className="flex items-center gap-1.5">
                 <Bath className="h-4 w-4 text-muted-foreground" />
                 <span>{property.bathrooms} Bath</span>
@@ -137,7 +141,9 @@ export function PropertyCard({ property }: PropertyCardProps) {
                   <span>{property.area_sqft} sqft</span>
                 </div>
               )}
-            {structureKind !== "plot" && property.floors != null && (
+            {structureKind !== "plot" &&
+              property.floors != null &&
+              Number(property.floors) > 0 && (
               <div className="flex items-center gap-1.5">
                 <Maximize2 className="h-4 w-4 text-muted-foreground" />
                 <span>{property.floors} Floors</span>
