@@ -1,15 +1,16 @@
 ---
-description: Keep Next.js request logic in proxy.ts; do not inline it into middleware.ts
+description: Next.js 16 edge routing uses proxy.ts only; do not add middleware.ts
 alwaysApply: true
 ---
 
-# Next.js: `proxy.ts` vs `middleware.ts`
+# Next.js 16: `proxy.ts` (no `middleware.ts`)
 
-This project splits Edge logic on purpose:
+This project uses **Next.js 16**, which expects **only** `proxy.ts` at the project root. Having both `middleware.ts` and `proxy.ts` causes a build error: use `./proxy.ts` only.
 
 - **`proxy.ts`** — Implements `proxy(request)` (session, headers, route guards, `config` export). All substantive logic lives here.
-- **`middleware.ts`** — Next.js required entry only: imports `proxy`, re-exports `config` from `./proxy`, and forwards `middleware(request)` to `proxy(request)`.
 
-**Do not** move `proxy` logic into `middleware.ts`, rename `proxy.ts` to fold everything into `middleware`, or delete `proxy.ts` in favor of a fat `middleware.ts`. If you need to change behavior, edit `proxy.ts` (and keep `middleware.ts` as the thin delegate).
+**Do not** add a `middleware.ts` that re-exports from `proxy.ts` (Next cannot statically parse re-exported `config`, and dual files are rejected).
 
-**Do not** suggest refactoring “for simplicity” by merging these files.
+**Do not** move `proxy` logic into a different file name, or delete `proxy.ts`. If you need to change behavior, edit `proxy.ts`.
+
+**Do not** suggest refactoring “for simplicity” by merging or renaming away from `proxy.ts`.

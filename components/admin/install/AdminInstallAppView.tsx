@@ -161,16 +161,9 @@ export function AdminInstallAppView() {
                       Install from your browser
                     </p>
                     <p className="mt-1 text-muted-foreground text-sm leading-relaxed">
-                      Chrome, Edge, or Opera can add this site as an app. After
-                      installing, sign in and bookmark{" "}
-                      <strong className="font-medium text-foreground/90">
-                        Admin
-                      </strong>{" "}
-                      or open the{" "}
-                      <strong className="font-medium text-foreground/90">
-                        Admin
-                      </strong>{" "}
-                      shortcut if your browser shows it.
+                      Chrome, Edge, or Opera can add this site as an app. Install
+                      from this page while you&apos;re signed in to Admin — the
+                      installed app opens the Admin dashboard directly.
                     </p>
                   </div>
                   <Button
@@ -199,20 +192,21 @@ export function AdminInstallAppView() {
             {showIosInstallHint ? (
               <InstructionCard icon={Share2} title="iPhone & iPad (Safari)">
                 <p className="m-0">
-                  Tap the{" "}
+                  Stay on this page while signed in to Admin, then tap{" "}
                   <strong className="font-medium text-foreground">Share</strong>{" "}
-                  button, then{" "}
+                  →{" "}
                   <strong className="font-medium text-foreground">
                     Add to Home Screen
                   </strong>
-                  . Open the icon and go to{" "}
+                  . The home-screen icon opens Admin; if your session expired,
+                  use{" "}
                   <Link
                     href="/admin/login"
                     className="font-medium text-brand-blue underline-offset-2 hover:underline"
                   >
                     Admin login
-                  </Link>{" "}
-                  to use the panel.
+                  </Link>
+                  .
                 </p>
               </InstructionCard>
             ) : null}
@@ -220,8 +214,8 @@ export function AdminInstallAppView() {
             <InstructionCard icon={Monitor} title="Desktop (Chrome or Edge)">
               <ol className="m-0 list-decimal space-y-2 pl-5">
                 <li>
-                  Open this site in Chrome or Edge while signed in to admin (or
-                  sign in after install).
+                  Open this site in Chrome or Edge while signed in to Admin (this
+                  install page is ideal).
                 </li>
                 <li>
                   Use the install icon in the address bar, or the menu:{" "}
@@ -235,11 +229,8 @@ export function AdminInstallAppView() {
                   .
                 </li>
                 <li>
-                  Launch the installed window and go to{" "}
-                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                    /admin/dashboard
-                  </code>{" "}
-                  if it opens on the marketing home page first.
+                  Launch the installed window — it opens the Admin dashboard
+                  directly because you installed while signed in.
                 </li>
               </ol>
             </InstructionCard>
@@ -247,13 +238,12 @@ export function AdminInstallAppView() {
             <InstructionCard icon={Smartphone} title="Android (Chrome)">
               <ol className="m-0 list-decimal space-y-2 pl-5">
                 <li>
-                  Open this website in Chrome and go to{" "}
-                  <strong className="font-medium text-foreground">Admin</strong>{" "}
-                  (or add{" "}
+                  In Chrome, open this install page while signed in to Admin (or
+                  navigate to{" "}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                    /admin
-                  </code>{" "}
-                  to the address bar).
+                    /admin/install-app
+                  </code>
+                  ).
                 </li>
                 <li>
                   Tap the menu (⋮) →{" "}
@@ -267,8 +257,9 @@ export function AdminInstallAppView() {
                   .
                 </li>
                 <li>
-                  Open the home-screen icon; you&apos;ll stay signed in if your
-                  session is still valid.
+                  Open the home-screen icon — it launches the Admin dashboard
+                  when you installed while signed in. You&apos;ll stay signed in
+                  if your session is still valid.
                 </li>
               </ol>
             </InstructionCard>
@@ -276,7 +267,7 @@ export function AdminInstallAppView() {
             {!showIosInstallHint && !isIos ? (
               <InstructionCard icon={Share2} title="iPhone & iPad (Safari)">
                 <p className="m-0">
-                  In Safari, tap{" "}
+                  Stay on this page while signed in to Admin. In Safari, tap{" "}
                   <strong className="font-medium text-foreground">Share</strong>{" "}
                   →{" "}
                   <strong className="font-medium text-foreground">
