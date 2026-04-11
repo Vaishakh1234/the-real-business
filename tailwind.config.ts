@@ -52,7 +52,7 @@ const config: Config = {
   				'sans-serif'
   			],
   			'site-wordmark': [
-  				'Times New Roman"',
+  				'Times New Roman',
   				'Times',
   				'var(--font-site-wordmark)',
   				'Georgia',
