@@ -2,11 +2,14 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ADMIN_ATTENTION_QUERY_KEY } from "@/hooks/useLeads";
+import { ADMIN_NOTIFICATIONS_LIST_QUERY_KEY } from "@/lib/query-keys/admin-notifications";
 import type { AdminNotificationRow } from "@/types";
+
+export { ADMIN_NOTIFICATIONS_LIST_QUERY_KEY };
 
 const QK = {
   list: (page: number, limit: number) =>
-    ["admin-notifications", page, limit] as const,
+    [ADMIN_NOTIFICATIONS_LIST_QUERY_KEY, page, limit] as const,
   unread: ["admin-notifications-unread-count"] as const,
   preview: ["admin-notifications-preview"] as const,
 };
@@ -33,6 +36,8 @@ export function useAdminNotificationUnreadCount(options?: { enabled?: boolean })
 export function useAdminNotificationsList(page: number, limit: number) {
   return useQuery({
     queryKey: QK.list(page, limit),
+    /** Override global staleTime so realtime refetches always replace inbox data on this page. */
+    staleTime: 0,
     queryFn: async () => {
       const qs = new URLSearchParams({
         page: String(page),
@@ -99,7 +104,7 @@ export function useMarkNotificationRead() {
       return json.data as AdminNotificationRow;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin-notifications"] });
+      qc.invalidateQueries({ queryKey: [ADMIN_NOTIFICATIONS_LIST_QUERY_KEY] });
       qc.invalidateQueries({ queryKey: QK.unread });
       qc.invalidateQueries({ queryKey: QK.preview });
       qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
@@ -125,7 +130,7 @@ export function useMarkAllNotificationsRead() {
       }
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin-notifications"] });
+      qc.invalidateQueries({ queryKey: [ADMIN_NOTIFICATIONS_LIST_QUERY_KEY] });
       qc.invalidateQueries({ queryKey: QK.unread });
       qc.invalidateQueries({ queryKey: QK.preview });
       qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });

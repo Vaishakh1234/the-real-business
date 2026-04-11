@@ -6,12 +6,13 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import { createClientSupabase } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/authStore";
 import { ADMIN_ATTENTION_QUERY_KEY } from "@/hooks/useLeads";
+import { ADMIN_NOTIFICATIONS_LIST_QUERY_KEY } from "@/lib/query-keys/admin-notifications";
 
 const REFRESH_MS = 45 * 60 * 1000;
 
 /**
- * Subscribes to `admin_notifications` for the logged-in admin email and invalidates
- * the same React Query keys as the polling hooks when rows change.
+ * Subscribes to `admin_notifications` for the logged-in admin email and syncs
+ * React Query (bell, unread, preview, and the paginated inbox list on this page).
  */
 export function useAdminNotificationsRealtime() {
   const queryClient = useQueryClient();
@@ -25,13 +26,16 @@ export function useAdminNotificationsRealtime() {
     const supabase = createClientSupabase();
     let channel: RealtimeChannel | null = null;
 
-    function invalidateNotificationQueries() {
-      void queryClient.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
-      void queryClient.invalidateQueries({
+    async function syncNotificationQueries() {
+      await queryClient.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
+      await queryClient.invalidateQueries({
         queryKey: ["admin-notifications-unread-count"],
       });
-      void queryClient.invalidateQueries({ queryKey: ["admin-notifications-preview"] });
-      void queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
+      await queryClient.invalidateQueries({ queryKey: ["admin-notifications-preview"] });
+      await queryClient.refetchQueries({
+        queryKey: [ADMIN_NOTIFICATIONS_LIST_QUERY_KEY],
+        type: "active",
+      });
     }
 
     async function subscribe() {
@@ -62,7 +66,7 @@ export function useAdminNotificationsRealtime() {
             filter,
           },
           () => {
-            invalidateNotificationQueries();
+            void syncNotificationQueries();
           }
         )
         .subscribe((status, err) => {

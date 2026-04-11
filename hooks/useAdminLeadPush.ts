@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { AdminSettings, AdminSettingsUpdate } from "@/types";
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
@@ -32,6 +32,8 @@ export function useAdminLeadPush() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [patching, setPatching] = useState(false);
+  /** Prevents overlapping enable runs (e.g. double-tap) before React state updates. */
+  const enableInFlightRef = useRef(false);
 
   const supported = usePushSupported();
 
@@ -110,29 +112,40 @@ export function useAdminLeadPush() {
       throw new Error("Notifications are not supported in this browser.");
     }
 
-    // Bug 1 fix: check/request browser permission BEFORE touching the DB so
-    // that a denial never leaves settings in a half-enabled state.
     if (Notification.permission === "denied") {
       throw new Error("NOTIFICATION_DENIED");
     }
 
+    if (enableInFlightRef.current) {
+      return;
+    }
+    enableInFlightRef.current = true;
     setBusy(true);
     try {
       const reg = await navigator.serviceWorker.register("/sw.js");
       await navigator.serviceWorker.ready;
 
-      // Only prompt when the browser hasn't decided yet; if already "granted"
-      // this returns immediately without showing a dialog (browser behaviour).
-      if (Notification.permission !== "granted") {
-        const perm = await Notification.requestPermission();
-        if (perm !== "granted") {
+      const appKey = urlBase64ToUint8Array(publicKey);
+      let sub: PushSubscription;
+      try {
+        // Do not call Notification.requestPermission() here: on many mobile
+        // browsers (Chrome Android) combining it with pushManager.subscribe()
+        // triggers two permission UIs. subscribe() requests notification
+        // permission when needed (single prompt).
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          // @ts-expect-error TS 5.7 ArrayBufferLike vs ArrayBuffer in PushSubscriptionOptions
+          applicationServerKey: appKey,
+        });
+      } catch (e) {
+        const name = e instanceof DOMException ? e.name : "";
+        if (name === "NotAllowedError" || name === "AbortError") {
           throw new Error("NOTIFICATION_DENIED");
         }
+        throw e;
       }
 
-      // Bug 1 fix (cont.) + Bug 2 fix: patch DB only after permission is
-      // confirmed, and include browser_notifications:true so the account-level
-      // flag stays consistent with the subscription we are about to create.
+      // Patch DB only after we have a subscription (permission + push path OK).
       const patchRes = await fetch("/api/admin/settings", {
         method: "PATCH",
         credentials: "include",
@@ -145,19 +158,13 @@ export function useAdminLeadPush() {
       });
       if (!patchRes.ok) {
         const j = await patchRes.json().catch(() => ({}));
+        await sub.unsubscribe().catch(() => {});
         throw new Error(
           typeof j.error === "string" ? j.error : "Could not update settings.",
         );
       }
       const pj = (await patchRes.json()) as { data: AdminSettings };
       setSettings(pj.data);
-
-      const appKey = urlBase64ToUint8Array(publicKey);
-      const sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        // @ts-expect-error TS 5.7 ArrayBufferLike vs ArrayBuffer in PushSubscriptionOptions
-        applicationServerKey: appKey,
-      });
 
       const json = sub.toJSON();
       if (!json.endpoint || !json.keys?.p256dh || !json.keys?.auth) {
@@ -175,6 +182,7 @@ export function useAdminLeadPush() {
       });
       if (!save.ok) {
         const j = await save.json().catch(() => ({}));
+        await sub.unsubscribe().catch(() => {});
         throw new Error(
           typeof j.error === "string"
             ? j.error
@@ -184,6 +192,7 @@ export function useAdminLeadPush() {
 
       setPushActive(true);
     } finally {
+      enableInFlightRef.current = false;
       setBusy(false);
     }
   }, [publicKey, supported, vapidConfigured]);

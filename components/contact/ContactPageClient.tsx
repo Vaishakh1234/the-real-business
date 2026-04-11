@@ -5,14 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Send,
-  Loader2,
-} from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, Loader2 } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 import {
   Select,
@@ -23,7 +16,11 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { publicContentFrameClass } from "@/lib/constants/publicLayout";
-import { CONTACT, getContactWhatsAppUrl, SOCIAL_LINKS } from "@/lib/constants/site";
+import {
+  CONTACT,
+  getContactWhatsAppUrl,
+  SOCIAL_LINKS,
+} from "@/lib/constants/site";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { useSubmitContactForm } from "@/hooks/useLeads";
 import { toast } from "sonner";
@@ -401,18 +398,17 @@ export function ContactPageClient() {
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm">
                       <WhatsAppIcon className="h-[18px] w-[18px] text-[#25D366] sm:h-5 sm:w-5" />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <h4 className="font-bold text-foreground mb-2 sm:mb-3 text-sm sm:text-base">
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-foreground mb-0.5 sm:mb-1 text-sm sm:text-base">
                         WhatsApp
                       </h4>
                       <a
                         href={whatsappHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex w-full min-h-[48px] items-center justify-center gap-2 rounded-xl bg-brand-charcoal px-4 py-4 text-center text-base font-medium text-white transition-opacity hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2"
+                        className="text-gray-600 text-[13px] sm:text-base leading-snug hover:text-brand-gold transition-colors"
                       >
-                        <WhatsAppIcon className="h-5 w-5 shrink-0 text-white" />
-                        Chat on WhatsApp
+                        {CONTACT.whatsappLabel}
                       </a>
                     </div>
                   </div>
@@ -473,7 +469,6 @@ export function ContactPageClient() {
                   </div>
                 </div>
               )}
-
             </div>
           </motion.div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { ADMIN_NOTIFICATIONS_LIST_QUERY_KEY } from "@/lib/query-keys/admin-notifications";
 import { buildQueryString } from "@/lib/utils";
 import type { AdminAttentionCounts } from "@/lib/queries/admin-attention";
 import type {
@@ -52,7 +53,7 @@ export function useCreateLead() {
       qc.invalidateQueries({ queryKey: ["leads"] });
       qc.invalidateQueries({ queryKey: ["admin-leads-unseen-count"] });
       qc.invalidateQueries({ queryKey: ADMIN_ATTENTION_QUERY_KEY });
-      qc.invalidateQueries({ queryKey: ["admin-notifications"] });
+      qc.invalidateQueries({ queryKey: [ADMIN_NOTIFICATIONS_LIST_QUERY_KEY] });
       qc.invalidateQueries({ queryKey: ["admin-notifications-unread-count"] });
       qc.invalidateQueries({ queryKey: ["admin-notifications-preview"] });
       toast.success("Lead created");
