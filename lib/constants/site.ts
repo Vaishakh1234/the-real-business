@@ -526,7 +526,7 @@ export const CLIENT_PWA_DOWNLOAD = false;
 /**
  * Admin: show “Install app” in the sidebar, settings shortcut, and `/admin/install-app`.
  */
-export const ADMIN_PWA_DOWNLOAD = true;
+export const ADMIN_PWA_DOWNLOAD = false;
 
 /** Ask Leon — expert Q&A / quick-help section (home page). */
 export const ASK_LEON = {

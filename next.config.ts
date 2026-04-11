@@ -25,6 +25,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: imageRemotePatterns,
   },
+  async headers() {
+    return [
+      {
+        // Always serve a fresh manifest so the browser picks up the correct
+        // start_url (/ for anonymous, /admin/dashboard for admin sessions)
+        // instead of using a stale cached copy from a prior anonymous visit.
+        source: "/manifest.webmanifest",
+        headers: [{ key: "Cache-Control", value: "no-store" }],
+      },
+    ];
+  },
   async redirects() {
     return [
       {
