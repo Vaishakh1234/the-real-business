@@ -3,23 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { LogOut, Loader2, ExternalLink } from "lucide-react";
+import { LogOut, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/store/appStore";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { AdminLogoutConfirmation } from "@/components/admin/AdminLogoutConfirmation";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { adminNavItems } from "@/lib/constants/admin-nav";
 
 export function Sidebar() {
@@ -152,35 +143,12 @@ export function Sidebar() {
         </button>
       </div>
 
-      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
-        <AlertDialogContent className="rounded-xl border border-border bg-card text-card-foreground shadow-xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sign out?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to sign out? Your current session will be
-              ended.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              variant="destructive"
-              className="min-w-[110px]"
-            >
-              {isLoggingOut ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing Out…
-                </>
-              ) : (
-                "Sign Out"
-              )}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AdminLogoutConfirmation
+        open={showLogoutDialog}
+        onOpenChange={setShowLogoutDialog}
+        onConfirm={handleLogout}
+        isLoggingOut={isLoggingOut}
+      />
     </aside>
   );
 }

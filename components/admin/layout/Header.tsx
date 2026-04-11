@@ -13,15 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { AdminLogoutConfirmation } from "@/components/admin/AdminLogoutConfirmation";
 import { Logo } from "@/components/ui/Logo";
 import { useAppStore } from "@/store/appStore";
 import { useAuthStore } from "@/store/authStore";
@@ -397,35 +389,13 @@ export function Header() {
         </DropdownMenu>
       </div>
 
-      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
-        <AlertDialogContent className="rounded-xl border border-border bg-card text-card-foreground shadow-xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Sign out?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to sign out of your account? You will need
-              to log back in to access the admin panel.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="gap-2 mt-4">
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              variant="destructive"
-              className="min-w-[110px]"
-            >
-              {isLoggingOut ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing Out…
-                </>
-              ) : (
-                "Sign Out"
-              )}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AdminLogoutConfirmation
+        open={showLogoutDialog}
+        onOpenChange={setShowLogoutDialog}
+        onConfirm={handleLogout}
+        isLoggingOut={isLoggingOut}
+        description="Are you sure you want to sign out of your account? You will need to log back in to access the admin panel."
+      />
     </header>
   );
 }
