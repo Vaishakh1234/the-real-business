@@ -21,7 +21,7 @@ const HERO_CATEGORY_BUTTON_LIMIT = 5;
 const HERO_CATEGORY_MOBILE_ROW = 2;
 
 const heroTitleClassName =
-  "min-w-0 text-balance font-heading text-[2.125rem] font-bold leading-[1.08] tracking-[-0.02em] text-white xs:text-[2.875rem] xs:leading-[1.06] sm:text-[4.5rem] sm:leading-[1.05] md:text-[clamp(2.75rem,7vw,3.5rem)] md:leading-[1.08] lg:text-[5.25rem] lg:leading-[1.04] xl:text-[5.75rem] xl:leading-[1.03] 2xl:text-[6rem] 2xl:leading-[1.02]";
+  "min-w-0 text-balance font-heading text-[2.5rem] font-bold leading-[1.06] tracking-[-0.02em] text-white xs:text-[2.875rem] sm:text-[4.5rem] sm:leading-[1.05] md:text-[clamp(2.75rem,7vw,3.5rem)] md:leading-[1.08] lg:text-[5.25rem] lg:leading-[1.04] xl:text-[5.75rem] xl:leading-[1.03] 2xl:text-[6rem] 2xl:leading-[1.02]";
 
 const categoryChipClass =
   "inline-flex shrink-0 snap-start items-center rounded-full border border-white/30 bg-white/10 px-2 py-1 text-[11px] font-semibold leading-tight text-white shadow-sm backdrop-blur-sm transition-[background-color,border-color,color] duration-200 hover:border-white hover:bg-white hover:text-brand-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal xs:px-2.5 xs:py-1.5 xs:text-xs xs:leading-normal sm:snap-none sm:px-5 sm:py-2.5 sm:text-[15px]";
@@ -59,7 +59,7 @@ function heroCategoryLinks(
       >
         View All
         <ChevronRight
-          className="h-3 w-3 shrink-0 text-brand-charcoal opacity-90 xs:h-3.5 xs:w-3.5 sm:h-4 sm:w-4"
+          className="h-3.5 w-3.5 shrink-0 text-brand-charcoal opacity-90 sm:h-4 sm:w-4"
           strokeWidth={2}
           aria-hidden
         />
@@ -94,7 +94,7 @@ function HeroCategoryButtons({
     return (
       <div
         className={cn(
-          "-mx-1 mt-2 flex gap-1.5 pb-0.5 xs:gap-2 sm:mx-0 sm:mt-7 sm:pb-0",
+          "-mx-1 mt-2 flex gap-2 pb-0.5 sm:mx-0 sm:mt-7 sm:pb-0",
           "flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           autoScroll && !singleRowCompact && "overflow-hidden",
           className,
@@ -105,7 +105,7 @@ function HeroCategoryButtons({
         {Array.from({ length: skeletonCount }, (_, i) => (
           <div
             key={i}
-            className="h-7 min-w-[3.5rem] shrink-0 animate-pulse rounded-full bg-white/15 xs:h-8 xs:min-w-[4.25rem] sm:h-10 sm:min-w-[5.75rem]"
+            className="h-8 min-w-[4.25rem] shrink-0 animate-pulse rounded-full bg-white/15 sm:h-10 sm:min-w-[5.75rem]"
           />
         ))}
       </div>
@@ -118,7 +118,7 @@ function HeroCategoryButtons({
     return (
       <nav
         className={cn(
-          "-mx-1 mt-0 flex flex-nowrap items-center gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] xs:gap-1.5 sm:mx-0 sm:gap-2 sm:pb-0 [&::-webkit-scrollbar]:hidden",
+          "-mx-1 mt-0 flex flex-nowrap items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] sm:mx-0 sm:gap-2 sm:pb-0 [&::-webkit-scrollbar]:hidden",
           className,
         )}
         aria-label="Browse by category"
@@ -159,7 +159,7 @@ function HeroCategoryButtons({
   return (
     <nav
       className={cn(
-        "-mx-1 mt-2 flex flex-wrap gap-1 pb-0.5 xs:gap-1.5 sm:mx-0 sm:mt-7 sm:gap-2.5 sm:pb-0",
+        "-mx-1 mt-2 flex flex-wrap gap-1.5 pb-0.5 sm:mx-0 sm:mt-7 sm:gap-2.5 sm:pb-0",
         className,
       )}
       aria-label="Browse by category"
