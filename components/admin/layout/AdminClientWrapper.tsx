@@ -3,6 +3,7 @@
 import { useAppStore } from "@/store/appStore";
 import { cn } from "@/lib/utils";
 import { AdminMobileWebNotice } from "@/components/admin/layout/AdminMobileWebNotice";
+import { useAdminNotificationsRealtime } from "@/hooks/useAdminNotificationsRealtime";
 
 const THEME_INIT_SCRIPT = `
 (function(){
@@ -19,6 +20,7 @@ export function AdminClientWrapper({
   children: React.ReactNode;
 }) {
   const { sidebarCollapsed } = useAppStore();
+  useAdminNotificationsRealtime();
 
   return (
     <div
