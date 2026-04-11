@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -12,6 +11,12 @@ import {
   Smartphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
 import {
   PageHeader,
@@ -20,38 +25,28 @@ import {
 import { ADMIN_PWA_DOWNLOAD, SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 
-function InstructionCard({
+function InstallPlatformAccordionTrigger({
   icon: Icon,
-  title,
-  children,
-  className,
+  label,
 }: {
   icon: LucideIcon;
-  title: string;
-  children: ReactNode;
-  className?: string;
+  label: string;
 }) {
   return (
-    <div
+    <AccordionTrigger
       className={cn(
-        "rounded-2xl border border-admin-card-border bg-white/90 p-4 shadow-sm sm:p-5",
-        className,
+        "gap-3 py-4 text-left hover:no-underline sm:py-5 [&>svg]:shrink-0",
       )}
     >
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-blue-muted/50 ring-1 ring-brand-blue/15">
+      <span className="flex min-w-0 flex-1 items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-blue-muted/50 ring-1 ring-brand-blue/15">
           <Icon className="h-5 w-5 text-brand-blue" strokeWidth={2} />
-        </div>
-        <div className="min-w-0 space-y-2">
-          <h2 className="font-semibold text-[#1a1a1a] text-base sm:text-lg">
-            {title}
-          </h2>
-          <div className="text-muted-foreground text-sm leading-relaxed sm:text-[15px]">
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
+        </span>
+        <span className="font-semibold text-[#1a1a1a] text-base sm:text-lg">
+          {label}
+        </span>
+      </span>
+    </AccordionTrigger>
   );
 }
 
@@ -63,7 +58,6 @@ export function AdminInstallAppView() {
     runInstall,
     isIos,
     showInstallButton,
-    showIosInstallHint,
   } = usePwaInstall();
 
   const breadcrumbs: BreadcrumbItem[] = [
@@ -148,7 +142,7 @@ export function AdminInstallAppView() {
                   <strong className="font-medium">
                     Apps → Install this site as an app
                   </strong>
-                  . The detailed steps for desktop and mobile are below.
+                  . Expand a section below for your device.
                 </p>
               </div>
             ) : null}
@@ -189,95 +183,113 @@ export function AdminInstallAppView() {
               </div>
             ) : null}
 
-            {showIosInstallHint ? (
-              <InstructionCard icon={Share2} title="iPhone & iPad (Safari)">
-                <p className="m-0">
-                  Stay on this page while signed in to Admin, then tap{" "}
-                  <strong className="font-medium text-foreground">Share</strong>{" "}
-                  →{" "}
-                  <strong className="font-medium text-foreground">
-                    Add to Home Screen
-                  </strong>
-                  . The home-screen icon opens Admin; if your session expired,
-                  use{" "}
-                  <Link
-                    href="/admin/login"
-                    className="font-medium text-brand-blue underline-offset-2 hover:underline"
-                  >
-                    Admin login
-                  </Link>
-                  .
-                </p>
-              </InstructionCard>
-            ) : null}
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue="desktop"
+              className="rounded-2xl border border-admin-card-border bg-white/90 px-3 shadow-sm sm:px-4"
+            >
+              <AccordionItem
+                value="desktop"
+                className="border-admin-card-border last:border-b-0"
+              >
+                <InstallPlatformAccordionTrigger
+                  icon={Monitor}
+                  label="Desktop (Chrome or Edge)"
+                />
+                <AccordionContent className="text-muted-foreground text-sm leading-relaxed sm:text-[15px]">
+                  <ol className="m-0 list-decimal space-y-2 pl-5">
+                    <li>
+                      Open this site in Chrome or Edge while signed in to Admin
+                      (this install page is ideal).
+                    </li>
+                    <li>
+                      Use the install icon in the address bar, or the menu:{" "}
+                      <strong className="font-medium text-foreground">
+                        ⋮ → Install {SITE_NAME}…
+                      </strong>{" "}
+                      /{" "}
+                      <strong className="font-medium text-foreground">
+                        Apps → Install this site as an app
+                      </strong>
+                      .
+                    </li>
+                    <li>
+                      Launch the installed window — it opens the Admin dashboard
+                      directly because you installed while signed in.
+                    </li>
+                  </ol>
+                </AccordionContent>
+              </AccordionItem>
 
-            <InstructionCard icon={Monitor} title="Desktop (Chrome or Edge)">
-              <ol className="m-0 list-decimal space-y-2 pl-5">
-                <li>
-                  Open this site in Chrome or Edge while signed in to Admin (this
-                  install page is ideal).
-                </li>
-                <li>
-                  Use the install icon in the address bar, or the menu:{" "}
-                  <strong className="font-medium text-foreground">
-                    ⋮ → Install {SITE_NAME}…
-                  </strong>{" "}
-                  /{" "}
-                  <strong className="font-medium text-foreground">
-                    Apps → Install this site as an app
-                  </strong>
-                  .
-                </li>
-                <li>
-                  Launch the installed window — it opens the Admin dashboard
-                  directly because you installed while signed in.
-                </li>
-              </ol>
-            </InstructionCard>
+              <AccordionItem
+                value="android"
+                className="border-admin-card-border last:border-b-0"
+              >
+                <InstallPlatformAccordionTrigger
+                  icon={Smartphone}
+                  label="Android (Chrome)"
+                />
+                <AccordionContent className="text-muted-foreground text-sm leading-relaxed sm:text-[15px]">
+                  <ol className="m-0 list-decimal space-y-2 pl-5">
+                    <li>
+                      In Chrome, open this install page while signed in to Admin
+                      (or navigate to{" "}
+                      <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
+                        /admin/install-app
+                      </code>
+                      ).
+                    </li>
+                    <li>
+                      Tap the menu (⋮) →{" "}
+                      <strong className="font-medium text-foreground">
+                        Add to Home screen
+                      </strong>{" "}
+                      or{" "}
+                      <strong className="font-medium text-foreground">
+                        Install app
+                      </strong>
+                      .
+                    </li>
+                    <li>
+                      Open the home-screen icon — it launches the Admin dashboard
+                      when you installed while signed in. You&apos;ll stay signed
+                      in if your session is still valid.
+                    </li>
+                  </ol>
+                </AccordionContent>
+              </AccordionItem>
 
-            <InstructionCard icon={Smartphone} title="Android (Chrome)">
-              <ol className="m-0 list-decimal space-y-2 pl-5">
-                <li>
-                  In Chrome, open this install page while signed in to Admin (or
-                  navigate to{" "}
-                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                    /admin/install-app
-                  </code>
-                  ).
-                </li>
-                <li>
-                  Tap the menu (⋮) →{" "}
-                  <strong className="font-medium text-foreground">
-                    Add to Home screen
-                  </strong>{" "}
-                  or{" "}
-                  <strong className="font-medium text-foreground">
-                    Install app
-                  </strong>
-                  .
-                </li>
-                <li>
-                  Open the home-screen icon — it launches the Admin dashboard
-                  when you installed while signed in. You&apos;ll stay signed in
-                  if your session is still valid.
-                </li>
-              </ol>
-            </InstructionCard>
-
-            {!showIosInstallHint && !isIos ? (
-              <InstructionCard icon={Share2} title="iPhone & iPad (Safari)">
-                <p className="m-0">
-                  Stay on this page while signed in to Admin. In Safari, tap{" "}
-                  <strong className="font-medium text-foreground">Share</strong>{" "}
-                  →{" "}
-                  <strong className="font-medium text-foreground">
-                    Add to Home Screen
-                  </strong>
-                  . iOS does not use the same one-tap install prompt as Chrome on
-                  desktop.
-                </p>
-              </InstructionCard>
-            ) : null}
+              <AccordionItem
+                value="ios"
+                className="border-admin-card-border border-b-0"
+              >
+                <InstallPlatformAccordionTrigger
+                  icon={Share2}
+                  label="iPhone & iPad (Safari)"
+                />
+                <AccordionContent className="text-muted-foreground text-sm leading-relaxed sm:text-[15px]">
+                  <p className="m-0">
+                    Stay on this page while signed in to Admin. In Safari, tap{" "}
+                    <strong className="font-medium text-foreground">Share</strong>{" "}
+                    →{" "}
+                    <strong className="font-medium text-foreground">
+                      Add to Home Screen
+                    </strong>
+                    . The home-screen icon opens Admin; if your session expired,
+                    use{" "}
+                    <Link
+                      href="/admin/login"
+                      className="font-medium text-brand-blue underline-offset-2 hover:underline"
+                    >
+                      Admin login
+                    </Link>
+                    . iOS does not use the same one-tap install prompt as Chrome
+                    on desktop.
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </>
         )}
       </div>

@@ -124,14 +124,20 @@ export function Footer() {
           <FooterLinkColumn title="Legal" links={legal} />
         </div>
 
-        <div className="pt-8 sm:pt-10 flex items-center justify-center">
-          <div className="text-sm text-white/40 text-center">
+        <div className="pt-8 sm:pt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-white/40 text-center sm:text-left">
             &copy; {new Date().getFullYear()}{" "}
             <span className="font-site-wordmark font-normal text-white/55">
               {SITE_NAME}
             </span>
             . All Rights Reserved.
           </div>
+          <Link
+            href="/admin/login"
+            className="text-sm font-medium text-white/70 transition-colors hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-brand-charcoal rounded text-center sm:text-right"
+          >
+            Login
+          </Link>
         </div>
       </div>
     </footer>

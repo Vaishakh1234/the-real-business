@@ -648,8 +648,13 @@ export function Navbar() {
                     </div>
                     <button
                       type="submit"
-                      className="shrink-0 bg-brand-gold px-4 text-[11px] font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand-gold/90 focus:outline-none focus-visible:relative focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold md:px-5 md:text-xs"
+                      className="inline-flex shrink-0 items-center justify-center gap-1.5 bg-brand-gold px-3 text-[11px] font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand-gold/90 focus:outline-none focus-visible:relative focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-gold md:gap-2 md:px-5 md:text-xs"
                     >
+                      <Search
+                        className="h-3.5 w-3.5 shrink-0 md:h-4 md:w-4"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
                       Search
                     </button>
                   </div>
