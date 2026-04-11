@@ -9,6 +9,14 @@ import {
   Download,
   type LucideIcon,
 } from "lucide-react";
+import { ADMIN_PWA_DOWNLOAD } from "@/lib/constants/site";
+
+const adminInstallNavItem = {
+  label: "Install app",
+  href: "/admin/install-app",
+  icon: Download,
+  color: "text-sky-600",
+} as const;
 
 export const adminNavItems: {
   label: string;
@@ -52,12 +60,7 @@ export const adminNavItems: {
     icon: FileBarChart,
     color: "text-orange-600",
   },
-  {
-    label: "Install app",
-    href: "/admin/install-app",
-    icon: Download,
-    color: "text-sky-600",
-  },
+  ...(ADMIN_PWA_DOWNLOAD ? [adminInstallNavItem] : []),
   {
     label: "Settings",
     href: "/admin/settings",

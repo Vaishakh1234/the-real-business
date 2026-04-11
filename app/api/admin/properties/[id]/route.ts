@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminSession } from "@/lib/auth/session";
-import { getPropertyByIdOrSlug } from "@/lib/queries/properties";
+import {
+  getPropertyById,
+  getPropertyByIdOrSlug,
+} from "@/lib/queries/properties";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { propertySchema } from "@/lib/validations/property.schema";
 import { normalizePropertyTags, slugify } from "@/lib/utils";
 import { normalizeMapUrl } from "@/lib/map-url";
 import { toUserFriendlyMessage } from "@/lib/db-errors";
 import { stripImmutablePropertyFields } from "@/lib/properties/immutable-fields";
+import { mergePropertyRowWithPatchForSeo } from "@/lib/seo/merge-seo-for-persist";
+import { fillBlankPropertySeoFields } from "@/lib/seo/property-seo-defaults";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -95,6 +100,20 @@ export async function PUT(request: NextRequest, { params }: Params) {
     const normalized = await normalizeMapUrl(updatePayload.map_embed_url);
     updatePayload.map_embed_url = normalized ?? (updatePayload.map_embed_url.trim() || null);
   }
+
+  const existingRow = await getPropertyById(id);
+  if (!existingRow) {
+    return NextResponse.json({ error: "Property not found" }, { status: 404 });
+  }
+  const mergedForSeo = mergePropertyRowWithPatchForSeo(
+    existingRow,
+    updatePayload as Record<string, unknown>,
+  );
+  const seoFilled = fillBlankPropertySeoFields(mergedForSeo);
+  (updatePayload as Record<string, unknown>).meta_title = seoFilled.meta_title;
+  (updatePayload as Record<string, unknown>).meta_description =
+    seoFilled.meta_description;
+  (updatePayload as Record<string, unknown>).meta_keywords = seoFilled.meta_keywords;
 
   const { data, error } = await supabase
     .from("properties")

@@ -10,13 +10,16 @@ const ICON_192 = {
   type: "image/png",
 } as const;
 
+/** PWA launch URL when the manifest is served with an admin session (install from admin / logged-in fetch). */
+export const PWA_ADMIN_START_URL = "/admin/dashboard?source=pwa" as const;
+
 /** Shown in the installed app launcher for signed-in admins only (not for public installs). */
 const ADMIN_SHORTCUTS: MetadataRoute.Manifest["shortcuts"] = [
   {
     name: "Admin dashboard",
     short_name: "Admin",
     description: "Open the admin dashboard",
-    url: "/admin/dashboard?source=pwa",
+    url: PWA_ADMIN_START_URL,
     icons: [{ ...ICON_192 }],
   },
   {
@@ -37,7 +40,8 @@ const ADMIN_SHORTCUTS: MetadataRoute.Manifest["shortcuts"] = [
 
 /**
  * Web app manifest. When `includeAdminShortcuts` is false (anonymous visitor),
- * admin routes are not advertised as launcher shortcuts; access is still enforced by middleware.
+ * `start_url` is the public home; when true (admin session), launching the installed PWA opens admin first.
+ * Admin routes are not advertised as shortcuts for anonymous visitors; access is still enforced by proxy.
  */
 export function buildWebAppManifest(
   includeAdminShortcuts: boolean,
@@ -47,7 +51,7 @@ export function buildWebAppManifest(
     short_name: SITE_NAME,
     description:
       "Real estate marketing, property consultancy, and buying & selling support in Palakkad, Kerala.",
-    start_url: "/?source=pwa",
+    start_url: includeAdminShortcuts ? PWA_ADMIN_START_URL : "/?source=pwa",
     scope: "/",
     display: "standalone",
     orientation: "portrait-primary",

@@ -4,6 +4,7 @@ import { getPropertiesForAdmin } from "@/lib/queries/properties";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { propertySchema } from "@/lib/validations/property.schema";
 import { normalizePropertyTags, slugify } from "@/lib/utils";
+import { applySeoDefaultsFromFormValues } from "@/lib/seo/merge-seo-for-persist";
 import { normalizeMapUrl } from "@/lib/map-url";
 import { CONNECTION_UNAVAILABLE_MESSAGE, toUserFriendlyMessage, withConnectionRetry } from "@/lib/db-errors";
 
@@ -134,6 +135,20 @@ export async function POST(request: NextRequest) {
     meta_keywords: d.meta_keywords ?? null,
     og_image_url: d.og_image_url?.trim() || null,
   };
+
+  const seo = applySeoDefaultsFromFormValues({
+    title: d.title,
+    description: d.description ?? null,
+    short_description: d.short_description ?? null,
+    city: d.city,
+    type: d.type,
+    meta_title: insertPayload.meta_title,
+    meta_description: insertPayload.meta_description,
+    meta_keywords: insertPayload.meta_keywords,
+  });
+  insertPayload.meta_title = seo.meta_title;
+  insertPayload.meta_description = seo.meta_description;
+  insertPayload.meta_keywords = seo.meta_keywords;
 
   const { data, error } = await supabase
     .from("properties")

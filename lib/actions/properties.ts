@@ -3,7 +3,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   getPropertiesForAdmin,
-  getPropertyById,
+  getPropertyById as getPropertyByIdQuery,
   getPropertyByIdOrSlug,
   type AdminListPropertiesOptions,
 } from "@/lib/queries/properties";
@@ -12,6 +12,11 @@ import { propertySchema } from "@/lib/validations/property.schema";
 import { normalizePropertyTags, slugify } from "@/lib/utils";
 import type { PropertyFormValues } from "@/lib/validations/property.schema";
 import { stripImmutablePropertyFields } from "@/lib/properties/immutable-fields";
+import {
+  applySeoDefaultsFromFormValues,
+  mergePropertyRowWithPatchForSeo,
+} from "@/lib/seo/merge-seo-for-persist";
+import { fillBlankPropertySeoFields } from "@/lib/seo/property-seo-defaults";
 
 export async function getPropertiesListAction(
   options: AdminListPropertiesOptions
@@ -23,7 +28,7 @@ export async function getPropertyByIdAction(
   id: string
 ): Promise<PropertyWithRelations | null> {
   try {
-    return await getPropertyById(id);
+    return await getPropertyByIdQuery(id);
   } catch {
     return null;
   }
@@ -41,6 +46,16 @@ export async function getPropertyByIdOrSlugAction(
 
 function toDbPayload(data: PropertyFormValues) {
   const slug = data.slug || slugify(data.title);
+  const seo = applySeoDefaultsFromFormValues({
+    title: data.title,
+    description: data.description ?? null,
+    short_description: data.short_description ?? null,
+    city: data.city,
+    type: data.type,
+    meta_title: data.meta_title ?? null,
+    meta_description: data.meta_description ?? null,
+    meta_keywords: data.meta_keywords ?? null,
+  });
   return {
     title: data.title,
     slug,
@@ -76,9 +91,9 @@ function toDbPayload(data: PropertyFormValues) {
     highlights: data.highlights ?? null,
     plot_number: data.plot_number ?? null,
     plot_dimensions: data.plot_dimensions ?? null,
-    meta_title: data.meta_title ?? null,
-    meta_description: data.meta_description ?? null,
-    meta_keywords: data.meta_keywords ?? null,
+    meta_title: seo.meta_title,
+    meta_description: seo.meta_description,
+    meta_keywords: seo.meta_keywords,
     og_image_url: data.og_image_url || null,
   };
 }
@@ -136,6 +151,17 @@ export async function updateProperty(
       safePayload.tags as string[] | null | undefined,
     );
   }
+  const existing = await getPropertyByIdQuery(id);
+  if (!existing) {
+    return { success: false, error: "Property not found" };
+  }
+  const seo = fillBlankPropertySeoFields(
+    mergePropertyRowWithPatchForSeo(existing, safePayload as Record<string, unknown>),
+  );
+  safePayload.meta_title = seo.meta_title;
+  safePayload.meta_description = seo.meta_description;
+  safePayload.meta_keywords = seo.meta_keywords;
+
   const { error } = await supabase
     .from("properties")
     .update(safePayload as never)

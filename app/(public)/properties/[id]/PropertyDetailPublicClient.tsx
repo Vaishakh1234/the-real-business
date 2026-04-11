@@ -782,6 +782,7 @@ export function PropertyDetailPublicClient({
               <PropertyEnquirySidebar
                 propertyId={property.id}
                 propertyTitle={property.title}
+                property={property}
               />
             </div>
           </aside>

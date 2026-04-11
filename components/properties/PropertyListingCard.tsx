@@ -20,10 +20,11 @@ import { useRef, useState } from "react";
 import type { PropertyWithRelations } from "@/types";
 import {
   CONTACT,
-  getContactWhatsAppUrl,
+  getContactWhatsAppUrlWithPrefill,
   HOME_EXPLORE,
   SITE_NAME,
 } from "@/lib/constants/site";
+import { buildPropertyWhatsAppPrefillMessage } from "@/lib/whatsapp-property-prefill";
 import { LISTING_CARD } from "@/lib/constants/listing-card";
 import { isRemoteImageOptimizedUrl } from "@/lib/public-image-hosts";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -795,7 +796,9 @@ export function DirectoryPropertyListingCard({
   const statLabelClass =
     "text-[11px] font-semibold uppercase tracking-wider text-neutral-500";
 
-  const whatsappHref = getContactWhatsAppUrl();
+  const whatsappHref = getContactWhatsAppUrlWithPrefill(
+    buildPropertyWhatsAppPrefillMessage(property, href),
+  );
 
   return (
     <motion.article

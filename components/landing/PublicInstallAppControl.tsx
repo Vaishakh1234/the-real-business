@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SITE_NAME } from "@/lib/constants/site";
+import { CLIENT_PWA_DOWNLOAD, SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
 
@@ -32,6 +32,7 @@ export function PublicInstallAppControl({ overlayNav }: Props) {
     isIos,
   } = usePwaInstall();
 
+  if (!CLIENT_PWA_DOWNLOAD) return null;
   if (!ready || isStandalone) return null;
 
   /** Home already has a large banner — keep the header control compact (icon-first). */

@@ -23,6 +23,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   propertySchema,
@@ -34,7 +39,7 @@ import { useAllCategories } from "@/hooks/useCategories";
 import { useAmenities } from "@/hooks/useAmenities";
 import { slugify, cn, normalizePropertyTags } from "@/lib/utils";
 import type { PropertyWithRelations } from "@/types";
-import { Loader2, Plus, X } from "lucide-react";
+import { ChevronDown, Info, Loader2, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { AmenitiesModal } from "./AmenitiesModal";
@@ -101,6 +106,8 @@ export function PropertySheet({
   openToTab,
 }: PropertySheetProps) {
   const isMobile = useIsMobile();
+  /** SEO tab is desktop-only; mobile relies on server-side auto meta from title/description. */
+  const showSeoTab = !isMobile;
   const isEditing = !!property;
   const [activeTab, setActiveTab] = useState<
     "general" | "assets" | "specs" | "seo"
@@ -125,12 +132,22 @@ export function PropertySheet({
     useState<AbortSignal | null>(null);
   const prevActiveTabRef = useRef(activeTab);
 
-  // When sheet opens with openToTab, switch to that tab
+  // When sheet opens with openToTab, switch to that tab (SEO is hidden on small viewports)
   useEffect(() => {
     if (open && openToTab) {
-      setActiveTab(openToTab);
+      if (openToTab === "seo" && !showSeoTab) {
+        setActiveTab("specs");
+      } else {
+        setActiveTab(openToTab);
+      }
     }
-  }, [open, openToTab]);
+  }, [open, openToTab, showSeoTab]);
+
+  useEffect(() => {
+    if (!showSeoTab && activeTab === "seo") {
+      setActiveTab("specs");
+    }
+  }, [showSeoTab, activeTab]);
 
   // Abort uploads when sheet closes
   useEffect(() => {
@@ -345,6 +362,22 @@ export function PropertySheet({
     return payload;
   }
 
+  const SPECS_FORM_FIELDS = [
+    "structure_type",
+    "area_sqft",
+    "total_cent",
+    "bedrooms",
+    "bathrooms",
+    "floors",
+    "facing",
+    "furnished",
+    "amenities",
+    "plot_number",
+    "plot_dimensions",
+    "tags",
+    "highlights",
+  ] as const;
+
   function addTagFromInput() {
     const raw = tagInput.trim().slice(0, 40);
     if (!raw) return;
@@ -409,6 +442,41 @@ export function PropertySheet({
       }
     }
     return result;
+  }
+
+  /** Final save (SEO tab on desktop, or Specs tab on mobile): full payload; API fills blank meta. */
+  async function completeListingSave() {
+    const payload = await buildPayload();
+    const id = effectivePropertyId;
+    if (!id) {
+      toast.error("Please complete the previous tabs first");
+      return;
+    }
+    const hasCover = !!payload.cover_image_url?.trim() || !!coverFile;
+    if (!hasCover) {
+      toast.error("Please add a cover image");
+      setActiveTab("assets");
+      return;
+    }
+    if (coverFile || galleryFiles.length > 0) {
+      try {
+        const finalPayload = await uploadPendingFiles(id, payload);
+        await updateMutation.mutateAsync({ id, values: finalPayload });
+      } catch (e) {
+        if (e instanceof Error && e.name === "AbortError") return;
+        console.error(e);
+        toast.error(e instanceof Error ? e.message : "Upload failed");
+        return;
+      }
+    } else {
+      await updateMutation.mutateAsync({ id, values: payload });
+    }
+    onOpenChange(false);
+    reset(defaultValues);
+    setCoverFile(null);
+    setGalleryFiles([]);
+    setCreatedPropertyId(null);
+    setCreatedListingRef(null);
   }
 
   async function handleSaveAndNext(nextTab: "assets" | "specs" | "seo") {
@@ -509,6 +577,14 @@ export function PropertySheet({
         toast.error("Please complete the previous tab first");
         return;
       }
+      const specsOk = await trigger([...SPECS_FORM_FIELDS]);
+      if (!specsOk) return;
+
+      if (!showSeoTab) {
+        await completeListingSave();
+        return;
+      }
+
       await updateMutation.mutateAsync({
         id,
         values: {
@@ -532,51 +608,8 @@ export function PropertySheet({
     }
   }
 
-  async function onSubmit(values: PropertyFormValues) {
-    const payload = await buildPayload();
-    const id = effectivePropertyId;
-
-    if (!id) {
-      toast.error("Please complete the previous tabs first");
-      return;
-    }
-
-    const hasCover = !!payload.cover_image_url?.trim() || !!coverFile;
-    if (!hasCover) {
-      toast.error("Please add a cover image");
-      setActiveTab("assets");
-      return;
-    }
-
-    // Upload pending files if we have any
-    if (coverFile || galleryFiles.length > 0) {
-      try {
-        const finalPayload = await uploadPendingFiles(id, payload);
-        await updateMutation.mutateAsync({ id, values: finalPayload });
-      } catch (e) {
-        if (e instanceof Error && e.name === "AbortError") return;
-        console.error("Upload failed:", e);
-        toast.error(e instanceof Error ? e.message : "Upload failed");
-        return;
-      }
-    } else {
-      await updateMutation.mutateAsync({
-        id,
-        values: {
-          meta_title: payload.meta_title,
-          meta_description: payload.meta_description,
-          meta_keywords: payload.meta_keywords,
-          og_image_url: payload.og_image_url,
-        },
-      });
-    }
-
-    onOpenChange(false);
-    reset(defaultValues);
-    setCoverFile(null);
-    setGalleryFiles([]);
-    setCreatedPropertyId(null);
-    setCreatedListingRef(null);
+  async function onSubmit(_values: PropertyFormValues) {
+    await completeListingSave();
   }
 
   return (
@@ -619,7 +652,7 @@ export function PropertySheet({
                 const next = v as "general" | "assets" | "specs" | "seo";
                 if (next === "assets" && !assetsTabEnabled) return;
                 if (next === "specs" && !specsTabEnabled) return;
-                if (next === "seo" && !seoTabEnabled) return;
+                if (next === "seo" && (!seoTabEnabled || !showSeoTab)) return;
                 setActiveTab(next);
               }}
               className="w-full"
@@ -690,6 +723,7 @@ export function PropertySheet({
                     "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-none",
                     "data-[state=active]:border-2 data-[state=active]:border-amber-200/90 data-[state=active]:ring-0",
                     "disabled:opacity-50 disabled:cursor-not-allowed",
+                    !showSeoTab && "hidden",
                   )}
                 >
                   SEO Settings
@@ -1219,75 +1253,96 @@ export function PropertySheet({
                           {errors.map_embed_url.message}
                         </p>
                       ) : null}
-                      <div
-                        className="ml-1 rounded-xl border border-neutral-200 bg-neutral-50/90 px-3 py-3 sm:px-4 sm:py-3.5"
-                        role="note"
+                      <Collapsible
+                        defaultOpen={false}
+                        className="group ml-1 rounded-xl border border-neutral-200 bg-neutral-50/90 data-[state=open]:bg-neutral-50"
                       >
-                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
-                          How to fill this in
-                        </p>
-                        <ul className="mt-2 space-y-2 text-[13px] leading-snug text-neutral-600 sm:text-sm sm:leading-relaxed">
-                          <li className="flex gap-2">
-                            <span
-                              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-200/90 text-[10px] font-bold text-neutral-700"
-                              aria-hidden
-                            >
-                              1
-                            </span>
-                            <span>
-                              In Google Maps, use{" "}
-                              <strong className="font-semibold text-neutral-800">
-                                Share
-                              </strong>{" "}
-                              →{" "}
-                              <strong className="font-semibold text-neutral-800">
-                                Copy link
-                              </strong>
-                              . Paste URLs like{" "}
-                              <code className="rounded bg-white px-1 py-0.5 text-[11px] text-neutral-800 ring-1 ring-neutral-200/80">
-                                maps.app.goo.gl/…
-                              </code>{" "}
-                              or{" "}
-                              <code className="rounded bg-white px-1 py-0.5 text-[11px] text-neutral-800 ring-1 ring-neutral-200/80">
-                                google.com/maps/place/…
-                              </code>
-                              .
-                            </span>
-                          </li>
-                          <li className="flex gap-2">
-                            <span
-                              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-200/90 text-[10px] font-bold text-neutral-700"
-                              aria-hidden
-                            >
-                              2
-                            </span>
-                            <span>
-                              Or use{" "}
-                              <strong className="font-semibold text-neutral-800">
-                                Embed a map
-                              </strong>{" "}
-                              and paste the embed / share URL from there.
-                            </span>
-                          </li>
-                          <li className="flex gap-2 border-t border-neutral-200/80 pt-2">
-                            <span
-                              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-[10px] font-bold text-amber-900"
-                              aria-hidden
-                            >
-                              !
-                            </span>
-                            <span>
-                              Set{" "}
-                              <strong className="font-semibold text-neutral-800">
-                                latitude and longitude
-                              </strong>{" "}
-                              on this property too. If a short link can&apos;t
-                              be embedded, the public page can still show the
-                              map using those coordinates.
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
+                        <CollapsibleTrigger
+                          type="button"
+                          className="flex w-full min-h-[44px] items-center gap-2 rounded-xl px-3 py-2.5 text-left outline-none transition-colors hover:bg-neutral-100/80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:min-h-0 sm:py-2"
+                          aria-label="How to fill in the map embed URL"
+                        >
+                          <Info
+                            className="h-4 w-4 shrink-0 text-neutral-500"
+                            aria-hidden
+                          />
+                          <span className="min-w-0 flex-1 text-xs font-semibold uppercase tracking-wide text-neutral-700">
+                            How to fill this in
+                          </span>
+                          <ChevronDown
+                            className="h-4 w-4 shrink-0 text-neutral-500 transition-transform duration-200 group-data-[state=open]:rotate-180"
+                            aria-hidden
+                          />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="overflow-hidden">
+                          <div
+                            className="border-t border-neutral-200/80 px-3 pb-3 pt-2 sm:px-4 sm:pb-3.5"
+                            role="note"
+                          >
+                            <ul className="space-y-2 text-[13px] leading-snug text-neutral-600 sm:text-sm sm:leading-relaxed">
+                              <li className="flex gap-2">
+                                <span
+                                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-200/90 text-[10px] font-bold text-neutral-700"
+                                  aria-hidden
+                                >
+                                  1
+                                </span>
+                                <span>
+                                  In Google Maps, use{" "}
+                                  <strong className="font-semibold text-neutral-800">
+                                    Share
+                                  </strong>{" "}
+                                  →{" "}
+                                  <strong className="font-semibold text-neutral-800">
+                                    Copy link
+                                  </strong>
+                                  . Paste URLs like{" "}
+                                  <code className="rounded bg-white px-1 py-0.5 text-[11px] text-neutral-800 ring-1 ring-neutral-200/80">
+                                    maps.app.goo.gl/…
+                                  </code>{" "}
+                                  or{" "}
+                                  <code className="rounded bg-white px-1 py-0.5 text-[11px] text-neutral-800 ring-1 ring-neutral-200/80">
+                                    google.com/maps/place/…
+                                  </code>
+                                  .
+                                </span>
+                              </li>
+                              <li className="flex gap-2">
+                                <span
+                                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-200/90 text-[10px] font-bold text-neutral-700"
+                                  aria-hidden
+                                >
+                                  2
+                                </span>
+                                <span>
+                                  Or use{" "}
+                                  <strong className="font-semibold text-neutral-800">
+                                    Embed a map
+                                  </strong>{" "}
+                                  and paste the embed / share URL from there.
+                                </span>
+                              </li>
+                              <li className="flex gap-2 border-t border-neutral-200/80 pt-2">
+                                <span
+                                  className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-[10px] font-bold text-amber-900"
+                                  aria-hidden
+                                >
+                                  !
+                                </span>
+                                <span>
+                                  Set{" "}
+                                  <strong className="font-semibold text-neutral-800">
+                                    latitude and longitude
+                                  </strong>{" "}
+                                  on this property too. If a short link
+                                  can&apos;t be embedded, the public page can
+                                  still show the map using those coordinates.
+                                </span>
+                              </li>
+                            </ul>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
                     </div>
                   </div>
                 </section>
@@ -1683,7 +1738,7 @@ export function PropertySheet({
                         Add Amenities
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-3 p-4 rounded-3xl bg-gray-50 border border-gray-100">
+                    <div className="grid grid-cols-2 gap-x-2 gap-y-2 rounded-xl border border-gray-200/70 bg-muted/25 p-2.5 sm:grid-cols-3 sm:gap-x-2.5 sm:gap-y-2 sm:p-3">
                       {amenitiesList.length > 0 ? (
                         amenitiesList.map((a) => {
                           const selected = (watch("amenities") ?? []).includes(
@@ -1692,7 +1747,7 @@ export function PropertySheet({
                           return (
                             <div
                               key={a.id}
-                              className="flex min-w-0 items-start gap-2 sm:gap-2.5"
+                              className="flex min-h-[2.25rem] min-w-0 items-center gap-1.5 sm:gap-2"
                             >
                               <Checkbox
                                 id={`amenity-${a.id}`}
@@ -1708,19 +1763,19 @@ export function PropertySheet({
                                     );
                                   }
                                 }}
-                                className="mt-0.5 h-5 w-5 shrink-0 rounded-md border-gray-300 text-indigo-600"
+                                className="shrink-0 rounded border-gray-400/90 text-indigo-600 data-[state=checked]:border-primary"
                               />
                               <Label
                                 htmlFor={`amenity-${a.id}`}
-                                className="flex min-w-0 flex-1 cursor-pointer items-start gap-2 font-bold leading-snug text-gray-700"
+                                className="flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 leading-snug text-gray-700"
                               >
                                 <span
-                                  className="flex min-h-5 w-8 shrink-0 select-none items-center justify-center text-lg leading-none sm:w-9"
+                                  className="flex h-6 w-6 shrink-0 select-none items-center justify-center text-base leading-none sm:h-7 sm:w-7 sm:text-[0.95rem]"
                                   aria-hidden={!a.icon}
                                 >
                                   {a.icon ?? null}
                                 </span>
-                                <span className="min-w-0 flex-1 break-words text-sm">
+                                <span className="min-w-0 flex-1 [overflow-wrap:anywhere] text-xs font-semibold sm:text-[13px]">
                                   {a.name}
                                 </span>
                               </Label>
@@ -1738,7 +1793,11 @@ export function PropertySheet({
                 </section>
               </TabsContent>
 
-              <TabsContent value="seo" className="mt-0 space-y-12">
+              <TabsContent
+                value="seo"
+                className={cn("mt-0 space-y-12", !showSeoTab && "hidden")}
+                forceMount
+              >
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 mb-6">
                     <div className="h-1 w-6 bg-violet-500 rounded-full" />
@@ -1747,7 +1806,10 @@ export function PropertySheet({
                     </Label>
                   </div>
                   <p className="text-sm text-gray-500 -mt-2">
-                    Optimize how this property appears in search results.
+                    Optimize how this property appears in search results. Leave
+                    fields empty to use auto-generated meta from the title and
+                    description (also applied on save from mobile). Your team
+                    can override anytime.
                   </p>
                   <div className="grid grid-cols-1 gap-6">
                     <div className="space-y-2">
@@ -1870,7 +1932,11 @@ export function PropertySheet({
                   {isPending || assetsUploading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : null}
-                  Save and Next
+                  {showSeoTab
+                    ? "Save and Next"
+                    : isEditing
+                      ? "Save listing"
+                      : "Publish listing"}
                 </Button>
               </>
             ) : (

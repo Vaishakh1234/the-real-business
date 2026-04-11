@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { SITE_NAME } from "@/lib/constants/site";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -145,7 +146,7 @@ const STOP_WORDS = new Set([
 export function generateSeoFromContent(
   title: string | null | undefined,
   description: string | null | undefined,
-  siteName = "TheRealBusiness"
+  siteName: string = SITE_NAME,
 ): {
   meta_title: string;
   meta_description: string;

@@ -10,9 +10,12 @@ import {
   ASK_LEON,
   CONTACT,
   getContactWhatsAppUrl,
+  getContactWhatsAppUrlWithPrefill,
   SOCIAL_LINKS,
 } from "@/lib/constants/site";
+import { buildPropertyWhatsAppPrefillMessage } from "@/lib/whatsapp-property-prefill";
 import { cn } from "@/lib/utils";
+import type { PropertyWithRelations } from "@/types";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { LISTING_CARD } from "@/lib/constants/listing-card";
 
@@ -24,9 +27,12 @@ type LeadTab = "enquiry" | "visit";
 export function PropertyEnquirySidebar({
   propertyId,
   propertyTitle,
+  property,
 }: {
   propertyId: string;
   propertyTitle: string;
+  /** When set, WhatsApp opens with a pre-filled enquiry for this listing. */
+  property?: PropertyWithRelations;
 }) {
   const { has, toggle } = useWishlist();
   const saved = has(propertyId);
@@ -36,7 +42,14 @@ export function PropertyEnquirySidebar({
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState(ENQUIRY_DEFAULT);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
-  const whatsappHref = getContactWhatsAppUrl();
+  const whatsappHref = property
+    ? getContactWhatsAppUrlWithPrefill(
+        buildPropertyWhatsAppPrefillMessage(
+          property,
+          `/properties/${property.slug}`,
+        ),
+      )
+    : getContactWhatsAppUrl();
 
   const syncMessageWithTab = useCallback((next: LeadTab) => {
     setTab(next);

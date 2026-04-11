@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   Bell,
   BellOff,
   ChevronDown,
+  Download,
   Loader2,
   Monitor,
   PlusSquare,
@@ -29,6 +31,8 @@ import { isAndroidChrome, isIOSDevice } from "@/lib/push/platform";
 import { safeClientErrorToastMessage } from "@/lib/safe-client-error-message";
 import { cn } from "@/lib/utils";
 import { LeadAlertsGuideDialog } from "@/components/admin/settings/LeadAlertsGuideDialog";
+import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
+import { ADMIN_PWA_DOWNLOAD } from "@/lib/constants/site";
 import { isInAppLeadNotificationsSettingsUiEnabled } from "@/lib/constants/admin-features";
 
 export type AdminSettingsVariant = "page" | "overlay";
@@ -54,6 +58,10 @@ export function AdminSettingsView({
     patchSettings,
     patching,
   } = useAdminLeadPush();
+
+  const { ready: pwaReady, isStandalone: pwaStandalone } = usePwaInstall();
+  const showInstallApp =
+    ADMIN_PWA_DOWNLOAD && pwaReady && !pwaStandalone;
 
   const [standalone, setStandalone] = useState(false);
 
@@ -163,14 +171,29 @@ export function AdminSettingsView({
               </li>
             </ol>
             {!standalone ? (
-              <div className="flex gap-3 rounded-xl border border-amber-200/80 bg-amber-50/90 p-3.5 text-amber-950 text-sm leading-snug dark:border-amber-900/60 dark:bg-amber-950/35 dark:text-amber-100">
-                <PlusSquare
-                  className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300"
+              <div
+                className={cn(
+                  "flex gap-3 rounded-xl border border-slate-200/90 bg-white p-4 text-sm leading-relaxed shadow-sm sm:gap-4 sm:p-5",
+                  "dark:border-border dark:bg-card",
+                )}
+              >
+                <div
+                  className={cn(
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 shadow-sm ring-1 ring-amber-300/70",
+                    "dark:bg-amber-950/50 dark:ring-amber-600/40",
+                  )}
                   aria-hidden
-                />
-                <p>
+                >
+                  <PlusSquare
+                    className="h-5 w-5 shrink-0 text-amber-950 dark:text-amber-100"
+                    strokeWidth={2.5}
+                  />
+                </div>
+                <p className="min-w-0 pt-0.5 text-muted-foreground">
                   You&apos;re in a normal browser tab. Use{" "}
-                  <strong className="font-semibold">Add to Home Screen</strong>{" "}
+                  <strong className="font-bold text-foreground">
+                    Add to Home Screen
+                  </strong>{" "}
                   first—push is unreliable until you launch from the home screen
                   icon.
                 </p>
@@ -475,10 +498,24 @@ export function AdminSettingsView({
     <div className="w-full">
       <div className="flex flex-col gap-4 pb-4 sm:gap-6 sm:pb-8">
         <div className="flex flex-col gap-3">
-          <div className="flex w-full justify-stretch sm:justify-end">
-            <LeadAlertsGuideDialog
-              triggerClassName="h-11 w-full justify-center gap-2 rounded-xl sm:h-9 sm:w-auto sm:justify-center"
-            />
+          <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end sm:gap-2">
+            <LeadAlertsGuideDialog triggerClassName="h-11 w-full justify-center gap-2 rounded-xl sm:h-9 sm:w-auto sm:justify-center" />
+            {showInstallApp ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-11 w-full shrink-0 justify-center gap-2 rounded-xl border-brand-gold/35 bg-white/90 shadow-sm backdrop-blur-sm hover:border-brand-gold/55 hover:bg-brand-gold-muted sm:h-9 sm:w-auto"
+                asChild
+              >
+                <Link
+                  href="/admin/install-app"
+                  className="inline-flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4 shrink-0" aria-hidden />
+                  Install app
+                </Link>
+              </Button>
+            ) : null}
           </div>
 
           {settingsError ? (

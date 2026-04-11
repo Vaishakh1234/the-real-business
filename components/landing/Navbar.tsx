@@ -561,7 +561,7 @@ export function Navbar() {
             <Link
               href="/"
               className={cn(
-                "font-site-wordmark text-lg font-semibold leading-tight tracking-tight xs:text-2xl sm:text-3xl sm:whitespace-nowrap md:text-4xl",
+                "font-site-wordmark text-[28px] xl  :text-4xl font-semibold leading-tight tracking-tight  sm:whitespace-nowrap",
                 overlayNav ? "text-white drop-shadow-sm" : "text-brand-gold",
               )}
             >

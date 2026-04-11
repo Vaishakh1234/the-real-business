@@ -2,7 +2,6 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import { PublicMain } from "@/components/landing/PublicMain";
 import { PwaInstallProvider } from "@/components/landing/PwaInstallProvider";
-import { IosInstallHintBanner } from "@/components/landing/IosInstallHintBanner";
 import { ChatWidget } from "@/components/chatbot/ChatWidget";
 import { PublicSiteJsonLd } from "@/components/seo/PublicSiteJsonLd";
 import { publicShellBackgroundColor } from "@/lib/constants/publicLayout";
@@ -21,7 +20,6 @@ export default function PublicLayout({
       >
         <PublicSiteJsonLd />
         <Navbar />
-        <IosInstallHintBanner />
         <PublicMain>{children}</PublicMain>
         <Footer />
         {CHATBOT.enabled ? <ChatWidget /> : null}

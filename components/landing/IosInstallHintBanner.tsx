@@ -11,6 +11,7 @@ const STORAGE_KEY = "pwa-ios-install-hint-dismissed";
 /**
  * iOS Safari does not fire `beforeinstallprompt`. Shows a slim fixed strip with
  * Share → Add to Home Screen instructions below the main header.
+ * Hidden on small viewports so the top of the mobile layout stays clear.
  */
 export function IosInstallHintBanner() {
   const { showIosInstallHint } = usePwaInstall();
@@ -39,6 +40,7 @@ export function IosInstallHintBanner() {
     <div
       role="status"
       className={cn(
+        "hidden md:block",
         "fixed right-0 left-0 z-[48] border-b border-amber-200/80 bg-amber-50/95 px-3 py-2.5 text-center text-[13px] leading-snug text-amber-950 shadow-sm backdrop-blur-sm sm:px-4 sm:text-sm",
         "top-[calc(env(safe-area-inset-top,0px)+4rem)] md:top-[calc(env(safe-area-inset-top,0px)+5rem)]",
       )}

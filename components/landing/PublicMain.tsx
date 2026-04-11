@@ -4,20 +4,13 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { PUBLIC_ROUTES_WITH_TOP_HERO } from "@/lib/constants/publicLayout";
-import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
 
 export function PublicMain({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { showIosInstallHint } = usePwaInstall();
   const isHome = pathname === "/";
   /** Full-bleed hero under fixed nav — no top padding or main’s white bg shows through the transparent header */
   const heroFlushTop = isHome || PUBLIC_ROUTES_WITH_TOP_HERO.has(pathname);
   const isPropertyDetailPage = /^\/properties\/[^/]+/.test(pathname);
-  /** Fixed iOS hint sits below the header; keep content from sitting under it. */
-  const iosBannerPad =
-    showIosInstallHint && !heroFlushTop
-      ? "pt-[calc(4rem+2.75rem)] md:pt-[calc(5rem+2.75rem)]"
-      : null;
 
   return (
     <main
@@ -28,7 +21,7 @@ export function PublicMain({ children }: { children: ReactNode }) {
         isPropertyDetailPage
           ? "pb-[max(1rem,env(safe-area-inset-bottom))]"
           : "pb-[max(5rem,env(safe-area-inset-bottom))]",
-        iosBannerPad ?? (heroFlushTop ? "pt-0" : "pt-16 md:pt-20"),
+        heroFlushTop ? "pt-0" : "pt-16 md:pt-20",
       )}
     >
       {children}

@@ -23,7 +23,10 @@ interface PageHeaderProps {
   showDate?: boolean;
   /** On mobile, show a back link above the title (e.g. from edit property page) */
   backHref?: string;
+  /** Used for `aria-label` on the icon-only back control (mobile). */
   backLabel?: string;
+  /** Merged onto `<header>` (e.g. `bg-white border-b border-slate-100`). */
+  className?: string;
 }
 
 export function PageHeader({
@@ -36,20 +39,17 @@ export function PageHeader({
   showDate = false,
   backHref,
   backLabel = "Back",
+  className,
 }: PageHeaderProps) {
   return (
-    <header className="bg-[#f5f5f5] px-4 pt-4 pb-4 sm:px-6 sm:pt-5 sm:pb-4 lg:px-8 lg:pt-6 lg:pb-5">
+    <header
+      className={cn(
+        "bg-[#f5f5f5] px-4 pt-4 pb-4 sm:px-6 sm:pt-5 sm:pb-4 lg:px-8 lg:pt-6 lg:pb-5",
+        className,
+      )}
+    >
       <div className="flex flex-row flex-wrap items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          {backHref && (
-            <Link
-              href={backHref}
-              className="mb-2 flex min-h-[44px] w-fit items-center gap-1 text-base font-medium text-muted-foreground hover:text-foreground lg:hidden"
-            >
-              <ChevronLeft className="h-4 w-4 shrink-0" />
-              {backLabel}
-            </Link>
-          )}
           {breadcrumbs && breadcrumbs.length > 0 && (
             <nav
               aria-label="Breadcrumb"
@@ -76,14 +76,34 @@ export function PageHeader({
               ))}
             </nav>
           )}
-          <h1
-            className={cn(
-              "text-2xl font-semibold tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl",
-              titleClassName,
-            )}
-          >
-            {title}
-          </h1>
+          {backHref ? (
+            <div className="flex min-w-0 items-center gap-3">
+              <Link
+                href={backHref}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-slate-100/90 text-brand-blue shadow-sm transition-colors hover:bg-slate-200/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 lg:hidden"
+                aria-label={backLabel}
+              >
+                <ChevronLeft className="h-5 w-5 shrink-0" strokeWidth={2.25} />
+              </Link>
+              <h1
+                className={cn(
+                  "min-w-0 flex-1 text-2xl font-semibold tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl",
+                  titleClassName,
+                )}
+              >
+                {title}
+              </h1>
+            </div>
+          ) : (
+            <h1
+              className={cn(
+                "text-2xl font-semibold tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl",
+                titleClassName,
+              )}
+            >
+              {title}
+            </h1>
+          )}
           {subtitle && (
             <div
               className={cn(

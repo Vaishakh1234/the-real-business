@@ -489,10 +489,10 @@ export const TEAM_TESTIMONIAL = {
 
 export const CONTACT = {
   email: "info.therealbusiness@gmail.com",
-  /** Phone number (leave empty until confirmed). */
-  phone: "" as string,
+  /** Display / tel: — same line as WhatsApp for public CTAs. */
+  phone: "+91 81578 61836" as string,
   /** WhatsApp link for quick contact (wa.me with country code + number, no + or spaces). */
-  whatsappUrl: "",
+  whatsappUrl: "https://wa.me/918157861836",
   whatsappLabel: "Chat on WhatsApp",
   /** Primary contact CTA label (e.g. contact form, contact page link) */
   contactUsLabel: "Contact us",
@@ -517,6 +517,16 @@ export const CHATBOT = {
   /** Feature flags for future use (flows live in `components/chatbot/chatFlows.ts`). */
   enabled: true,
 } as const;
+
+/**
+ * Public site: show PWA “Install app” in the navbar and on the home banner.
+ */
+export const CLIENT_PWA_DOWNLOAD = false;
+
+/**
+ * Admin: show “Install app” in the sidebar, settings shortcut, and `/admin/install-app`.
+ */
+export const ADMIN_PWA_DOWNLOAD = true;
 
 /** Ask Leon — expert Q&A / quick-help section (home page). */
 export const ASK_LEON = {
@@ -572,7 +582,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
   {
     platform: "whatsapp",
     label: "WhatsApp",
-    href: "https://wa.me/919876543210",
+    href: "https://wa.me/918157861836",
     ariaLabel: "WhatsApp",
   },
   {
@@ -589,4 +599,24 @@ export function getContactWhatsAppUrl(): string {
   if (fromContact) return fromContact;
   const social = SOCIAL_LINKS.find((l) => l.platform === "whatsapp");
   return social?.href?.trim() ?? "";
+}
+
+/** Safe max for `text=` across WhatsApp Web / app (leave headroom below URL limits). */
+const WHATSAPP_PREFILL_TEXT_MAX = 1800;
+
+/**
+ * Same number as `getContactWhatsAppUrl()` with optional pre-filled message (`?text=`).
+ * Empty or whitespace-only `message` returns the base URL unchanged.
+ */
+export function getContactWhatsAppUrlWithPrefill(message: string): string {
+  const base = getContactWhatsAppUrl();
+  if (!base) return "";
+  const trimmed = message.trim();
+  if (!trimmed) return base;
+  const limited =
+    trimmed.length > WHATSAPP_PREFILL_TEXT_MAX
+      ? `${trimmed.slice(0, WHATSAPP_PREFILL_TEXT_MAX - 1)}…`
+      : trimmed;
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}text=${encodeURIComponent(limited)}`;
 }

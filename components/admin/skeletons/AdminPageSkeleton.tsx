@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const CARD_CLASS_PROPERTY =
   "rounded-xl border border-admin-card-border bg-admin-card-bg p-3 shadow-sm sm:p-4 lg:p-6";
@@ -13,19 +14,31 @@ export function PageHeaderSkeleton({
     <header className="border-b border-[#e5e5e5] bg-[#f5f5f5] px-4 pt-4 pb-4 sm:px-6 sm:pt-5 sm:pb-4 lg:px-8 lg:pt-6 lg:pb-5">
       <div className="flex flex-row flex-wrap items-center justify-between gap-4">
         <div className="min-w-0 flex-1 space-y-2">
-          {showBackLink && (
-            <div className="mb-2 flex h-[44px] w-20 items-center gap-1 rounded lg:hidden">
-              <Skeleton className="h-4 w-4 shrink-0 rounded" />
-              <Skeleton className="h-3.5 w-8 rounded" />
-            </div>
-          )}
           {/* Breadcrumb: hidden on mobile, visible at lg */}
           <div className="mb-2 hidden items-center gap-1.5 lg:flex">
             <Skeleton className="h-3.5 w-12 rounded" />
             <Skeleton className="h-3.5 w-3.5 rounded" />
             <Skeleton className="h-3.5 w-20 rounded" />
           </div>
-          <Skeleton className="h-7 w-48 rounded sm:h-8 sm:w-56 lg:h-9 lg:w-64" />
+          <div
+            className={
+              showBackLink
+                ? "flex min-w-0 items-center gap-3 lg:block"
+                : undefined
+            }
+          >
+            {showBackLink ? (
+              <Skeleton className="h-10 w-10 shrink-0 rounded-full lg:hidden" />
+            ) : null}
+            <Skeleton
+              className={cn(
+                "h-7 rounded sm:h-8 lg:h-9",
+                showBackLink
+                  ? "min-w-0 flex-1 sm:w-48 lg:w-64"
+                  : "w-48 sm:w-56 lg:w-64",
+              )}
+            />
+          </div>
           <Skeleton className="hidden h-4 w-72 max-w-full rounded md:block" />
         </div>
       </div>

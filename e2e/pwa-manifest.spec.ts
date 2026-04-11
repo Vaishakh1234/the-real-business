@@ -1,7 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
+import { PWA_ADMIN_START_URL } from "@/lib/pwa-manifest";
 
 const LOGIN_URL = "/admin/login";
 const MANIFEST = "/manifest.webmanifest";
+const PUBLIC_PWA_START = "/?source=pwa";
 
 function emailInput(page: Page) {
   return page.getByRole("textbox", { name: /email/i });
@@ -20,8 +22,12 @@ test.describe("PWA manifest (dynamic admin shortcuts)", () => {
     expect(res.headers()["cache-control"]).toMatch(/no-store/);
     expect(res.headers().vary?.toLowerCase()).toContain("cookie");
 
-    const body = (await res.json()) as { shortcuts?: unknown };
+    const body = (await res.json()) as {
+      shortcuts?: unknown;
+      start_url?: string;
+    };
     expect(body.shortcuts).toBeUndefined();
+    expect(body.start_url).toBe(PUBLIC_PWA_START);
   });
 
   test("after admin login, manifest includes admin shortcuts", async ({ page }) => {
@@ -42,7 +48,9 @@ test.describe("PWA manifest (dynamic admin shortcuts)", () => {
     expect(res.ok(), await res.text()).toBeTruthy();
     const body = (await res.json()) as {
       shortcuts?: { url: string; name: string }[];
+      start_url?: string;
     };
+    expect(body.start_url).toBe(PWA_ADMIN_START_URL);
     expect(body.shortcuts).toBeDefined();
     expect(body.shortcuts!.length).toBeGreaterThanOrEqual(3);
     const urls = body.shortcuts!.map((s) => s.url).join(" ");

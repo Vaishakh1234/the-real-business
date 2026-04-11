@@ -17,7 +17,7 @@ import {
   PageHeader,
   type BreadcrumbItem,
 } from "@/components/admin/layout/PageHeader";
-import { SITE_NAME } from "@/lib/constants/site";
+import { ADMIN_PWA_DOWNLOAD, SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 
 function InstructionCard({
@@ -70,6 +70,27 @@ export function AdminInstallAppView() {
     { label: "Admin", href: "/admin/dashboard" },
     { label: "Install app" },
   ];
+
+  if (!ADMIN_PWA_DOWNLOAD) {
+    return (
+      <div className="flex min-h-full flex-col bg-gradient-to-b from-admin-main-bg via-white to-brand-gold-muted/25 pb-[env(safe-area-inset-bottom)]">
+        <PageHeader
+          title="Install admin app"
+          titleClassName="text-xl sm:text-2xl lg:text-3xl"
+          subtitleClassName="text-sm leading-snug sm:text-[15px] sm:leading-snug"
+          subtitle="PWA install for admin is turned off in site settings."
+          breadcrumbs={breadcrumbs}
+        />
+        <div className="mx-auto w-full max-w-2xl flex-1 px-4 pt-4 sm:px-0">
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Set <span className="font-medium text-foreground">ADMIN_PWA_DOWNLOAD</span> to{" "}
+            <span className="font-medium text-foreground">true</span> in site constants to show install
+            steps and the sidebar link.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-full flex-col bg-gradient-to-b from-admin-main-bg via-white to-brand-gold-muted/25 pb-[env(safe-area-inset-bottom)]">

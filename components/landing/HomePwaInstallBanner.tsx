@@ -14,7 +14,7 @@ import {
   publicContentFrameClass,
   publicShellBackgroundColor,
 } from "@/lib/constants/publicLayout";
-import { SITE_NAME } from "@/lib/constants/site";
+import { CLIENT_PWA_DOWNLOAD, SITE_NAME } from "@/lib/constants/site";
 import { cn } from "@/lib/utils";
 import { usePwaInstall } from "@/components/landing/PwaInstallProvider";
 
@@ -81,51 +81,59 @@ export function HomePwaInstallBanner() {
     await runInstall();
   };
 
+  if (!CLIENT_PWA_DOWNLOAD) return null;
   if (!ready || isStandalone) return null;
 
-  const mobileTagline = isIos
-    ? `Tap Share, then Add to Home Screen — the icon will show as ${SITE_NAME}.`
-    : `Add ${SITE_NAME} to your home screen for quick access.`;
+  const mobileHelperWhenNoPrompt = !showInstallButton
+    ? isIos
+      ? "Share → Add to Home Screen"
+      : "Browser menu → Install or Add to Home screen"
+    : null;
 
   return (
     <section
       style={{ backgroundColor: publicShellBackgroundColor }}
-      className="mb-8 pb-[max(1rem,env(safe-area-inset-bottom))] sm:mb-10 lg:mb-12"
+      className="mt-0 mb-4 pb-2 sm:mb-10 sm:pb-[max(1rem,env(safe-area-inset-bottom))] lg:mb-12"
       aria-label="Install our app"
     >
       <div className={publicContentFrameClass}>
         <Sheet>
           <div
             className={cn(
-              "relative w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.12)] sm:rounded-3xl",
-              "bg-gradient-to-br from-brand-charcoal via-[#252525] to-[#1a1a1a]",
+              "relative w-full overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_12px_40px_-8px_rgba(0,0,0,0.35)] sm:rounded-3xl",
+              "bg-gradient-to-br from-[#1c1c1c] via-[#222] to-[#141414]",
             )}
           >
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="absolute right-2 top-2 z-20 flex h-10 w-10 items-center justify-center rounded-full text-white/75 transition-colors hover:bg-white/12 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold sm:right-4 sm:top-4"
+                className="absolute right-2.5 top-2.5 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/70 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.08] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold sm:right-4 sm:top-4 sm:h-10 sm:w-10"
                 aria-label="More about installing the app"
               >
-                <Info className="h-5 w-5" strokeWidth={2} aria-hidden />
+                <Info
+                  className="h-4 w-4 sm:h-5 sm:w-5"
+                  strokeWidth={2}
+                  aria-hidden
+                />
               </button>
             </SheetTrigger>
 
             <div
-              className="pointer-events-none absolute -right-16 -top-24 h-56 w-56 rounded-full bg-brand-gold/10 blur-3xl sm:-right-8 sm:top-0 sm:h-72 sm:w-72"
+              className="pointer-events-none absolute -right-12 -top-20 h-48 w-48 rounded-full bg-brand-gold/[0.07] blur-3xl sm:-right-8 sm:top-0 sm:h-72 sm:w-72"
               aria-hidden
             />
             <div
-              className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-brand-gold/5 blur-2xl"
+              className="pointer-events-none absolute -bottom-16 -left-8 h-40 w-40 rounded-full bg-brand-gold/[0.04] blur-2xl"
               aria-hidden
             />
 
-            {/* ——— Mobile: logo + stacked title/tagline (tagline aligns with title, not icon) ——— */}
-            <div className="relative px-4 pb-5 pt-[3.15rem] sm:px-5 lg:hidden">
-              <div className="flex items-start gap-3.5 sm:gap-4">
+            {/* Mobile: single-row app mark + icon-only “Install” CTA (details in sheet) */}
+            <div className="relative px-4 pb-4 pt-[3.25rem] lg:hidden">
+              <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    "relative flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/25 bg-white p-2 shadow-[0_4px_14px_rgba(0,0,0,0.2)] ring-1 ring-black/5",
+                    "relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/20 bg-white p-2",
+                    "shadow-[0_2px_16px_rgba(0,0,0,0.35)] ring-1 ring-black/20",
                   )}
                 >
                   <Image
@@ -138,38 +146,35 @@ export function HomePwaInstallBanner() {
                   />
                 </div>
 
-                <div className="min-w-0 flex-1 pr-11">
-                  <div className="flex gap-2.5">
-                    <Smartphone
-                      className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-brand-gold"
-                      strokeWidth={2}
-                      aria-hidden
-                    />
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <h2 className="font-heading text-[1.0625rem] font-bold leading-snug tracking-[-0.02em] text-white sm:text-lg">
-                        Install {SITE_NAME}
-                      </h2>
-                      <p className="text-pretty text-[13px] leading-[1.35] text-white sm:text-sm sm:leading-relaxed">
-                        {mobileTagline}
-                      </p>
-                    </div>
-                  </div>
-
+                <div className="min-w-0 flex-1 pr-10">
                   {showInstallButton ? (
                     <Button
                       type="button"
-                      size="lg"
                       disabled={installing}
                       onClick={onInstallClick}
                       className={cn(
-                        "mt-4 h-11 w-full rounded-xl border-0 bg-brand-gold text-[15px] font-semibold text-brand-charcoal shadow-[0_2px_12px_rgba(0,0,0,0.2)]",
-                        "hover:bg-brand-gold-hover focus-visible:ring-brand-gold",
+                        "h-11 w-full min-w-0 rounded-full border-0 bg-brand-gold px-5 text-[15px] font-semibold tracking-tight text-brand-charcoal",
+                        "shadow-[0_2px_0_0_rgba(0,0,0,0.12),0_8px_24px_-4px_rgba(0,0,0,0.45)]",
+                        "hover:bg-brand-gold-hover focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1a1a]",
+                        "disabled:opacity-70",
                       )}
                     >
-                      <Download className="h-5 w-5" aria-hidden />
-                      {installing ? "Opening…" : `Install ${SITE_NAME}`}
+                      <Download
+                        className="h-[1.125rem] w-[1.125rem] shrink-0"
+                        aria-hidden
+                      />
+                      {installing ? "Opening…" : "Install"}
                     </Button>
-                  ) : null}
+                  ) : (
+                    <div className="space-y-1">
+                      <p className="font-heading text-[0.9375rem] font-semibold leading-tight text-white">
+                        {SITE_NAME}
+                      </p>
+                      <p className="text-[12px] leading-snug text-white/65">
+                        {mobileHelperWhenNoPrompt}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -226,7 +231,7 @@ export function HomePwaInstallBanner() {
                       )}
                     >
                       <Download className="h-5 w-5" aria-hidden />
-                      {installing ? "Opening…" : `Install ${SITE_NAME}`}
+                      {installing ? "Opening…" : "Install"}
                     </Button>
                   </div>
                 ) : null}
